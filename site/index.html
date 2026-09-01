@@ -1,0 +1,2189 @@
+<title>Grupo 2 Churn Recon</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap">
+<style>
+  :root{
+    /* canvas — GitHub dark, the README's labelColor */
+    --canvas:#0D1117;
+    --surface:#131A22;
+    --surface-2:#0A0F15;
+    --surface-3:#161D26;
+    --border:#1F6F3F;
+    --border-soft:#1B2A22;
+    --rule:#17301F;
+
+    /* greens */
+    --accent:#00FF41;
+    --accent-deep:#1F6F3F;
+    --accent-mid:#00B32E;
+
+    /* ink */
+    --white:#FFFFFF;
+    --ink:#D9E4DC;
+    --muted:#8AA394;
+    --muted-deep:#54705F;
+
+    /* semantic — reserved, never used for a data series */
+    --warn:#D9A441;
+    --warn-bg:#1A1409;
+    --warn-border:#4A3714;
+    --alert:#E5534B;
+    --alert-bg:#1B0C0B;
+    --alert-border:#4E1F1C;
+
+    /* sequential ramp, one hue, dark -> bright */
+    --r1:#0D2A17;
+    --r2:#114A24;
+    --r3:#146B2D;
+    --r4:#199437;
+    --r5:#00C934;
+    --r6:#00FF41;
+
+    --mono:"JetBrains Mono","SFMono-Regular",Menlo,Consolas,"Liberation Mono",monospace,"Noto Sans Symbols","Segoe UI Symbol",sans-serif;
+  }
+
+  *{box-sizing:border-box;}
+
+  body{
+    background:var(--canvas);
+    color:var(--ink);
+    font-family:var(--mono);
+    font-size:13.5px;
+    line-height:1.75;
+    margin:0;
+    padding:0;
+    -webkit-font-smoothing:antialiased;
+  }
+
+  .wrap{
+    max-width:1060px;
+    margin:0 auto;
+    padding:0 clamp(16px,4vw,40px) 88px;
+  }
+
+  a{color:var(--accent);text-decoration:none;border-bottom:1px solid var(--accent-deep);}
+  a:hover{border-bottom-color:var(--accent);}
+  a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;}
+
+  p{margin:0 0 14px;max-width:74ch;}
+  p:last-child{margin-bottom:0;}
+  b,strong{font-weight:700;color:var(--white);}
+  em{font-style:normal;color:var(--muted);}
+
+  code{
+    font-family:var(--mono);
+    font-size:.94em;
+    color:var(--accent);
+    background:var(--surface-2);
+    border:1px solid var(--border-soft);
+    padding:0 4px;
+    border-radius:2px;
+  }
+
+  hr.rule{border:none;border-top:1px solid var(--rule);margin:0;}
+
+  /* ---------- console prompt ---------- */
+
+  .prompt{
+    font-size:12.5px;
+    color:var(--muted-deep);
+    margin:0 0 18px;
+    white-space:nowrap;
+    overflow-x:auto;
+    letter-spacing:.01em;
+  }
+  .prompt .u{color:var(--accent-deep);}
+  .prompt .d{color:var(--accent);}
+  .prompt .c{color:var(--muted);}
+
+  /* ---------- header ---------- */
+
+  .chevron{display:block;width:100%;height:clamp(40px,6.5vw,64px);margin-top:clamp(18px,4vw,32px);}
+
+  .masthead{
+    border-top:1px solid var(--rule);
+    padding-top:clamp(20px,3vw,30px);
+    margin-top:clamp(12px,2vw,18px);
+    display:grid;
+    grid-template-columns:1fr;
+    gap:26px;
+  }
+  @media (min-width:880px){ .masthead{grid-template-columns:1.45fr 1fr;gap:44px;} }
+
+  h1{
+    font-family:var(--mono);
+    font-weight:700;
+    font-size:clamp(1.7rem,4.9vw,2.7rem);
+    line-height:1.12;
+    letter-spacing:-.035em;
+    margin:0 0 18px;
+    color:var(--white);
+    text-wrap:balance;
+  }
+  h1 .g{color:var(--accent);}
+
+  .typing{
+    display:grid;
+    gap:2px;
+    margin:0 0 20px;
+    font-size:13.5px;
+    color:var(--muted);
+  }
+  .typing span::before{content:"> ";color:var(--accent);}
+  .typing span b{color:var(--ink);font-weight:500;}
+
+  .meta{
+    display:grid;
+    gap:9px;
+    align-content:start;
+    font-size:12.5px;
+    color:var(--muted);
+    border-left:1px solid var(--rule);
+    padding-left:18px;
+  }
+  .meta div{display:grid;grid-template-columns:76px 1fr;gap:10px;}
+  .meta .k{color:var(--accent-deep);text-transform:uppercase;letter-spacing:.06em;font-size:11px;padding-top:1px;}
+  .meta .v{color:var(--ink);}
+
+  /* ---------- badge pills ---------- */
+
+  .pills{
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+    margin:26px 0 0;
+    padding-top:22px;
+    border-top:1px solid var(--rule);
+  }
+  .pill{
+    display:inline-flex;
+    align-items:stretch;
+    border:1px solid var(--border-soft);
+    background:var(--canvas);
+    border-radius:3px;
+    overflow:hidden;
+    font-size:10.5px;
+    font-weight:700;
+    letter-spacing:.14em;
+    text-transform:uppercase;
+    line-height:1;
+  }
+  .pill .pk{background:var(--surface-3);color:var(--muted);padding:8px 9px;}
+  .pill .ps{background:var(--surface-3);color:var(--accent-deep);padding:8px 2px;}
+  .pill .pv{background:var(--surface-2);color:var(--accent);padding:8px 10px;}
+  .pill.hot .pv{color:var(--white);background:#0A2413;}
+  .pill.wait .pv{color:var(--warn);}
+
+  /* ---------- sections ---------- */
+
+  section{margin-top:clamp(50px,7.5vw,80px);}
+
+  .sec-head{
+    display:flex;
+    align-items:baseline;
+    gap:12px;
+    border-bottom:1px solid var(--rule);
+    padding-bottom:12px;
+    margin-bottom:20px;
+    flex-wrap:wrap;
+  }
+  h2{
+    font-family:var(--mono);
+    font-weight:700;
+    font-size:clamp(1rem,2.4vw,1.3rem);
+    letter-spacing:.02em;
+    margin:0;
+    color:var(--white);
+    text-transform:uppercase;
+  }
+  h2::before{content:"> ";color:var(--accent);}
+  .sec-note{font-size:11px;color:var(--muted-deep);margin-left:auto;letter-spacing:.03em;}
+
+  h3{
+    font-weight:700;
+    font-size:13.5px;
+    margin:0 0 10px;
+    color:var(--white);
+    text-transform:uppercase;
+    letter-spacing:.05em;
+  }
+
+  .lede{color:var(--muted);max-width:76ch;margin-bottom:26px;}
+  .lede b{color:var(--white);}
+
+  pre{
+    font-family:var(--mono);
+    font-size:12.5px;
+    line-height:1.75;
+    background:var(--surface-2);
+    border:1px solid var(--border-soft);
+    border-left:2px solid var(--accent-deep);
+    padding:14px 16px;
+    overflow-x:auto;
+    margin:0 0 16px;
+    color:var(--ink);
+  }
+  pre code{background:none;border:none;padding:0;color:inherit;font-size:inherit;}
+  pre .cm{color:var(--muted-deep);}
+  pre .g{color:var(--accent);}
+  pre .r{color:var(--alert);}
+
+  .src{
+    font-size:11px;
+    color:var(--muted-deep);
+    margin-top:10px;
+    letter-spacing:.02em;
+  }
+  .src::before{content:"# ";color:var(--accent-deep);}
+
+  /* ---------- progress tracker ---------- */
+
+  .track{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(166px,1fr));
+    gap:1px;
+    background:var(--border-soft);
+    border:1px solid var(--border-soft);
+  }
+  .step{
+    background:var(--surface-2);
+    padding:15px 15px 17px;
+    display:flex;
+    flex-direction:column;
+    gap:9px;
+    min-height:148px;
+  }
+  .step.done{background:var(--surface);border-top:2px solid var(--accent);}
+  .step.now{border-top:2px solid var(--warn);}
+  .step.todo{border-top:2px solid var(--rule);}
+  .step-n{font-size:11px;letter-spacing:.16em;color:var(--muted-deep);}
+  .step.done .step-n{color:var(--accent);}
+  .step.now .step-n{color:var(--warn);}
+  .step-name{font-size:14.5px;font-weight:700;color:var(--white);line-height:1.35;letter-spacing:-.01em;}
+  .step.todo .step-name{color:var(--muted);font-weight:500;}
+  .step-budget{font-size:11px;color:var(--muted-deep);margin-top:auto;line-height:1.5;}
+  .chip{
+    font-size:10px;
+    font-weight:700;
+    letter-spacing:.14em;
+    text-transform:uppercase;
+    padding:3px 8px;
+    border:1px solid;
+    align-self:flex-start;
+    border-radius:2px;
+  }
+  .chip.ok{color:var(--accent);border-color:var(--accent-deep);}
+  .chip.next{color:var(--warn);border-color:var(--warn-border);}
+  .chip.wait{color:var(--muted-deep);border-color:var(--rule);}
+  .chip.hurt{color:var(--alert);border-color:var(--alert-border);}
+  .chip.help{color:var(--accent);border-color:var(--accent-deep);}
+
+  .meter{display:flex;gap:8px;margin-top:20px;align-items:center;flex-wrap:wrap;}
+  .meter-bars{display:flex;gap:4px;}
+  .meter-seg{width:42px;height:6px;background:var(--rule);}
+  .meter-seg.on{background:var(--accent);}
+  .meter-label{font-size:11.5px;color:var(--muted);}
+
+  /* ---------- stat tiles ---------- */
+
+  .stats{
+    display:grid;
+    grid-template-columns:repeat(6,1fr);
+    gap:1px;
+    background:var(--border-soft);
+    border:1px solid var(--border-soft);
+  }
+  .tile{background:var(--surface-2);padding:18px 17px;grid-column:span 2;}
+  .tile.hero{grid-column:span 3;background:var(--surface);}
+  .tile.wide{grid-column:span 3;}
+  @media (max-width:760px){
+    .stats{grid-template-columns:repeat(2,1fr);}
+    .tile,.tile.hero,.tile.wide{grid-column:span 2;}
+  }
+  .tile-k{
+    font-size:10.5px;
+    font-weight:700;
+    letter-spacing:.14em;
+    text-transform:uppercase;
+    color:var(--muted);
+    margin-bottom:12px;
+  }
+  .tile-v{
+    font-weight:700;
+    font-size:clamp(1.6rem,4.2vw,2.15rem);
+    line-height:1;
+    letter-spacing:-.045em;
+    color:var(--white);
+    font-variant-numeric:tabular-nums;
+  }
+  .tile.hero .tile-v{font-size:clamp(2.2rem,6.6vw,3.4rem);color:var(--accent);}
+  .tile.hero .tile-k{color:var(--accent-deep);}
+  .tile-s{font-size:11.5px;color:var(--muted-deep);margin-top:11px;line-height:1.6;}
+  .tile.hero .tile-s{color:var(--muted);font-size:12.5px;}
+
+  /* ---------- callouts ---------- */
+
+  .call{border:1px solid var(--warn-border);background:var(--warn-bg);padding:15px 17px;margin:22px 0;}
+  .call.stop{border-color:var(--alert-border);background:var(--alert-bg);}
+  .call-t{
+    font-size:10.5px;
+    font-weight:700;
+    letter-spacing:.16em;
+    text-transform:uppercase;
+    color:var(--warn);
+    margin-bottom:9px;
+  }
+  .call.stop .call-t{color:var(--alert);}
+  .call p{color:var(--ink);margin-bottom:0;font-size:13px;}
+  .call code{background:#0000;border-color:var(--warn-border);color:var(--warn);}
+  .call.stop code{border-color:var(--alert-border);color:var(--alert);}
+  .ico-sq{display:inline-block;width:8px;height:8px;background:currentColor;margin-right:2px;vertical-align:middle;position:relative;top:-1px;}
+
+  /* ---------- trap block ---------- */
+
+  .trap{display:grid;grid-template-columns:1fr;gap:26px;}
+  @media (min-width:920px){ .trap{grid-template-columns:1.02fr .98fr;gap:40px;} }
+
+  .facts{list-style:none;margin:0 0 18px;padding:0;border-top:1px solid var(--border-soft);}
+  .facts li{
+    display:grid;
+    grid-template-columns:auto 1fr;
+    gap:14px;
+    padding:10px 0;
+    border-bottom:1px solid var(--border-soft);
+    align-items:baseline;
+  }
+  .facts .n{
+    font-size:15.5px;
+    font-weight:700;
+    color:var(--accent);
+    font-variant-numeric:tabular-nums;
+    min-width:3.4em;
+    letter-spacing:-.02em;
+  }
+  .facts .t{color:var(--ink);font-size:12.8px;line-height:1.6;}
+
+  .verdict{border:1px solid var(--accent-deep);background:var(--surface);padding:17px 19px;}
+  .verdict .call-t{color:var(--accent);}
+  .verdict .v-line{
+    font-size:clamp(1rem,2.5vw,1.22rem);
+    font-weight:700;
+    color:var(--white);
+    line-height:1.45;
+    margin-bottom:10px;
+    letter-spacing:-.02em;
+  }
+  .verdict .v-line s{color:var(--muted-deep);text-decoration-color:var(--alert);}
+  .verdict p{font-size:12.8px;color:var(--muted);margin-bottom:0;}
+
+  .ids{
+    font-size:11.5px;
+    color:var(--muted);
+    background:var(--surface-2);
+    border:1px solid var(--border-soft);
+    padding:12px 14px;
+    line-height:1.9;
+    overflow-x:auto;
+    white-space:nowrap;
+  }
+
+  /* ---------- charts ---------- */
+
+  .figs{display:grid;gap:clamp(28px,5vw,42px);}
+  .fig{border-top:1px solid var(--rule);padding-top:20px;}
+  .fig-t{font-size:14px;font-weight:700;color:var(--white);margin:0 0 5px;letter-spacing:-.01em;}
+  .fig-d{font-size:13px;color:var(--muted);margin:0 0 20px;max-width:78ch;line-height:1.7;}
+  .fig-d b{color:var(--white);}
+
+  .bars{display:grid;gap:8px;}
+  .bar-head,.bar-row{
+    display:grid;
+    grid-template-columns:minmax(86px,150px) 1fr auto auto;
+    gap:10px;
+    align-items:center;
+    font-size:12.5px;
+    font-variant-numeric:tabular-nums;
+  }
+  .bar-head{
+    font-size:10px;
+    font-weight:700;
+    letter-spacing:.14em;
+    color:var(--muted-deep);
+    text-transform:uppercase;
+    padding-bottom:8px;
+    border-bottom:1px solid var(--rule);
+    margin-bottom:4px;
+  }
+  .bar-head span:nth-child(3),.bar-head span:nth-child(4){text-align:right;}
+  .bar-lab{color:var(--ink);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+  .bar-row.dim .bar-lab{color:var(--muted-deep);}
+  .bar-track{position:relative;height:16px;background:var(--surface-2);border:1px solid var(--border-soft);}
+  .bar-fill{height:100%;background:var(--accent-mid);transition:background .12s ease;}
+  .bar-row.dim .bar-fill{background:var(--muted-deep);}
+  .bar-row:hover .bar-fill{background:var(--accent);}
+  .bar-row.dim:hover .bar-fill{background:var(--muted);}
+  .bar-ref{position:absolute;top:-4px;bottom:-4px;width:0;border-left:1px dashed var(--muted);}
+  .bar-val{color:var(--white);font-weight:700;min-width:5.4em;text-align:right;}
+  .bar-row.dim .bar-val{color:var(--muted);font-weight:400;}
+  .bar-n{color:var(--muted-deep);min-width:6.6em;text-align:right;font-size:11.5px;}
+  .bar-legend{font-size:11px;color:var(--muted);margin-top:14px;display:flex;gap:18px;flex-wrap:wrap;align-items:center;}
+  .swatch{display:inline-block;width:20px;height:0;border-top:1px dashed var(--muted);vertical-align:middle;margin-right:6px;}
+  .swatch.solid{height:9px;width:14px;border:none;background:var(--accent-mid);}
+  .swatch.grey{height:9px;width:14px;border:none;background:var(--muted-deep);}
+  .swatch.amber{height:9px;width:14px;border:none;background:var(--warn);}
+
+  .svg-scroll{overflow-x:auto;}
+  .svg-scroll svg{display:block;min-width:600px;width:100%;height:auto;}
+
+  .heat-scroll{overflow-x:auto;}
+  .heat{display:grid;grid-template-columns:auto repeat(3,minmax(110px,1fr));gap:2px;min-width:520px;}
+  .heat .hh{
+    font-size:10px;
+    font-weight:700;
+    letter-spacing:.13em;
+    text-transform:uppercase;
+    color:var(--muted-deep);
+    padding:6px 8px;
+    align-self:end;
+  }
+  .heat .rh{
+    font-size:12.5px;
+    color:var(--ink);
+    padding:0 14px 0 0;
+    display:flex;
+    align-items:center;
+    justify-content:flex-end;
+    text-align:right;
+  }
+  .cell{
+    padding:13px 12px;
+    display:flex;
+    flex-direction:column;
+    gap:3px;
+    min-height:72px;
+    justify-content:center;
+    font-variant-numeric:tabular-nums;
+    border:1px solid #0D111700;
+  }
+  .cell .cv{font-size:16.5px;font-weight:700;letter-spacing:-.03em;}
+  .cell .cn{font-size:10.5px;opacity:.75;}
+  .cell.s1{background:var(--r1);color:var(--ink);}
+  .cell.s2{background:var(--r2);color:var(--ink);}
+  .cell.s3{background:var(--r3);color:var(--white);}
+  .cell.s4{background:var(--r4);color:var(--white);}
+  .cell.s6{background:var(--r6);color:#06180C;}
+  .cell.na{background:var(--surface-2);color:var(--muted-deep);border:1px dashed var(--rule);}
+  .ramp-key{display:flex;align-items:center;gap:8px;font-size:11px;color:var(--muted);margin-top:14px;flex-wrap:wrap;}
+  .ramp-key .r{display:flex;}
+  .ramp-key .r i{width:24px;height:10px;display:block;}
+
+  /* ---------- tables ---------- */
+
+  .table-scroll{overflow-x:auto;border:1px solid var(--border-soft);}
+  table{border-collapse:collapse;width:100%;min-width:760px;font-size:12.8px;}
+  th,td{text-align:left;padding:13px 15px;vertical-align:top;border-bottom:1px solid var(--border-soft);}
+  th{
+    font-size:10.5px;
+    font-weight:700;
+    letter-spacing:.14em;
+    text-transform:uppercase;
+    color:var(--accent-deep);
+    background:var(--surface-3);
+    border-bottom:1px solid var(--border-soft);
+    white-space:nowrap;
+  }
+  th + th,td + td{border-left:1px solid var(--border-soft);}
+  tbody tr:last-child td{border-bottom:none;}
+  tbody tr:hover{background:var(--surface-2);}
+  td.issue{font-size:12.5px;color:var(--white);width:18%;font-weight:500;}
+  td.issue span{color:var(--muted-deep);font-size:11px;font-weight:400;}
+  td.took{color:var(--ink);width:24%;line-height:1.65;}
+  td.rej{color:var(--muted);width:19%;line-height:1.65;}
+  td.rej s{text-decoration-color:var(--alert);}
+  td.why{color:var(--muted);width:39%;line-height:1.68;}
+
+  /* ---------- pipeline ---------- */
+
+  .pipe{display:grid;grid-template-columns:1fr;gap:0;}
+  @media (min-width:900px){ .pipe{grid-template-columns:minmax(0,1fr) 296px;gap:38px;align-items:start;} }
+
+  .flow{display:flex;flex-direction:column;}
+  .node{
+    border:1px solid var(--border-soft);
+    background:var(--surface-2);
+    padding:12px 15px;
+    display:grid;
+    grid-template-columns:1fr auto;
+    gap:5px 16px;
+    align-items:center;
+  }
+  .node .nl{font-size:13px;color:var(--white);font-weight:700;letter-spacing:-.01em;}
+  .node .nd{font-size:11.8px;color:var(--muted);grid-column:1/-1;line-height:1.65;}
+  .node .nt{font-size:10px;letter-spacing:.13em;text-transform:uppercase;color:var(--muted-deep);white-space:nowrap;}
+  .node.key{border-color:var(--accent-deep);background:var(--surface);}
+  .node.key .nl{color:var(--accent);}
+  .node.key .nt{color:var(--accent-deep);}
+  .node.pending{border-style:dashed;border-color:var(--rule);}
+  .node.pending .nl{color:var(--muted);font-weight:500;}
+  .conn{height:19px;position:relative;}
+  .conn::before{content:"";position:absolute;left:24px;top:0;bottom:0;width:1px;background:var(--accent-deep);}
+  .conn::after{
+    content:"";position:absolute;left:21px;bottom:1px;width:7px;height:7px;
+    border-right:1px solid var(--accent-deep);border-bottom:1px solid var(--accent-deep);
+    transform:rotate(45deg);
+  }
+  .branch{border:1px dashed var(--alert-border);background:var(--alert-bg);padding:13px 15px;margin-top:14px;}
+  .branch .nl{font-size:12.5px;color:var(--alert);font-weight:700;margin-bottom:6px;letter-spacing:.02em;}
+  .branch .nd{font-size:11.8px;color:var(--muted);line-height:1.65;}
+
+  .aside-card{border:1px solid var(--border-soft);background:var(--surface-2);padding:16px 17px;}
+  @media (max-width:899px){ .aside-card{margin-top:26px;} }
+  .kv{display:grid;gap:8px;font-size:11.8px;font-variant-numeric:tabular-nums;}
+  .kv div{display:flex;justify-content:space-between;gap:12px;border-bottom:1px solid var(--border-soft);padding-bottom:7px;}
+  .kv div:last-child{border-bottom:none;padding-bottom:0;}
+  .kv span:first-child{color:var(--muted);}
+  .kv span:last-child{color:var(--white);text-align:right;}
+
+  /* ---------- next ---------- */
+
+  .target{
+    display:flex;
+    gap:clamp(20px,5vw,52px);
+    flex-wrap:wrap;
+    border:1px solid var(--accent-deep);
+    background:var(--surface);
+    padding:19px 21px;
+    margin-bottom:22px;
+  }
+  .target-item .tk{font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--accent-deep);margin-bottom:8px;}
+  .target-item .tv{font-size:clamp(1.25rem,3.2vw,1.6rem);font-weight:700;color:var(--white);letter-spacing:-.035em;font-variant-numeric:tabular-nums;}
+  .target-item .ts{font-size:10.8px;color:var(--muted-deep);margin-top:6px;}
+
+  .next-grid{display:grid;grid-template-columns:1fr;gap:18px;}
+  @media (min-width:840px){ .next-grid{grid-template-columns:1fr 1fr;} }
+  .card{border:1px solid var(--border-soft);background:var(--surface-2);padding:17px 19px;}
+  .card ul{margin:0;padding-left:1.15em;color:var(--muted);font-size:12.8px;line-height:1.72;}
+  .card li{margin-bottom:11px;}
+  .card li:last-child{margin-bottom:0;}
+  .card li::marker{color:var(--accent-deep);}
+
+  footer{
+    margin-top:clamp(50px,7.5vw,80px);
+    border-top:1px solid var(--rule);
+    padding-top:20px;
+    font-size:11px;
+    color:var(--muted-deep);
+    display:flex;
+    justify-content:space-between;
+    gap:16px;
+    flex-wrap:wrap;
+    line-height:1.7;
+  }
+
+  /* ---------- step nav ---------- */
+
+  .stepnav{
+    position:sticky;top:0;z-index:50;
+    background:rgba(13,17,23,.94);
+    -webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);
+    border-bottom:1px solid var(--rule);
+  }
+  .stepnav-in{
+    max-width:1060px;margin:0 auto;
+    padding:0 clamp(16px,4vw,40px);
+    display:flex;gap:2px;overflow-x:auto;
+  }
+  .stepnav a{
+    display:flex;align-items:center;gap:7px;
+    padding:12px 13px;
+    font-size:10.5px;font-weight:700;letter-spacing:.1em;
+    color:var(--muted);border:none;border-bottom:2px solid transparent;
+    white-space:nowrap;text-transform:uppercase;
+  }
+  .stepnav a:hover{color:var(--ink);border-bottom-color:var(--accent-deep);}
+  .stepnav a.on{color:var(--accent);border-bottom-color:var(--accent);}
+  .stepnav .sn-n{color:var(--accent-deep);font-weight:700;}
+  .stepnav .sn-s{font-size:9px;opacity:.7;}
+
+  /* ---------- chapters ---------- */
+
+  .chapter{margin-top:clamp(60px,8.5vw,96px);scroll-margin-top:54px;}
+  section{scroll-margin-top:54px;}
+  .chapter-head{
+    display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;
+    border-top:2px solid var(--border-soft);
+    padding-top:20px;margin-bottom:6px;
+  }
+  .chapter-n{font-size:11px;font-weight:700;letter-spacing:.2em;color:var(--accent-deep);white-space:nowrap;}
+  .chapter-title{
+    font-family:var(--mono);font-weight:700;
+    font-size:clamp(1.3rem,3.3vw,1.85rem);
+    color:var(--white);letter-spacing:-.025em;
+    text-transform:uppercase;margin:0;
+  }
+  .chapter-meta{margin-left:auto;display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
+  .chapter-budget{font-size:10.5px;color:var(--muted-deep);letter-spacing:.03em;white-space:nowrap;}
+  .chapter-sub{font-size:12.8px;color:var(--muted);margin:12px 0 0;max-width:78ch;line-height:1.7;}
+  .chapter-sub b{color:var(--white);}
+
+  .badge{
+    font-size:10.5px;font-weight:700;letter-spacing:.13em;text-transform:uppercase;
+    padding:5px 11px;border:1px solid;border-radius:3px;white-space:nowrap;line-height:1.4;
+  }
+  .badge.done{color:var(--accent);border-color:var(--accent-deep);background:var(--surface);}
+  .badge.progress{color:var(--warn);border-color:var(--warn-border);background:var(--warn-bg);}
+  .badge.pending{color:var(--muted-deep);border-color:var(--rule);background:var(--surface-2);}
+
+  .track a.step{text-decoration:none;color:inherit;}
+  .track a.step:hover{background:var(--surface);}
+
+  /* ---------- model cards ---------- */
+
+  .leaderboard{margin-bottom:clamp(36px,5vw,52px);}
+
+  .model-grid{display:grid;grid-template-columns:1fr;gap:26px;}
+
+  .model-card{border:1px solid var(--border-soft);background:var(--surface-2);padding:22px 24px;}
+  .model-card.pending{border-style:dashed;border-color:var(--rule);}
+
+  .mc-head{display:flex;flex-wrap:wrap;align-items:baseline;gap:8px 14px;margin-bottom:4px;}
+  .mc-name{font-size:15.5px;font-weight:700;color:var(--white);letter-spacing:-.01em;}
+  .model-card.pending .mc-name{color:var(--muted);}
+  .mc-brief{font-size:10.5px;color:var(--accent-deep);text-transform:uppercase;letter-spacing:.1em;}
+  .model-card.pending .mc-brief{color:var(--muted-deep);}
+  .model-card.pending .mstat .mv{color:var(--muted-deep);}
+  .model-card.pending .mstat .mk{color:var(--muted-deep);}
+  .mc-status{margin-left:auto;}
+  .mc-desc{font-size:12.5px;color:var(--muted);margin:10px 0 20px;max-width:76ch;line-height:1.75;}
+
+  .mstats{
+    display:grid;grid-template-columns:repeat(5,1fr);gap:1px;
+    background:var(--border-soft);border:1px solid var(--border-soft);
+    margin-bottom:24px;
+  }
+  .mstat{background:var(--surface);padding:12px 13px;}
+  .mstat .mk{font-size:9px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--muted);margin-bottom:7px;line-height:1.4;}
+  .mstat .mv{font-size:clamp(1rem,2vw,1.26rem);font-weight:700;color:var(--accent);letter-spacing:-.03em;font-variant-numeric:tabular-nums;}
+  .mstat .mv em{font-style:normal;font-size:.56em;color:var(--muted-deep);font-weight:500;}
+  @media (max-width:760px){ .mstats{grid-template-columns:repeat(2,1fr);} }
+
+  .mc-sub{font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin:0 0 12px;}
+  .mc-block{margin-bottom:26px;}
+  .mc-block:last-child{margin-bottom:0;}
+  .mc-cols{display:grid;grid-template-columns:1fr;gap:26px;}
+  @media (min-width:820px){ .mc-cols{grid-template-columns:1fr 1fr;} }
+
+  /* confusion matrix */
+  .cm-wrap{display:flex;flex-wrap:wrap;gap:20px 28px;align-items:flex-start;}
+  .cm{display:grid;grid-template-columns:auto repeat(2,84px);gap:2px;}
+  .cm .ch{font-size:9px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--muted-deep);padding:0 6px 6px;align-self:end;text-align:center;}
+  .cm .rh{font-size:9.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--muted-deep);padding-right:8px;display:flex;align-items:center;justify-content:flex-end;text-align:right;max-width:64px;}
+  .cm .cc{padding:10px 8px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;min-height:62px;font-variant-numeric:tabular-nums;}
+  .cm .cc .cv2{font-size:17px;font-weight:700;letter-spacing:-.02em;}
+  .cm .cc .cl{font-size:8.5px;letter-spacing:.08em;text-transform:uppercase;opacity:.85;}
+  .cm-key{font-size:11px;color:var(--muted);line-height:1.9;}
+  .cm-key b{color:var(--white);}
+
+  /* diverging driver bars */
+  .drv-rows{display:grid;gap:7px;}
+  .drv-row{display:grid;grid-template-columns:minmax(118px,192px) 1fr 60px;gap:10px;align-items:center;font-size:11.8px;}
+  .drv-lab{color:var(--ink);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+  .drv-track{position:relative;height:14px;background:var(--surface-2);border:1px solid var(--border-soft);}
+  .drv-zero{position:absolute;left:50%;top:-3px;bottom:-3px;width:1px;background:var(--muted-deep);}
+  .drv-fill{position:absolute;top:1px;bottom:1px;}
+  .drv-fill.pos{left:50%;background:var(--warn);}
+  .drv-fill.neg{right:50%;background:var(--accent-mid);}
+  .drv-val{text-align:right;font-variant-numeric:tabular-nums;color:var(--white);font-weight:700;font-size:11px;}
+  .drv-legend{font-size:11px;color:var(--muted);margin-top:14px;display:flex;gap:18px;flex-wrap:wrap;align-items:center;}
+
+  /* pending card body */
+  .pending-body{
+    border:1px dashed var(--rule);background:var(--surface-2);
+    padding:16px 18px;color:var(--muted-deep);font-size:12.3px;line-height:1.8;
+  }
+  .pending-body .pb-t{font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:8px;}
+  .pending-body code{color:var(--muted-deep);background:var(--surface-3);}
+
+  @media (prefers-reduced-motion:reduce){ *{transition:none !important;animation:none !important;} }
+</style>
+
+<nav class="stepnav" aria-label="Step navigation">
+  <div class="stepnav-in">
+    <a href="#step1"><span class="sn-n">01</span>EXPLORE<span class="sn-s">DONE</span></a>
+    <a href="#step2"><span class="sn-n">02</span>TREAT DATA<span class="sn-s">DONE</span></a>
+    <a href="#step3"><span class="sn-n">03</span>TRAIN MODELS<span class="sn-s">4/4</span></a>
+    <a href="#step4"><span class="sn-n">04</span>EVALUATE<span class="sn-s">WAIT</span></a>
+    <a href="#step5"><span class="sn-n">05</span>SYNTHESIS<span class="sn-s">WAIT</span></a>
+  </div>
+</nav>
+
+<div class="wrap">
+
+  <!-- ============ HEADER ============ -->
+  <header>
+    <svg class="chevron" viewBox="0 0 87 40" preserveAspectRatio="none" role="img" aria-label="Green terminal stripes forming a downward chevron">
+      <rect x="0" y="0" width="87" height="40" fill="#0D1117"></rect>
+      <g>
+        <rect x="0"  y="0.0"  width="2" height="13" fill="#0D2A17"></rect>
+        <rect x="3"  y="1.3"  width="2" height="13" fill="#0D2A17"></rect>
+        <rect x="6"  y="2.6"  width="2" height="13" fill="#114A24"></rect>
+        <rect x="9"  y="3.9"  width="2" height="13" fill="#114A24"></rect>
+        <rect x="12" y="5.1"  width="2" height="13" fill="#1F6F3F"></rect>
+        <rect x="15" y="6.4"  width="2" height="13" fill="#1F6F3F"></rect>
+        <rect x="18" y="7.7"  width="2" height="13" fill="#146B2D"></rect>
+        <rect x="21" y="9.0"  width="2" height="13" fill="#199437"></rect>
+        <rect x="24" y="10.3" width="2" height="13" fill="#199437"></rect>
+        <rect x="27" y="11.6" width="2" height="13" fill="#00B32E"></rect>
+        <rect x="30" y="12.9" width="2" height="13" fill="#00B32E"></rect>
+        <rect x="33" y="14.1" width="2" height="13" fill="#00C934"></rect>
+        <rect x="36" y="15.4" width="2" height="13" fill="#00C934"></rect>
+        <rect x="39" y="16.7" width="2" height="13" fill="#00FF41"></rect>
+        <rect x="42" y="18.0" width="2" height="13" fill="#00FF41"></rect>
+        <rect x="45" y="16.7" width="2" height="13" fill="#00FF41"></rect>
+        <rect x="48" y="15.4" width="2" height="13" fill="#00C934"></rect>
+        <rect x="51" y="14.1" width="2" height="13" fill="#00C934"></rect>
+        <rect x="54" y="12.9" width="2" height="13" fill="#00B32E"></rect>
+        <rect x="57" y="11.6" width="2" height="13" fill="#00B32E"></rect>
+        <rect x="60" y="10.3" width="2" height="13" fill="#199437"></rect>
+        <rect x="63" y="9.0"  width="2" height="13" fill="#199437"></rect>
+        <rect x="66" y="7.7"  width="2" height="13" fill="#146B2D"></rect>
+        <rect x="69" y="6.4"  width="2" height="13" fill="#1F6F3F"></rect>
+        <rect x="72" y="5.1"  width="2" height="13" fill="#1F6F3F"></rect>
+        <rect x="75" y="3.9"  width="2" height="13" fill="#114A24"></rect>
+        <rect x="78" y="2.6"  width="2" height="13" fill="#114A24"></rect>
+        <rect x="81" y="1.3"  width="2" height="13" fill="#0D2A17"></rect>
+        <rect x="84" y="0.0"  width="2" height="13" fill="#0D2A17"></rect>
+      </g>
+    </svg>
+
+    <div class="masthead">
+      <div>
+        <p class="prompt"><span class="u">michelmisk@vps</span>:<span class="d">~/hackaton-classificacao</span>$ cat ./STATUS</p>
+        <h1>TELCO CHURN<br><span class="g">// RECON</span></h1>
+        <div class="typing">
+          <span>hackathon 1 — desafio de classificação, 90 min, team of three</span>
+          <span>7043 telco customers, one binary target</span>
+          <span><b>step 3 complete — all 4 model agents landed, step 4 (evaluate &amp; compare) not started</b></span>
+          <span>every number below is cited to the report it came from</span>
+        </div>
+        <p style="color:var(--muted);font-size:12.5px;">repo -&gt;
+        <a href="https://github.com/miskmichel/grupo2">github.com/miskmichel/grupo2</a></p>
+      </div>
+      <div class="meta">
+        <div><span class="k">dataset</span><span class="v">Telco Customer Churn — 7043 × 21</span></div>
+        <div><span class="k">target</span><span class="v">Churn (Yes/No) — 26.54% positive</span></div>
+        <div><span class="k">metric</span><span class="v">ROC-AUC primary, F1(Yes) alongside</span></div>
+        <div><span class="k">team</span><span class="v">three — cleaning / linear / ensemble</span></div>
+        <div><span class="k">stack</span><span class="v">pandas 3.0.5 · scikit-learn 1.9.0</span></div>
+        <div><span class="k">updated</span><span class="v">2026-09-01 — steps 1–3 complete, step 4 not started</span></div>
+      </div>
+    </div>
+
+    <div class="pills">
+      <span class="pill"><span class="pk">DATASET</span><span class="ps">//</span><span class="pv">7043 ROWS</span></span>
+      <span class="pill"><span class="pk">TARGET</span><span class="ps">//</span><span class="pv">CHURN</span></span>
+      <span class="pill"><span class="pk">STATUS</span><span class="ps">//</span><span class="pv">STEP 4/5 NEXT</span></span>
+      <span class="pill hot"><span class="pk">BASELINE</span><span class="ps">//</span><span class="pv">73.46%</span></span>
+      <span class="pill hot"><span class="pk">BEST AUC SO FAR</span><span class="ps">//</span><span class="pv">0.8440</span></span>
+      <span class="pill"><span class="pk">MODEL AGENTS</span><span class="ps">//</span><span class="pv">4/4 LANDED</span></span>
+    </div>
+  </header>
+
+  <!-- ============ STATUS_TRACKER ============ -->
+  <section id="status">
+    <div class="sec-head">
+      <h2>STATUS_TRACKER</h2>
+      <span class="sec-note">METHODOLOGY.md · overview</span>
+    </div>
+    <p class="prompt"><span class="u">michelmisk@vps</span>:<span class="d">~/hackaton-classificacao</span>$ head -n 12 METHODOLOGY.md</p>
+    <p class="lede" style="margin-bottom:18px;">Every row below links straight to its step section — jump in, or read top to bottom for the full story.</p>
+
+    <div class="track">
+      <a class="step done" href="#step1">
+        <div class="step-n">STEP_1</div>
+        <div class="step-name">EXPLORE</div>
+        <div class="chip ok">complete</div>
+        <div class="step-budget">budget 10 min<br>docs/step-01-eda.md</div>
+      </a>
+      <a class="step done" href="#step2">
+        <div class="step-n">STEP_2</div>
+        <div class="step-name">TREAT DATA</div>
+        <div class="chip ok">complete</div>
+        <div class="step-budget">budget 20–25 min<br>src/data_prep.py</div>
+      </a>
+      <a class="step done" href="#step3">
+        <div class="step-n">STEP_3</div>
+        <div class="step-name">TRAIN >=2 MODELS</div>
+        <div class="chip ok">complete</div>
+        <div class="step-budget">budget 30–35 min<br>4/4 agents landed</div>
+      </a>
+      <a class="step now" href="#step4">
+        <div class="step-n">STEP_4</div>
+        <div class="step-name">EVALUATE &amp; COMPARE</div>
+        <div class="chip next">next up</div>
+        <div class="step-budget">budget 15 min</div>
+      </a>
+      <a class="step todo" href="#step5">
+        <div class="step-n">STEP_5</div>
+        <div class="step-name">SYNTHESIS CELL</div>
+        <div class="chip wait">not started</div>
+        <div class="step-budget">budget 10 min</div>
+      </a>
+    </div>
+
+    <div class="meter">
+      <div class="meter-bars">
+        <span class="meter-seg on"></span><span class="meter-seg on"></span><span class="meter-seg on"></span>
+        <span class="meter-seg"></span><span class="meter-seg"></span>
+      </div>
+      <span class="meter-label">3 / 5 complete — all four Step 3 model agents have landed; Step 4's evaluation and comparison has not started</span>
+    </div>
+  </section>
+
+  <!-- ============ CHAPTER: STEP 1 — EXPLORE ============ -->
+  <div class="chapter" id="step1">
+    <div class="chapter-head">
+      <span class="chapter-n">STEP 1 / 5</span>
+      <h2 class="chapter-title">Explore</h2>
+      <div class="chapter-meta">
+        <span class="chapter-budget">budget 10 min</span>
+        <span class="badge done">complete</span>
+      </div>
+    </div>
+    <p class="chapter-sub">EDA on all 7043 rows before touching anything: profile every column, find the disguised
+    missing values, and measure which categoricals actually carry signal. Everything cited below traces to
+    <code>docs/step-01-eda.md</code>. <b>This chapter stands alone</b> — the trap, the class balance and the
+    Cramér's V ranking are all findings from this step, used by every step after it.</p>
+
+  <!-- ============ BASELINE_METRICS ============ -->
+  <section id="numbers">
+    <div class="sec-head">
+      <h2>BASELINE_METRICS</h2>
+      <span class="sec-note">step-01-eda.md §5 · step-02 §6</span>
+    </div>
+    <p class="prompt"><span class="u">michelmisk@vps</span>:<span class="d">~/hackaton-classificacao</span>$ python3 -c <span class="c">"print(df.Churn.value_counts(normalize=True))"</span></p>
+
+    <p class="lede">One figure decides how this project gets scored. The class balance is
+    2.77 : 1, so a model that answers “No” for every customer is already right three quarters
+    of the time — and catches <b>zero</b> churners.</p>
+
+    <div class="stats">
+      <div class="tile hero">
+        <div class="tile-k">ALL-“NO” BASELINE ACCURACY</div>
+        <div class="tile-v">73.46%</div>
+        <div class="tile-s">The score of a constant predictor, with 0% recall on the class the
+        business cares about. Any accuracy claim has to clear this bar — which is exactly why
+        accuracy is not our headline metric.</div>
+      </div>
+      <div class="tile wide">
+        <div class="tile-k">CHURN RATE (YES)</div>
+        <div class="tile-v">26.54%</div>
+        <div class="tile-s">1869 Yes / 5174 No · ratio 2.77 : 1<br>The base rate every segment below is measured against.</div>
+      </div>
+      <div class="tile">
+        <div class="tile-k">ROWS</div>
+        <div class="tile-v">7043</div>
+        <div class="tile-s">One row per customer.<br>A static snapshot — no event log.</div>
+      </div>
+      <div class="tile">
+        <div class="tile-k">COLUMNS AFTER CLEAN()</div>
+        <div class="tile-v">21 -> 18</div>
+        <div class="tile-s">Dropped: customerID, gender, PhoneService.<br>Rows preserved: 7043 -> 7043.</div>
+      </div>
+      <div class="tile">
+        <div class="tile-k">ENCODED FEATURES</div>
+        <div class="tile-v">21 / 21</div>
+        <div class="tile-s">Full column rank.<br>Max off-diagonal |r| = 0.8297.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ THE_PLANTED_TRAP ============ -->
+  <section id="trap">
+    <div class="sec-head">
+      <h2>THE_PLANTED_TRAP</h2>
+      <span class="sec-note">step-01-eda.md §4.1</span>
+    </div>
+    <p class="prompt"><span class="u">michelmisk@vps</span>:<span class="d">~/hackaton-classificacao</span>$ grep -c <span class="c">"^' '$"</span> &lt;(cut -d, -f21 Telco-Customer-Churn.csv)</p>
+
+    <p class="lede">The assignment warns that <code>TotalCharges</code> “has text type, not numeric —
+    there is a reason for this. Investigate before converting.” The reason turned out to be
+    sharper than generic dirty data.</p>
+
+    <div class="trap">
+      <div>
+        <ul class="facts">
+          <li><span class="n">11</span><span class="t">values are a literal single space <code>' '</code> — not an empty string, which is exactly why the column reads as text</span></li>
+          <li><span class="n">0</span><span class="t">of them are caught by <code>.isnull()</code> on read</span></li>
+          <li><span class="n">11/11</span><span class="t">have <b>tenure == 0</b> — and they are the <em>only</em> 11 rows in the whole dataset with zero tenure</span></li>
+          <li><span class="n">11/11</span><span class="t">have <b>Churn == 'No'</b> — zero churners among them</span></li>
+          <li><span class="n">10+1</span><span class="t">contracts: ten Two year, one One year. MonthlyCharges spans 19.70–80.85</span></li>
+        </ul>
+
+        <div class="verdict">
+          <div class="call-t">THE DIAGNOSIS</div>
+          <div class="v-line">impute <span style="color:var(--accent)">0</span>, not the median <s>1397.47</s></div>
+          <p>They are brand-new customers who have never been billed. Assigning them the median
+          lifetime spend of a ~29-month customer invents about 1400 currency units of history and
+          breaks the near-deterministic <code>TotalCharges ~= tenure × MonthlyCharges</code>
+          relation (R² = 0.9991) for exactly those rows. Dropping them is defensible at 0.16% of
+          the data, but silently deletes 11 non-churners in one direction.</p>
+        </div>
+      </div>
+
+      <div>
+        <pre><code><span class="cm"># the naive route</span>
+&gt;&gt;&gt; df['TotalCharges'].astype(float)
+<span class="r">ValueError: could not convert string
+to float: ' '</span>
+
+<span class="cm"># what we do instead</span>
+df['TotalCharges'] = <span class="g">pd.to_numeric</span>(
+    df['TotalCharges'], errors='coerce'
+).<span class="g">fillna(0)</span>
+
+<span class="cm"># verified after clean()</span>
+dtype                    : float64
+nulls                    : 0
+values at the 11 rows    : [0.0]
+count of TotalCharges==0 : 11
+mean  2283.3004 -&gt; <span class="g">2279.7343</span></code></pre>
+
+        <div class="call">
+          <div class="call-t">[!] PANDAS 3.0 GOTCHA</div>
+          <p>Under the pinned <b>pandas 3.0.5</b>, this column's dtype is <code>str</code>, not
+          <code>object</code> — pandas 3.0 promotes the dedicated string dtype to the default.
+          Every consequence above is unchanged, but a guard written as
+          <code>dtype == 'object'</code> <b>silently never fires</b>. Dispatch on
+          <code>not is_numeric_dtype(...)</code> instead, as <code>src/data_prep.py</code> does.
+          Essentially every published tutorial for this dataset predates pandas 3 and says
+          <code>object</code>.</p>
+        </div>
+
+        <div class="ids">4472-LVYGI  3115-CZMZD  5709-LVOEQ  4367-NUYAO<br>1371-DWPAZ  7644-OMVMY  3213-VVOLG  2520-SGTTA<br>2923-ARZLG  4075-WKNIU  2775-SEFEE</div>
+        <p class="src">the 11 customerIDs, recorded so predictions stay joinable — step-01-eda.md §4.1</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ SIGNAL_SCAN ============ -->
+  <section id="signal">
+    <div class="sec-head">
+      <h2>SIGNAL_SCAN</h2>
+      <span class="sec-note">step-01-eda.md §6</span>
+    </div>
+    <p class="prompt"><span class="u">michelmisk@vps</span>:<span class="d">~/hackaton-classificacao</span>$ sed -n <span class="c">'/## 6. What predicts churn/,/## 7/p'</span> docs/step-01-eda.md</p>
+
+    <p class="lede">Base rate <b>26.54%</b>. Every chart below carries segment sizes next to the
+    rates, so small-sample noise stays visible.</p>
+
+    <div class="figs">
+
+      <!-- FIG 1 — Contract -->
+      <figure class="fig" style="margin:0;">
+        <figcaption>
+          <p class="fig-t">Contract is the widest single split — 39.88 pp</p>
+          <p class="fig-d">Churn rate by contract type against the 26.54% base rate. The spread runs
+          from <b>42.71%</b> month-to-month down to <b>2.83%</b> on two-year contracts, a 0.11× lift.
+          The single highest-churn segment in the dataset is adjacent rather than here:
+          <code>PaymentMethod = Electronic check</code> at 45.29% (n=2365).</p>
+        </figcaption>
+        <div class="bars">
+          <div class="bar-head"><span>CONTRACT</span><span>CHURN_RATE</span><span>RATE</span><span>N</span></div>
+          <div class="bar-row" title="Month-to-month — 42.71% churn, n=3875">
+            <span class="bar-lab">Month-to-month</span>
+            <span class="bar-track"><span class="bar-fill" style="width:71.2%"></span><span class="bar-ref" style="left:44.23%"></span></span>
+            <span class="bar-val">42.71%</span><span class="bar-n">n=3875</span>
+          </div>
+          <div class="bar-row" title="One year — 11.27% churn, n=1473">
+            <span class="bar-lab">One year</span>
+            <span class="bar-track"><span class="bar-fill" style="width:18.8%"></span><span class="bar-ref" style="left:44.23%"></span></span>
+            <span class="bar-val">11.27%</span><span class="bar-n">n=1473</span>
+          </div>
+          <div class="bar-row" title="Two year — 2.83% churn, n=1695">
+            <span class="bar-lab">Two year</span>
+            <span class="bar-track"><span class="bar-fill" style="width:4.7%"></span><span class="bar-ref" style="left:44.23%"></span></span>
+            <span class="bar-val">2.83%</span><span class="bar-n">n=1695</span>
+          </div>
+        </div>
+        <div class="bar-legend">
+          <span><i class="swatch solid"></i>churn rate</span>
+          <span><i class="swatch"></i>26.54% base rate</span>
+          <span>scale 0–60%</span>
+        </div>
+        <p class="src">step-01-eda.md §6.3</p>
+      </figure>
+
+      <!-- FIG 2 — tenure -->
+      <figure class="fig" style="margin:0;">
+        <figcaption>
+          <p class="fig-t">Tenure decays cleanly and monotonically</p>
+          <p class="fig-d">Churn by tenure bucket. New customers churn at <b>56.80%</b> inside their
+          first three months; customers past five years churn at <b>6.61%</b>. Tenure is the
+          strongest numeric predictor by a wide margin — point-biserial r = -0.352, univariate
+          AUC 0.740.</p>
+        </figcaption>
+        <div class="svg-scroll">
+          <svg viewBox="0 0 720 300" role="img" aria-label="Line chart of churn rate by tenure bucket, falling from 56.80 percent at 1 to 3 months to 6.61 percent at 61 to 72 months">
+            <rect x="0" y="0" width="720" height="300" fill="#0D1117"></rect>
+            <line x1="56" y1="240" x2="700" y2="240" stroke="#1F6F3F" stroke-width="1"></line>
+            <line x1="56" y1="166.67" x2="700" y2="166.67" stroke="#1B2A22" stroke-width="1"></line>
+            <line x1="56" y1="93.33" x2="700" y2="93.33" stroke="#1B2A22" stroke-width="1"></line>
+            <line x1="56" y1="20" x2="700" y2="20" stroke="#1B2A22" stroke-width="1"></line>
+            <g font-family="JetBrains Mono, monospace" font-size="11" fill="#54705F" text-anchor="end">
+              <text x="48" y="244">0%</text><text x="48" y="170.67">20%</text>
+              <text x="48" y="97.33">40%</text><text x="48" y="24">60%</text>
+            </g>
+            <line x1="56" y1="142.69" x2="700" y2="142.69" stroke="#8AA394" stroke-width="1" stroke-dasharray="4 4"></line>
+            <text x="700" y="136" text-anchor="end" fill="#8AA394" font-family="JetBrains Mono, monospace" font-size="10.5">base rate 26.54%</text>
+            <path d="M56,31.73 L148,76.36 L240,108.40 L332,134.73 L424,160.69 L516,170.22 L608,187.13 L700,215.76 L700,240 L56,240 Z" fill="#00FF41" fill-opacity="0.10"></path>
+            <path d="M56,31.73 L148,76.36 L240,108.40 L332,134.73 L424,160.69 L516,170.22 L608,187.13 L700,215.76" fill="none" stroke="#00C934" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"></path>
+            <g>
+              <circle cx="56"  cy="31.73"  r="4" fill="#00FF41" stroke="#0D1117" stroke-width="2"><title>1–3 months · 56.80% · n=1051</title></circle>
+              <circle cx="148" cy="76.36"  r="4" fill="#00C934" stroke="#0D1117" stroke-width="2"><title>4–6 months · 44.63% · n=419</title></circle>
+              <circle cx="240" cy="108.40" r="4" fill="#00C934" stroke="#0D1117" stroke-width="2"><title>7–12 months · 35.89% · n=705</title></circle>
+              <circle cx="332" cy="134.73" r="4" fill="#00C934" stroke="#0D1117" stroke-width="2"><title>13–24 months · 28.71% · n=1024</title></circle>
+              <circle cx="424" cy="160.69" r="4" fill="#00C934" stroke="#0D1117" stroke-width="2"><title>25–36 months · 21.63% · n=832</title></circle>
+              <circle cx="516" cy="170.22" r="4" fill="#00C934" stroke="#0D1117" stroke-width="2"><title>37–48 months · 19.03% · n=762</title></circle>
+              <circle cx="608" cy="187.13" r="4" fill="#00C934" stroke="#0D1117" stroke-width="2"><title>49–60 months · 14.42% · n=832</title></circle>
+              <circle cx="700" cy="215.76" r="4" fill="#00FF41" stroke="#0D1117" stroke-width="2"><title>61–72 months · 6.61% · n=1407</title></circle>
+            </g>
+            <text x="64" y="26" fill="#00FF41" font-family="JetBrains Mono, monospace" font-size="12" font-weight="700">56.80%</text>
+            <text x="700" y="205" text-anchor="end" fill="#00FF41" font-family="JetBrains Mono, monospace" font-size="12" font-weight="700">6.61%</text>
+            <g font-family="JetBrains Mono, monospace" font-size="11" fill="#D9E4DC" text-anchor="middle">
+              <text x="56" y="262">1–3</text><text x="148" y="262">4–6</text><text x="240" y="262">7–12</text>
+              <text x="332" y="262">13–24</text><text x="424" y="262">25–36</text><text x="516" y="262">37–48</text>
+              <text x="608" y="262">49–60</text><text x="700" y="262">61–72</text>
+            </g>
+            <g font-family="JetBrains Mono, monospace" font-size="10" fill="#54705F" text-anchor="middle">
+              <text x="56" y="280">n=1051</text><text x="148" y="280">n=419</text><text x="240" y="280">n=705</text>
+              <text x="332" y="280">n=1024</text><text x="424" y="280">n=832</text><text x="516" y="280">n=762</text>
+              <text x="608" y="280">n=832</text><text x="700" y="280">n=1407</text>
+            </g>
+            <text x="56" y="296" text-anchor="start" fill="#54705F" font-family="JetBrains Mono, monospace" font-size="10">tenure, months</text>
+          </svg>
+        </div>
+        <p class="src">step-01-eda.md §6.4 — the 11 tenure-0 rows (0.00%, n=11) are excluded; they are the trap rows above</p>
+      </figure>
+
+      <!-- FIG 3 — heatmap -->
+      <figure class="fig" style="margin:0;">
+        <figcaption>
+          <p class="fig-t">Contract × InternetService — a 70× spread</p>
+          <p class="fig-d">The interaction is far stronger than either column alone: month-to-month
+          fiber customers churn at <b>54.61%</b> (n=2128), two-year customers with no internet at
+          <b>0.78%</b> (n=638). Trees and ensembles find this natively; logistic regression needs
+          the interaction term written out by hand.</p>
+        </figcaption>
+        <div class="heat-scroll">
+          <div class="heat">
+            <div class="hh"></div>
+            <div class="hh">FIBER OPTIC</div>
+            <div class="hh">DSL</div>
+            <div class="hh">NO INTERNET</div>
+
+            <div class="rh">Month-to-month</div>
+            <div class="cell s6" title="Month-to-month / Fiber optic — 54.61%, n=2128"><span class="cv">54.61%</span><span class="cn">n=2128</span></div>
+            <div class="cell s4" title="Month-to-month / DSL — 32.22%, n=1223"><span class="cv">32.22%</span><span class="cn">n=1223</span></div>
+            <div class="cell s3" title="Month-to-month / No internet — 18.89%, n=524"><span class="cv">18.89%</span><span class="cn">n=524</span></div>
+
+            <div class="rh">One year</div>
+            <div class="cell s3" title="One year / Fiber optic — 19.29%, n=539"><span class="cv">19.29%</span><span class="cn">n=539</span></div>
+            <div class="cell s2" title="One year / DSL — 9.30%, n=570"><span class="cv">9.30%</span><span class="cn">n=570</span></div>
+            <div class="cell na" title="Not tabulated in the source report"><span class="cv">—</span><span class="cn">not tabulated</span></div>
+
+            <div class="rh">Two year</div>
+            <div class="cell s2" title="Two year / Fiber optic — 7.23%, n=429"><span class="cv">7.23%</span><span class="cn">n=429</span></div>
+            <div class="cell s1" title="Two year / DSL — 1.91%, n=628"><span class="cv">1.91%</span><span class="cn">n=628</span></div>
+            <div class="cell s1" title="Two year / No internet — 0.78%, n=638"><span class="cv">0.78%</span><span class="cn">n=638</span></div>
+          </div>
+        </div>
+        <div class="ramp-key">
+          <span>churn rate</span>
+          <span class="r"><i style="background:var(--r1)"></i><i style="background:var(--r2)"></i><i style="background:var(--r3)"></i><i style="background:var(--r4)"></i><i style="background:var(--r5)"></i><i style="background:var(--r6)"></i></span>
+          <span>0% -> 55%</span>
+          <span style="color:var(--muted-deep)">· One year / No internet is absent from the source table and is not estimated here</span>
+        </div>
+        <p class="src">step-01-eda.md §6.5</p>
+      </figure>
+
+      <!-- FIG 4 — monthly charges -->
+      <figure class="fig" style="margin:0;">
+        <figcaption>
+          <p class="fig-t">MonthlyCharges is non-monotone — and that is the argument for trees</p>
+          <p class="fig-d">Churn climbs with price up to the ninth decile at <b>40.91%</b>, then
+          <b>falls back to 24.68%</b> in the tenth (102.60–118.75). The reason: decile 10 is 40%
+          two-year contracts with a mean of 4.80 add-ons, against decile 9 at 62% month-to-month
+          with 3.20. <b>The most expensive customers are loyal bundlers.</b> A plain logistic
+          regression fits a monotone effect and gets the top decile backwards.</p>
+        </figcaption>
+        <div class="svg-scroll">
+          <svg viewBox="0 0 720 300" role="img" aria-label="Chart of churn rate by MonthlyCharges decile: 8.66 percent at decile 1, 9.38 at decile 2, rising to 40.91 at decile 9, then falling to 24.68 at decile 10">
+            <rect x="0" y="0" width="720" height="300" fill="#0D1117"></rect>
+            <line x1="56" y1="240" x2="700" y2="240" stroke="#1F6F3F" stroke-width="1"></line>
+            <line x1="56" y1="196" x2="700" y2="196" stroke="#1B2A22" stroke-width="1"></line>
+            <line x1="56" y1="152" x2="700" y2="152" stroke="#1B2A22" stroke-width="1"></line>
+            <line x1="56" y1="108" x2="700" y2="108" stroke="#1B2A22" stroke-width="1"></line>
+            <line x1="56" y1="64"  x2="700" y2="64"  stroke="#1B2A22" stroke-width="1"></line>
+            <line x1="56" y1="20"  x2="700" y2="20"  stroke="#1B2A22" stroke-width="1"></line>
+            <g font-family="JetBrains Mono, monospace" font-size="11" fill="#54705F" text-anchor="end">
+              <text x="48" y="244">0%</text><text x="48" y="200">10%</text><text x="48" y="156">20%</text>
+              <text x="48" y="112">30%</text><text x="48" y="68">40%</text><text x="48" y="24">50%</text>
+            </g>
+            <line x1="56" y1="123.22" x2="700" y2="123.22" stroke="#8AA394" stroke-width="1" stroke-dasharray="4 4"></line>
+            <text x="56" y="117" text-anchor="start" fill="#8AA394" font-family="JetBrains Mono, monospace" font-size="10.5">base rate 26.54%</text>
+            <path d="M127.6,198.73 L628.4,60.04" fill="none" stroke="#1F6F3F" stroke-width="2" stroke-dasharray="3 5"></path>
+            <text x="70" y="40" fill="#54705F" font-family="JetBrains Mono, monospace" font-size="10.5">deciles 3–8 rise steadily but are not</text>
+            <text x="70" y="54" fill="#54705F" font-family="JetBrains Mono, monospace" font-size="10.5">tabulated in the source report</text>
+            <path d="M56,201.90 L127.6,198.73" fill="none" stroke="#00C934" stroke-width="2" stroke-linecap="round"></path>
+            <path d="M628.4,60.04 L700,131.41" fill="none" stroke="#00FF41" stroke-width="3" stroke-linecap="round"></path>
+            <g>
+              <circle cx="56" cy="201.90" r="4" fill="#00C934" stroke="#0D1117" stroke-width="2"><title>Decile 1 · 8.66%</title></circle>
+              <circle cx="127.6" cy="198.73" r="4" fill="#00C934" stroke="#0D1117" stroke-width="2"><title>Decile 2 · 9.38%</title></circle>
+              <circle cx="628.4" cy="60.04" r="5" fill="#00FF41" stroke="#0D1117" stroke-width="2"><title>Decile 9 · 40.91% — peak</title></circle>
+              <circle cx="700" cy="131.41" r="5" fill="#00FF41" stroke="#0D1117" stroke-width="2"><title>Decile 10 (102.60–118.75) · 24.68% — falls back below the base rate</title></circle>
+            </g>
+            <text x="56" y="222" text-anchor="start" fill="#8AA394" font-family="JetBrains Mono, monospace" font-size="11">8.66%</text>
+            <text x="127.6" y="222" text-anchor="middle" fill="#8AA394" font-family="JetBrains Mono, monospace" font-size="11">9.38%</text>
+            <text x="628.4" y="48" text-anchor="middle" fill="#00FF41" font-family="JetBrains Mono, monospace" font-size="12.5" font-weight="700">40.91%</text>
+            <text x="700" y="120" text-anchor="end" fill="#00FF41" font-family="JetBrains Mono, monospace" font-size="12.5" font-weight="700">24.68%</text>
+            <g font-family="JetBrains Mono, monospace" font-size="11" fill="#D9E4DC" text-anchor="middle">
+              <text x="56" y="262">D1</text><text x="127.6" y="262">D2</text><text x="199.1" y="262">D3</text>
+              <text x="270.7" y="262">D4</text><text x="342.2" y="262">D5</text><text x="413.8" y="262">D6</text>
+              <text x="485.3" y="262">D7</text><text x="556.9" y="262">D8</text><text x="628.4" y="262">D9</text>
+              <text x="700" y="262">D10</text>
+            </g>
+            <text x="56" y="282" text-anchor="start" fill="#54705F" font-family="JetBrains Mono, monospace" font-size="10">MonthlyCharges decile, low -> high (full range 18.25–118.75)</text>
+          </svg>
+        </div>
+        <p class="src">step-01-eda.md §6.7 — only D1, D2, D9 and D10 are given numerically in the source; the intermediate deciles are drawn as an unmeasured span</p>
+      </figure>
+
+      <!-- FIG 5 — Cramér's V -->
+      <figure class="fig" style="margin:0;">
+        <figcaption>
+          <p class="fig-t">Every categorical, ranked by Cramér's V</p>
+          <p class="fig-d">Association strength with churn across all 16 categorical columns, with the
+          chi-sq p-value beside each. The tail is not weak signal, it is <b>no</b> signal:
+          <code>PhoneService</code> (p = 0.339) and <code>gender</code> (p = 0.487) fail to reject
+          independence at any sane threshold, and both were dropped.</p>
+        </figcaption>
+        <div class="bars">
+          <div class="bar-head"><span>FEATURE</span><span>CRAMERS_V</span><span>V</span><span>CHI2_P</span></div>
+          <div class="bar-row" title="Contract — Cramér's V 0.410"><span class="bar-lab">Contract</span><span class="bar-track"><span class="bar-fill" style="width:91.1%"></span></span><span class="bar-val">0.410</span><span class="bar-n">5.9e-258</span></div>
+          <div class="bar-row" title="OnlineSecurity — Cramér's V 0.347"><span class="bar-lab">OnlineSecurity</span><span class="bar-track"><span class="bar-fill" style="width:77.1%"></span></span><span class="bar-val">0.347</span><span class="bar-n">2.7e-185</span></div>
+          <div class="bar-row" title="TechSupport — Cramér's V 0.343"><span class="bar-lab">TechSupport</span><span class="bar-track"><span class="bar-fill" style="width:76.2%"></span></span><span class="bar-val">0.343</span><span class="bar-n">1.4e-180</span></div>
+          <div class="bar-row" title="InternetService — Cramér's V 0.323"><span class="bar-lab">InternetService</span><span class="bar-track"><span class="bar-fill" style="width:71.8%"></span></span><span class="bar-val">0.323</span><span class="bar-n">9.6e-160</span></div>
+          <div class="bar-row" title="PaymentMethod — Cramér's V 0.303"><span class="bar-lab">PaymentMethod</span><span class="bar-track"><span class="bar-fill" style="width:67.3%"></span></span><span class="bar-val">0.303</span><span class="bar-n">3.7e-140</span></div>
+          <div class="bar-row" title="OnlineBackup — Cramér's V 0.292"><span class="bar-lab">OnlineBackup</span><span class="bar-track"><span class="bar-fill" style="width:64.9%"></span></span><span class="bar-val">0.292</span><span class="bar-n">2.1e-131</span></div>
+          <div class="bar-row" title="DeviceProtection — Cramér's V 0.282"><span class="bar-lab">DeviceProtection</span><span class="bar-track"><span class="bar-fill" style="width:62.7%"></span></span><span class="bar-val">0.282</span><span class="bar-n">5.5e-122</span></div>
+          <div class="bar-row" title="StreamingMovies — Cramér's V 0.231"><span class="bar-lab">StreamingMovies</span><span class="bar-track"><span class="bar-fill" style="width:51.3%"></span></span><span class="bar-val">0.231</span><span class="bar-n">2.7e-82</span></div>
+          <div class="bar-row" title="StreamingTV — Cramér's V 0.231"><span class="bar-lab">StreamingTV</span><span class="bar-track"><span class="bar-fill" style="width:51.3%"></span></span><span class="bar-val">0.231</span><span class="bar-n">5.5e-82</span></div>
+          <div class="bar-row" title="PaperlessBilling — Cramér's V 0.192"><span class="bar-lab">PaperlessBilling</span><span class="bar-track"><span class="bar-fill" style="width:42.7%"></span></span><span class="bar-val">0.192</span><span class="bar-n">4.1e-58</span></div>
+          <div class="bar-row" title="Dependents — Cramér's V 0.164"><span class="bar-lab">Dependents</span><span class="bar-track"><span class="bar-fill" style="width:36.4%"></span></span><span class="bar-val">0.164</span><span class="bar-n">4.9e-43</span></div>
+          <div class="bar-row" title="SeniorCitizen — Cramér's V 0.151"><span class="bar-lab">SeniorCitizen</span><span class="bar-track"><span class="bar-fill" style="width:33.6%"></span></span><span class="bar-val">0.151</span><span class="bar-n">1.5e-36</span></div>
+          <div class="bar-row" title="Partner — Cramér's V 0.150"><span class="bar-lab">Partner</span><span class="bar-track"><span class="bar-fill" style="width:33.3%"></span></span><span class="bar-val">0.150</span><span class="bar-n">2.1e-36</span></div>
+          <div class="bar-row" title="MultipleLines — Cramér's V 0.040"><span class="bar-lab">MultipleLines</span><span class="bar-track"><span class="bar-fill" style="width:8.9%"></span></span><span class="bar-val">0.040</span><span class="bar-n">3.5e-03</span></div>
+          <div class="bar-row dim" title="PhoneService — Cramér's V 0.011, p = 0.339 — dropped as noise"><span class="bar-lab">PhoneService</span><span class="bar-track"><span class="bar-fill" style="width:2.4%"></span></span><span class="bar-val">0.011</span><span class="bar-n">p=0.339</span></div>
+          <div class="bar-row dim" title="gender — Cramér's V 0.008, p = 0.487 — dropped as noise"><span class="bar-lab">gender</span><span class="bar-track"><span class="bar-fill" style="width:1.8%"></span></span><span class="bar-val">0.008</span><span class="bar-n">p=0.487</span></div>
+        </div>
+        <div class="bar-legend">
+          <span><i class="swatch solid"></i>kept</span>
+          <span><i class="swatch grey"></i>dropped as noise</span>
+          <span>scale 0–0.45 · right column is the chi-sq p-value</span>
+        </div>
+        <p class="src">step-01-eda.md §6.1 and §6.8</p>
+      </figure>
+
+    </div>
+  </section>
+
+  </div>
+  <!-- ============ /CHAPTER: STEP 1 ============ -->
+
+  <!-- ============ CHAPTER: STEP 2 — TREAT DATA ============ -->
+  <div class="chapter" id="step2">
+    <div class="chapter-head">
+      <span class="chapter-n">STEP 2 / 5</span>
+      <h2 class="chapter-title">Treat data</h2>
+      <div class="chapter-meta">
+        <span class="chapter-budget">budget 20–25 min</span>
+        <span class="badge done">complete</span>
+      </div>
+    </div>
+    <p class="chapter-sub">Turns Step 1's diagnosis into verified, reusable code. <code>src/data_prep.py</code>
+    cleans the frame, collapses the redundant service levels, and returns an <b>unfitted</b> preprocessor so it
+    can only be fit inside a <code>Pipeline</code> on the training fold. The split is then frozen to disk so all
+    three team members in Step 3 score on identical held-out rows. All 25 verification assertions passed.
+    Cited to <code>docs/step-02-data-treatment.md</code>.</p>
+
+  <!-- ============ TREATMENT_LOG ============ -->
+  <section id="treatment">
+    <div class="sec-head">
+      <h2>TREATMENT_LOG</h2>
+      <span class="sec-note">step-02-data-treatment.md §3, §4</span>
+    </div>
+    <p class="prompt"><span class="u">michelmisk@vps</span>:<span class="d">~/hackaton-classificacao</span>$ cat docs/step-02-data-treatment.md <span class="c">| less</span></p>
+
+    <p class="lede">Step 2's job was to implement and empirically verify the treatment, not
+    rediscover it. <b>All 25 assertions passed.</b> Row count came through unchanged at 7043,
+    and the input frame was never mutated in place.</p>
+
+    <div class="table-scroll">
+      <table>
+        <thead>
+          <tr><th>ISSUE</th><th>DECISION_TAKEN</th><th>REJECTED</th><th>WHY_IT_LOSES</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="issue">TotalCharges<br><span>11 single-space values</span></td>
+            <td class="took"><code>pd.to_numeric(errors='coerce')</code> then <b>.fillna(0.0)</b> -> float64</td>
+            <td class="rej"><s>Median imputation (1397.47)</s><br><s>Drop the 11 rows</s></td>
+            <td class="why">All 11 have <code>tenure == 0</code> — never billed. The median invents ~1400 units of history and breaks the R² = 0.9991 <code>TotalCharges ~= tenure × MonthlyCharges</code> relation for exactly those rows. Dropping is defensible at 0.16% of the data but deletes 11 non-churners one-directionally.</td>
+          </tr>
+          <tr>
+            <td class="issue">'No internet service'<br><span>same 1526 rows, 6 columns</span></td>
+            <td class="took">Collapse to <b>'No'</b> before one-hot encoding. Same for <code>'No phone service'</code> (682 rows).</td>
+            <td class="rej"><s>Leave it as a third level</s><br><s>Drop the 6 add-on columns</s></td>
+            <td class="why">Measured counterfactual: naive encoding gives <b>30 columns at rank 24</b> — deficient by exactly 6 — with <b>22 perfect-|r| pairs</b>, including <code>PhoneService_Yes <-> MultipleLines_No phone service</code> at <b>r = -1.0000</b>, an anti-correlation that duplicate-column checks miss entirely. The clean encoding is <b>21 columns at rank 21</b>. Dropping the columns instead would throw away the #2 and #3 predictors.</td>
+          </tr>
+          <tr>
+            <td class="issue">customerID<br><span>7043 unique / 7043 rows</span></td>
+            <td class="took"><b>Dropped entirely</b>, unconditionally. Still recoverable outside the model through a <code>row_id</code> join key.</td>
+            <td class="rej"><s>LabelEncoder -> 0...7042</s><br><s>One-hot -> 7043 columns</s></td>
+            <td class="why">This is the trap the assignment points at, and it is <b>silent</b>: ordinal encoding raises no error and yields a column that looks numeric, so a tree splits on <code>customerID &lt; 3521.5</code> and memorises the training set. The ordering is just alphabetical sort order over strings like <code>4472-LVYGI</code>. One-hot fails loudly instead — one perfect indicator per training row.</td>
+          </tr>
+          <tr>
+            <td class="issue">gender · PhoneService<br><span>p = 0.487 · p = 0.339</span></td>
+            <td class="took">Dropped behind a <code>drop_noise=True</code> flag, so Step 3 can refit with them.</td>
+            <td class="rej"><s>Keep them “just in case”</s><br><s>Hard-code the drop</s></td>
+            <td class="why">Neither survives any sane significance threshold — gender spreads 0.76 pp, PhoneService 1.78 pp and is 90.32% one value. Kept as a flag rather than a hard delete so the synthesis cell can <em>demonstrate</em> the cull instead of asserting it.</td>
+          </tr>
+          <tr>
+            <td class="issue">Encoder fitting</td>
+            <td class="took"><code>build_preprocessor()</code> returns an <b>unfitted</b> ColumnTransformer — asserted in verification.</td>
+            <td class="rej"><s>Fit on the full frame, then split</s></td>
+            <td class="why">Leaks test-fold means, standard deviations and category lists into training. Numerically small here, but it is the standard deduction on this exercise — so the cleaning layer is built to make the mistake structurally hard to commit.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="src">step-02-data-treatment.md §3 (decision table) · §4 (the customerID answer) · §6.H (the counterfactual)</p>
+  </section>
+
+  <!-- ============ PIPELINE ============ -->
+  <section id="pipeline">
+    <div class="sec-head">
+      <h2>PIPELINE</h2>
+      <span class="sec-note">ARCHITECTURE.md · step-02 §9</span>
+    </div>
+    <p class="prompt"><span class="u">michelmisk@vps</span>:<span class="d">~/hackaton-classificacao</span>$ python3 src/make_splits.py --check</p>
+
+    <p class="lede">Everything above the estimator is built and verified in
+    <code>src/data_prep.py</code>. Two properties are load-bearing: the transformer comes back
+    <b>unfitted</b>, and the split is <b>frozen to disk</b>.</p>
+
+    <div class="pipe">
+      <div class="flow">
+        <div class="node">
+          <span class="nl">Telco-Customer-Churn.csv</span><span class="nt">raw · repo root</span>
+          <span class="nd">7043 × 21, read with no coercion so the 11 blanks stay visible and countable</span>
+        </div>
+        <div class="conn"></div>
+        <div class="node">
+          <span class="nl">clean()</span><span class="nt">7043 × 18</span>
+          <span class="nd">coerce TotalCharges -> fillna(0) · map Churn -> {0,1} · collapse the 'No X service' levels · drop customerID, gender, PhoneService</span>
+        </div>
+        <div class="conn"></div>
+        <div class="node key">
+          <span class="nl">frozen split -> data/splits/</span><span class="nt">stratified · seed 42</span>
+          <span class="nd">Written once and committed. train 5634 · test 1409. Load with <code>load_splits()</code>, never <code>split()</code> — three people training in parallel have to score on identical rows or the comparison table means nothing.</span>
+        </div>
+        <div class="conn"></div>
+        <div class="node key">
+          <span class="nl">build_preprocessor() -> UNFITTED</span><span class="nt">ColumnTransformer</span>
+          <span class="nd">StandardScaler on 3 numerics · passthrough SeniorCitizen · OneHotEncoder(drop='first') on 13 categoricals. Fitted only inside a Pipeline, on the training fold.</span>
+        </div>
+        <div class="conn"></div>
+        <div class="node key">
+          <span class="nl">estimator</span><span class="nt">step 3 · complete, 4/4</span>
+          <span class="nd">four parallel agents, each trying a different family — logistic regression is landed and tuned; tree ensembles, k-NN/naive Bayes and SVM+features are still running. See STEP 3 below.</span>
+        </div>
+        <div class="conn"></div>
+        <div class="node pending">
+          <span class="nl">evaluate</span><span class="nt">step 4 · not started</span>
+          <span class="nd">ROC-AUC primary · F1 and recall on Yes · confusion matrix · tune the decision threshold rather than assuming 0.5</span>
+        </div>
+
+        <div class="branch">
+          <div class="nl">&#9492;&#9472; test.csv — SEALED</div>
+          <div class="nd">1409 rows, held out and unread until final evaluation. Re-deriving a split inside a tuning loop is how a holdout quietly degrades into a validation set. The manifest stores a SHA-256 of every file and of the source CSV, so a regenerated split is loud rather than silent.</div>
+        </div>
+      </div>
+
+      <div>
+        <div class="aside-card">
+          <h3>SPLIT_VERIFICATION</h3>
+          <div class="kv">
+            <div><span>full</span><span>7043 · 26.5370%</span></div>
+            <div><span>train</span><span>5634 · 26.5353%</span></div>
+            <div><span>test</span><span>1409 · 26.5436%</span></div>
+            <div><span>max drift</span><span>0.0067 pp</span></div>
+            <div><span>fold overlap</span><span>none</span></div>
+            <div><span>encoded</span><span>(5634, 21) / (1409, 21)</span></div>
+            <div><span>matrix rank</span><span>21 / 21</span></div>
+            <div><span>regeneration</span><span>byte-stable</span></div>
+          </div>
+          <p class="src" style="margin-top:14px;">step-02 §9 — both folds hold the 26.54% rate to within 0.007 pp</p>
+        </div>
+
+        <div class="call" style="margin-top:22px;">
+          <div class="call-t">[!] DO NOT MOVE THE CSV</div>
+          <p>The assignment's prose says the file lives in <code>data/</code>. Its executable cell
+          reads <code>pd.read_csv('Telco-Customer-Churn.csv')</code>. <b>The code is
+          authoritative</b> — the file stays at the repo root, and <code>data/</code> holds derived
+          files only. Tidying it away breaks the assignment notebook.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  </div>
+  <!-- ============ /CHAPTER: STEP 2 ============ -->
+
+  <!-- ============ CHAPTER: STEP 3 — TRAIN MODELS ============ -->
+  <div class="chapter" id="step3">
+    <div class="chapter-head">
+      <span class="chapter-n">STEP 3 / 5</span>
+      <h2 class="chapter-title">Train models</h2>
+      <div class="chapter-meta">
+        <span class="chapter-budget">budget 30–35 min</span>
+        <span class="badge done">complete — 4/4 landed</span>
+      </div>
+    </div>
+    <p class="chapter-sub">Four agents ran in parallel, one per model family, each free to try its own
+    variants and pick a winner by 5-fold CV on the training split only. Results land in
+    <code>results/&lt;approach&gt;.json</code> and this section renders straight from those files — every
+    stat, confusion matrix and chart below cites a JSON field, not a guess. <b>All four have now landed</b> —
+    logistic regression, tree ensembles, k-NN/naive Bayes, and SVM+engineered features. That means Step 3's
+    training job is done; <b>picking a winner is still Step 4's job, not this one</b> — nothing below should
+    be read as a final ranking.</p>
+
+    <div class="target">
+      <div class="target-item">
+        <div class="tk">PREDICTED CEILING // ROC-AUC</div>
+        <div class="tv">0.84 – 0.85</div>
+        <div class="ts">Step 1 estimate · all four landed inside it, 0.8389–0.8440</div>
+      </div>
+      <div class="target-item">
+        <div class="tk">PREDICTED CEILING // F1(YES)</div>
+        <div class="tv">0.60 – 0.63</div>
+        <div class="ts">Step 1 estimate · all four landed inside it, 0.6170–0.6228</div>
+      </div>
+      <div class="target-item">
+        <div class="tk">ACCURACY FLOOR TO BEAT</div>
+        <div class="tv">73.46%</div>
+        <div class="ts">the constant predictor · all four clear it, 75.94%–78.85%</div>
+      </div>
+    </div>
+
+    <div class="call stop">
+      <div class="call-t"><i class="ico-sq"></i> LEAKAGE TRIPWIRE</div>
+      <p><b>A model reporting ROC-AUC above 0.90 has not succeeded — it has leaked.</b>
+      That is the standing instruction: go and find the leak rather than record the score.
+      Equally, a model reporting ~79% accuracy should be pointed straight at the 73.46% baseline.
+      All four landed models sit inside the 0.84–0.85 band predicted in Step 1 — logistic regression
+      0.8424, tree ensembles (GradientBoosting) 0.8440, SVM+features 0.8399, k-NN/naive Bayes 0.8389 — no
+      leakage indicated for any of them.</p>
+    </div>
+
+    <!-- ---- leaderboard ---- -->
+    <div class="leaderboard">
+      <h3 class="mc-sub">LEADERBOARD — TEST ROC-AUC, ALL FOUR MODEL AGENTS</h3>
+      <p class="fig-d">Not a final ranking — that's Step 4's job, not this one. This is only "what's been
+      measured so far," ordered by test ROC-AUC because that is this project's primary metric. Scale is
+      zoomed to 0.50–0.95 (0.50 = a coin flip) so the gap above the base rate is visible; the dashed grey
+      mark is the Step 1 predicted ceiling floor (0.84), the dashed red mark is the 0.90 leakage tripwire.</p>
+      <div class="bars">
+        <div class="bar-head"><span>MODEL</span><span>TEST_ROC_AUC</span><span>AUC</span><span>STATUS</span></div>
+        <div class="bar-row" title="Tree Ensembles (GradientBoosting, tuned) — test ROC-AUC 0.844 — results/tree_ensembles.json">
+          <span class="bar-lab">Tree Ensembles</span>
+          <span class="bar-track">
+            <span class="bar-fill" style="width:76.4%"></span>
+            <span class="bar-ref" style="left:75.6%"></span>
+            <span class="bar-ref" style="left:88.9%;border-left-color:var(--alert)"></span>
+          </span>
+          <span class="bar-val">0.8440</span><span class="bar-n">landed</span>
+        </div>
+        <div class="bar-row" title="Logistic Regression — test ROC-AUC 0.8424 — results/logistic_regression.json">
+          <span class="bar-lab">Logistic Regression</span>
+          <span class="bar-track">
+            <span class="bar-fill" style="width:76.1%"></span>
+            <span class="bar-ref" style="left:75.6%"></span>
+            <span class="bar-ref" style="left:88.9%;border-left-color:var(--alert)"></span>
+          </span>
+          <span class="bar-val">0.8424</span><span class="bar-n">landed</span>
+        </div>
+        <div class="bar-row" title="SVM + Feature Engineering (LinearSVC, balanced) — test ROC-AUC 0.8399 — results/svm_features.json">
+          <span class="bar-lab">SVM + Features</span>
+          <span class="bar-track">
+            <span class="bar-fill" style="width:75.5%"></span>
+            <span class="bar-ref" style="left:75.6%"></span>
+            <span class="bar-ref" style="left:88.9%;border-left-color:var(--alert)"></span>
+          </span>
+          <span class="bar-val">0.8399</span><span class="bar-n">landed</span>
+        </div>
+        <div class="bar-row" title="k-NN / Naive Bayes (nb_discretised_bins10) — test ROC-AUC 0.8389 — results/knn_naive_bayes.json">
+          <span class="bar-lab">k-NN / Naive Bayes</span>
+          <span class="bar-track">
+            <span class="bar-fill" style="width:75.3%"></span>
+            <span class="bar-ref" style="left:75.6%"></span>
+            <span class="bar-ref" style="left:88.9%;border-left-color:var(--alert)"></span>
+          </span>
+          <span class="bar-val">0.8389</span><span class="bar-n">landed</span>
+        </div>
+      </div>
+      <div class="bar-legend">
+        <span><i class="swatch solid"></i>test ROC-AUC</span>
+        <span><i class="swatch"></i>predicted ceiling floor 0.84</span>
+        <span><i class="swatch" style="border-top-color:var(--alert)"></i>leakage tripwire 0.90</span>
+        <span>scale 0.50–0.95</span>
+      </div>
+      <p class="src">results/tree_ensembles.json · results/logistic_regression.json · results/svm_features.json · results/knn_naive_bayes.json — all four span only 0.0051 of ROC-AUC, tighter together than any one of them is to the ceiling band's own width</p>
+    </div>
+
+    <!-- ---- model cards ---- -->
+    <div class="model-grid">
+
+      <!-- MODEL CARD — Logistic Regression (landed) -->
+      <div class="model-card">
+        <div class="mc-head">
+          <span class="mc-name">Logistic Regression</span>
+          <span class="mc-brief">linear / interpretable</span>
+          <span class="mc-status"><span class="badge done">landed</span></span>
+        </div>
+        <p class="mc-desc">Regularised logistic regression, tuned by 5-fold <code>StratifiedKFold</code> grid
+        search over <code>C</code>, <code>penalty</code>, <code>solver</code> and <code>class_weight</code> on
+        the training fold only. Run as four variants to settle the open TotalCharges and noise-cull questions
+        from Steps 1–2, and used as a built-in sanity check: with <code>Contract</code> referenced to
+        Month-to-month, its coefficients should come out strongly negative — they do, see drivers below.</p>
+
+        <div class="mstats">
+          <div class="mstat"><div class="mk">CV ROC-AUC</div><div class="mv">0.8463 <em>+/-0.0085</em></div></div>
+          <div class="mstat"><div class="mk">TEST ROC-AUC</div><div class="mv">0.8424</div></div>
+          <div class="mstat"><div class="mk">F1 (YES)</div><div class="mv">0.6178</div></div>
+          <div class="mstat"><div class="mk">PRECISION (YES)</div><div class="mv">0.5341</div></div>
+          <div class="mstat"><div class="mk">RECALL (YES)</div><div class="mv">0.7326</div></div>
+        </div>
+
+        <div class="mc-cols">
+          <div class="mc-block">
+            <div class="mc-sub">CONFUSION MATRIX — TEST SET, N=1409, THRESHOLD 0.32</div>
+            <div class="cm-wrap">
+              <div class="cm">
+                <div class="ch"></div>
+                <div class="ch">PRED NO</div>
+                <div class="ch">PRED YES</div>
+                <div class="rh">ACTUAL NO</div>
+                <div class="cc cell s6" title="True Negative — 796"><span class="cv2">796</span><span class="cl">TN</span></div>
+                <div class="cc cell s3" title="False Positive — 239"><span class="cv2">239</span><span class="cl">FP</span></div>
+                <div class="rh">ACTUAL YES</div>
+                <div class="cc cell s1" title="False Negative — 100"><span class="cv2">100</span><span class="cl">FN</span></div>
+                <div class="cc cell s3" title="True Positive — 274"><span class="cv2">274</span><span class="cl">TP</span></div>
+              </div>
+              <div class="cm-key">
+                <div>Threshold <b>0.32</b>, chosen by maximising F1(Yes) on out-of-fold train probabilities
+                (OOF F1 0.6362).</div>
+                <div>At the default 0.5 cut: F1(Yes) 0.6081, precision 0.6594, recall 0.5642, accuracy 80.70% —
+                tuning the threshold trades precision for recall and moves F1(Yes) 0.6081 -&gt; 0.6178.</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="mc-block">
+            <div class="mc-sub">VARIANTS TRIED — CV ROC-AUC, 5-FOLD, TRAIN ONLY</div>
+            <div class="bars">
+              <div class="bar-head"><span>VARIANT</span><span>CV_ROC_AUC</span><span>AUC</span><span></span></div>
+              <div class="bar-row" title="a_keep_total_charges — 0.8462 +/-0.0085 — the winning configuration, tuned to 0.84634">
+                <span class="bar-lab">a_keep_total_charges</span>
+                <span class="bar-track"><span class="bar-fill" style="width:88.6%"></span></span>
+                <span class="bar-val">0.8462</span><span class="bar-n">winner</span>
+              </div>
+              <div class="bar-row dim" title="b_drop_total_charges — 0.84466 +/-0.0085">
+                <span class="bar-lab">b_drop_total_charges</span>
+                <span class="bar-track"><span class="bar-fill" style="width:66.6%"></span></span>
+                <span class="bar-val">0.8447</span><span class="bar-n">rejected</span>
+              </div>
+              <div class="bar-row dim" title="c_total_charges_residual — 0.84474 +/-0.0083">
+                <span class="bar-lab">c_total_charges_residual</span>
+                <span class="bar-track"><span class="bar-fill" style="width:67.7%"></span></span>
+                <span class="bar-val">0.8447</span><span class="bar-n">rejected</span>
+              </div>
+              <div class="bar-row" title="d_keep_noise_columns — 0.84584 +/-0.0083 — close second, tuned to 0.84627">
+                <span class="bar-lab">d_keep_noise_columns</span>
+                <span class="bar-track"><span class="bar-fill" style="width:83.4%"></span></span>
+                <span class="bar-val">0.8458</span><span class="bar-n">close 2nd</span>
+              </div>
+            </div>
+            <div class="bar-legend"><span>scale zoomed to 0.840–0.847 — all four variants cluster within 0.0015 of each other</span></div>
+          </div>
+        </div>
+
+        <div class="mc-block">
+          <div class="mc-sub">TOP DRIVERS — COEFFICIENTS, TOP 8 OF 21 BY |COEF|</div>
+          <div class="drv-rows">
+            <div class="drv-row" title="InternetService_No — coef -1.5718, odds ratio 0.2077">
+              <span class="drv-lab">InternetService_No</span>
+              <span class="drv-track"><span class="drv-zero"></span><span class="drv-fill neg" style="width:50.0%"></span></span>
+              <span class="drv-val">-1.572</span>
+            </div>
+            <div class="drv-row" title="InternetService_Fiber optic — coef 1.5542, odds ratio 4.7314">
+              <span class="drv-lab">InternetService_Fiber optic</span>
+              <span class="drv-track"><span class="drv-zero"></span><span class="drv-fill pos" style="width:49.4%"></span></span>
+              <span class="drv-val">+1.554</span>
+            </div>
+            <div class="drv-row" title="Contract_Two year — coef -1.3642, odds ratio 0.2556">
+              <span class="drv-lab">Contract_Two year</span>
+              <span class="drv-track"><span class="drv-zero"></span><span class="drv-fill neg" style="width:43.4%"></span></span>
+              <span class="drv-val">-1.364</span>
+            </div>
+            <div class="drv-row" title="tenure — coef -1.308, odds ratio 0.2704">
+              <span class="drv-lab">tenure</span>
+              <span class="drv-track"><span class="drv-zero"></span><span class="drv-fill neg" style="width:41.6%"></span></span>
+              <span class="drv-val">-1.308</span>
+            </div>
+            <div class="drv-row" title="MonthlyCharges — coef -0.9171, odds ratio 0.3997">
+              <span class="drv-lab">MonthlyCharges</span>
+              <span class="drv-track"><span class="drv-zero"></span><span class="drv-fill neg" style="width:29.2%"></span></span>
+              <span class="drv-val">-0.917</span>
+            </div>
+            <div class="drv-row" title="Contract_One year — coef -0.6948, odds ratio 0.4992">
+              <span class="drv-lab">Contract_One year</span>
+              <span class="drv-track"><span class="drv-zero"></span><span class="drv-fill neg" style="width:22.1%"></span></span>
+              <span class="drv-val">-0.695</span>
+            </div>
+            <div class="drv-row" title="TotalCharges — coef 0.5882, odds ratio 1.8007">
+              <span class="drv-lab">TotalCharges</span>
+              <span class="drv-track"><span class="drv-zero"></span><span class="drv-fill pos" style="width:18.7%"></span></span>
+              <span class="drv-val">+0.588</span>
+            </div>
+            <div class="drv-row" title="StreamingTV_Yes — coef 0.5179, odds ratio 1.6785">
+              <span class="drv-lab">StreamingTV_Yes</span>
+              <span class="drv-track"><span class="drv-zero"></span><span class="drv-fill pos" style="width:16.5%"></span></span>
+              <span class="drv-val">+0.518</span>
+            </div>
+          </div>
+          <div class="drv-legend">
+            <span><i class="swatch amber"></i>positive — increases churn odds</span>
+            <span><i class="swatch solid"></i>negative — protective</span>
+            <span>bars scaled to the largest |coef|, 1.5718 (InternetService_No)</span>
+          </div>
+        </div>
+        <p class="src">results/logistic_regression.json — runtime 420.75s, frozen split, test set read once</p>
+      </div>
+
+      <!-- MODEL CARD — Tree Ensembles (landed) -->
+      <div class="model-card">
+        <div class="mc-head">
+          <span class="mc-name">Tree Ensembles</span>
+          <span class="mc-brief">random forest / gradient boosting</span>
+          <span class="mc-status"><span class="badge done">landed</span></span>
+        </div>
+        <p class="mc-desc">Random Forest, GradientBoosting and HistGradientBoosting, tuned by randomised
+        search under 5-fold CV on the training fold only. Built to capture what a linear model structurally
+        can't — the non-monotone MonthlyCharges top decile (40.91% falling to 24.68%, Step 1) and the
+        Contract &times; InternetService interaction — without hand-building an interaction term. The winner
+        is <b>GradientBoosting (tuned)</b>, a shallow, heavily regularised fit
+        (<code>max_depth=2</code>, <code>min_samples_leaf=50</code>, <code>subsample=0.8</code>).</p>
+
+        <div class="mstats">
+          <div class="mstat"><div class="mk">CV ROC-AUC</div><div class="mv">0.8486 <em>+/-0.0084</em></div></div>
+          <div class="mstat"><div class="mk">TEST ROC-AUC</div><div class="mv">0.8440</div></div>
+          <div class="mstat"><div class="mk">F1 (YES)</div><div class="mv">0.6228</div></div>
+          <div class="mstat"><div class="mk">PRECISION (YES)</div><div class="mv">0.5913</div></div>
+          <div class="mstat"><div class="mk">RECALL (YES)</div><div class="mv">0.6578</div></div>
+        </div>
+
+        <div class="mc-cols">
+          <div class="mc-block">
+            <div class="mc-sub">CONFUSION MATRIX — TEST SET, N=1409, THRESHOLD 0.385</div>
+            <div class="cm-wrap">
+              <div class="cm">
+                <div class="ch"></div>
+                <div class="ch">PRED NO</div>
+                <div class="ch">PRED YES</div>
+                <div class="rh">ACTUAL NO</div>
+                <div class="cc cell s6" title="True Negative — 865"><span class="cv2">865</span><span class="cl">TN</span></div>
+                <div class="cc cell s2" title="False Positive — 170"><span class="cv2">170</span><span class="cl">FP</span></div>
+                <div class="rh">ACTUAL YES</div>
+                <div class="cc cell s1" title="False Negative — 128"><span class="cv2">128</span><span class="cl">FN</span></div>
+                <div class="cc cell s2" title="True Positive — 246"><span class="cv2">246</span><span class="cl">TP</span></div>
+              </div>
+              <div class="cm-key">
+                <div>Threshold <b>0.385</b>, chosen by maximising F1(Yes) on out-of-fold TRAIN probabilities
+                — never on test.</div>
+                <div>At the default 0.5 cut: F1(Yes) 0.5723, precision 0.6552, recall 0.5080, accuracy 79.84% —
+                tuning the threshold trades precision for recall and moves F1(Yes) 0.5723 -&gt; 0.6228.</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="mc-block">
+            <div class="mc-sub">VARIANTS TRIED — CV ROC-AUC, 10 OF 10, 5-FOLD TRAIN ONLY</div>
+            <div class="bars">
+              <div class="bar-head"><span>VARIANT</span><span>CV_ROC_AUC</span><span>AUC</span><span></span></div>
+              <div class="bar-row" title="GradientBoosting (tuned) — 0.8486 +/-0.0084 — the winning configuration">
+                <span class="bar-lab">GradientBoosting (tuned)</span>
+                <span class="bar-track"><span class="bar-fill" style="width:95.3%"></span></span>
+                <span class="bar-val">0.8486</span><span class="bar-n">winner</span>
+              </div>
+              <div class="bar-row dim" title="GradientBoosting (tuned, balanced weights) — 0.8485 +/-0.0096">
+                <span class="bar-lab">GBM (tuned, balanced)</span>
+                <span class="bar-track"><span class="bar-fill" style="width:95.0%"></span></span>
+                <span class="bar-val">0.8485</span><span class="bar-n">close 2nd</span>
+              </div>
+              <div class="bar-row dim" title="RandomForest (tuned) — 0.8464 +/-0.0098">
+                <span class="bar-lab">RandomForest (tuned)</span>
+                <span class="bar-track"><span class="bar-fill" style="width:88.0%"></span></span>
+                <span class="bar-val">0.8464</span><span class="bar-n">rejected</span>
+              </div>
+              <div class="bar-row dim" title="HistGradientBoosting (tuned) — 0.8455 +/-0.0088">
+                <span class="bar-lab">HistGBM (tuned)</span>
+                <span class="bar-track"><span class="bar-fill" style="width:85.0%"></span></span>
+                <span class="bar-val">0.8455</span><span class="bar-n">rejected</span>
+              </div>
+              <div class="bar-row dim" title="RandomForest (default, 200 trees) — 0.8228 +/-0.0087 — fully grown, unweighted">
+                <span class="bar-lab">RandomForest (default)</span>
+                <span class="bar-track"><span class="bar-fill" style="width:9.3%"></span></span>
+                <span class="bar-val">0.8228</span><span class="bar-n">worst</span>
+              </div>
+            </div>
+            <div class="bar-legend"><span>scale zoomed to 0.820–0.850 · 5 of 10 variants shown (best per family plus the untuned floor) · full 10 in results/tree_ensembles.json</span></div>
+          </div>
+        </div>
+
+        <div class="mc-block">
+          <div class="mc-sub">TOP DRIVERS — PERMUTATION IMPORTANCE (MEAN AUC DROP, TOP 8 OF 10)</div>
+          <p class="fig-d" style="margin-bottom:14px;">Permutation, not impurity, importance — mean drop in ROC-AUC over 5 shuffles on the
+          training fold, computed at the level of the raw column so a multi-level categorical is shuffled as
+          one feature rather than as its dummies. No sign: this is "how much the model leans on it," not
+          "which direction." <code>TotalCharges</code> ranks 4th, above <code>MonthlyCharges</code> — trees
+          are indifferent to the collinearity that gets it dropped for linear models.</p>
+          <div class="bars">
+            <div class="bar-head"><span>FEATURE</span><span>IMPORTANCE</span><span>AUC DROP</span><span></span></div>
+            <div class="bar-row" title="tenure — permutation importance 0.06666"><span class="bar-lab">tenure</span><span class="bar-track"><span class="bar-fill" style="width:100.0%"></span></span><span class="bar-val">0.0667</span></div>
+            <div class="bar-row" title="InternetService — permutation importance 0.05496"><span class="bar-lab">InternetService</span><span class="bar-track"><span class="bar-fill" style="width:82.4%"></span></span><span class="bar-val">0.0550</span></div>
+            <div class="bar-row" title="Contract — permutation importance 0.02938"><span class="bar-lab">Contract</span><span class="bar-track"><span class="bar-fill" style="width:44.1%"></span></span><span class="bar-val">0.0294</span></div>
+            <div class="bar-row" title="TotalCharges — permutation importance 0.00685"><span class="bar-lab">TotalCharges</span><span class="bar-track"><span class="bar-fill" style="width:10.3%"></span></span><span class="bar-val">0.0069</span></div>
+            <div class="bar-row" title="PaymentMethod — permutation importance 0.00524"><span class="bar-lab">PaymentMethod</span><span class="bar-track"><span class="bar-fill" style="width:7.9%"></span></span><span class="bar-val">0.0052</span></div>
+            <div class="bar-row" title="MonthlyCharges — permutation importance 0.00518"><span class="bar-lab">MonthlyCharges</span><span class="bar-track"><span class="bar-fill" style="width:7.8%"></span></span><span class="bar-val">0.0052</span></div>
+            <div class="bar-row" title="PaperlessBilling — permutation importance 0.00345"><span class="bar-lab">PaperlessBilling</span><span class="bar-track"><span class="bar-fill" style="width:5.2%"></span></span><span class="bar-val">0.0035</span></div>
+            <div class="bar-row" title="OnlineSecurity — permutation importance 0.00246"><span class="bar-lab">OnlineSecurity</span><span class="bar-track"><span class="bar-fill" style="width:3.7%"></span></span><span class="bar-val">0.0025</span></div>
+          </div>
+          <div class="bar-legend"><span>bars scaled to the largest importance, 0.06666 (tenure)</span></div>
+        </div>
+
+        <div class="mc-block">
+          <div class="mc-sub">DOES THE TREE ACTUALLY RECOVER THE MONTHLYCHARGES NON-MONOTONICITY?</div>
+          <p class="fig-d">The finding <code>CLAUDE.md</code> fact #8 predicted trees would win on. Out-of-fold predicted
+          churn by MonthlyCharges decile, training fold (5634 rows) — actual vs. this tree vs. a plain
+          logistic regression run purely as a shape contrast (not the team's logistic-regression result,
+          which uses the full Step 2 feature set).</p>
+          <div class="svg-scroll">
+            <svg viewBox="0 0 720 300" role="img" aria-label="Line chart of out-of-fold predicted churn by MonthlyCharges decile: actual, tree, and logistic all rise to a peak around decile 9 near 41 percent, then fall together at decile 10">
+              <rect x="0" y="0" width="720" height="300" fill="#0D1117"></rect>
+              <line x1="56" y1="240" x2="700" y2="240" stroke="#1F6F3F" stroke-width="1"></line>
+              <line x1="56" y1="196" x2="700" y2="196" stroke="#1B2A22" stroke-width="1"></line>
+              <line x1="56" y1="152" x2="700" y2="152" stroke="#1B2A22" stroke-width="1"></line>
+              <line x1="56" y1="108" x2="700" y2="108" stroke="#1B2A22" stroke-width="1"></line>
+              <line x1="56" y1="64"  x2="700" y2="64"  stroke="#1B2A22" stroke-width="1"></line>
+              <line x1="56" y1="20"  x2="700" y2="20"  stroke="#1B2A22" stroke-width="1"></line>
+              <g font-family="JetBrains Mono, monospace" font-size="11" fill="#54705F" text-anchor="end">
+                <text x="48" y="244">0%</text><text x="48" y="200">10%</text><text x="48" y="156">20%</text>
+                <text x="48" y="112">30%</text><text x="48" y="68">40%</text><text x="48" y="24">50%</text>
+              </g>
+              <path d="M56,204.45 L127.6,195.6 L199.1,129.6 L270.7,133.7 L342.2,140.69 L413.8,81.78 L485.3,69.63 L556.9,84.86 L628.4,58.63 L700,131.94" fill="none" stroke="#8AA394" stroke-width="2" stroke-dasharray="4 4" stroke-linecap="round"></path>
+              <path d="M56,200.14 L127.6,193.1 L199.1,136.6 L270.7,141.92 L342.2,129.56 L413.8,78.34 L485.3,78.96 L556.9,80.63 L628.4,58.28 L700,135.76" fill="none" stroke="#00FF41" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"></path>
+              <path d="M56,204.49 L127.6,195.21 L199.1,134.62 L270.7,143.07 L342.2,129.87 L413.8,76.67 L485.3,77.02 L556.9,70.91 L628.4,56.61 L700,142.63" fill="none" stroke="#D9A441" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"></path>
+              <g fill="#00FF41">
+                <circle cx="56" cy="200.14" r="3.5" stroke="#0D1117" stroke-width="1.5"><title>D1 tree OOF 9.06% (actual 8.08%)</title></circle>
+                <circle cx="628.4" cy="58.28" r="4" stroke="#0D1117" stroke-width="1.5"><title>D9 tree OOF 41.30% (actual 41.22%) — peak</title></circle>
+                <circle cx="700" cy="135.76" r="4" stroke="#0D1117" stroke-width="1.5"><title>D10 tree OOF 23.69% (actual 24.56%) — falls 17.61pp from D9</title></circle>
+              </g>
+              <g fill="#D9A441">
+                <circle cx="628.4" cy="56.61" r="4" stroke="#0D1117" stroke-width="1.5"><title>D9 logistic-shape-contrast OOF 41.68%</title></circle>
+                <circle cx="700" cy="142.63" r="4" stroke="#0D1117" stroke-width="1.5"><title>D10 logistic-shape-contrast OOF 22.13% — falls 19.55pp from D9</title></circle>
+              </g>
+              <g fill="#8AA394">
+                <circle cx="628.4" cy="58.63" r="3" stroke="#0D1117" stroke-width="1.5"><title>D9 actual 41.22%</title></circle>
+                <circle cx="700" cy="131.94" r="3" stroke="#0D1117" stroke-width="1.5"><title>D10 actual 24.56% — falls 16.66pp from D9</title></circle>
+              </g>
+              <g font-family="JetBrains Mono, monospace" font-size="11" fill="#D9E4DC" text-anchor="middle">
+                <text x="56" y="262">D1</text><text x="127.6" y="262">D2</text><text x="199.1" y="262">D3</text>
+                <text x="270.7" y="262">D4</text><text x="342.2" y="262">D5</text><text x="413.8" y="262">D6</text>
+                <text x="485.3" y="262">D7</text><text x="556.9" y="262">D8</text><text x="628.4" y="262">D9</text>
+                <text x="700" y="262">D10</text>
+              </g>
+              <text x="56" y="282" text-anchor="start" fill="#54705F" font-family="JetBrains Mono, monospace" font-size="10">MonthlyCharges decile, training fold, out-of-fold predictions — docs/step-03b-tree-ensembles.md §7.1</text>
+            </svg>
+          </div>
+          <div class="bar-legend">
+            <span><i class="swatch" style="border-top-style:dashed"></i>actual churn</span>
+            <span><i class="swatch solid"></i>tree, OOF predicted</span>
+            <span><i class="swatch" style="border-top:none;height:9px;width:14px;background:#D9A441;display:inline-block;"></i>logistic (shape contrast), OOF predicted</span>
+          </div>
+          <p class="fig-d" style="margin-top:14px;">Both models reproduce the D9-&gt;D10 fall — the tree by -17.61pp, the shape-contrast logistic
+          by -19.55pp, against an actual -16.66pp. <b>The logistic reproduces it slightly more sharply than the tree</b>, which
+          corrects <code>CLAUDE.md</code> fact #8's inference: the doc's <em>data</em> claim (MonthlyCharges is non-monotone)
+          holds, but its <em>modelling</em> claim ("plain logistic regression gets the top decile backwards") does not — a
+          multivariate logistic on the full Step 2 feature set gets it too. The tree's own partial-dependence curve is flat at
+          ~0.255–0.265 up to ~94, steps up to 0.3223 at 104.37, then falls to 0.3128 — a genuine but tiny 0.94pp dip,
+          against the 16.66pp swing the deciles actually show. See <code>results/tree_ensembles_monthlycharges_pd.png</code>
+          and <code>docs/step-03b-tree-ensembles.md</code> §7 for the full derivation, including why it is a
+          <code>Contract</code> &times; <code>InternetService</code> composition effect rather than a MonthlyCharges main effect.</p>
+        </div>
+        <p class="src">results/tree_ensembles.json · docs/step-03b-tree-ensembles.md — runtime 380.5s, frozen split, test set read once</p>
+      </div>
+
+      <!-- MODEL CARD — k-NN / Naive Bayes (landed) -->
+      <div class="model-card">
+        <div class="mc-head">
+          <span class="mc-name">k-NN / Naive Bayes</span>
+          <span class="mc-brief">distance-based and probabilistic</span>
+          <span class="mc-status"><span class="badge done">landed</span></span>
+        </div>
+        <p class="mc-desc">A distance-based (k-NN, 21-feature space, k swept from 1 to 201) and a probabilistic
+        (Naive Bayes, discretised into 3/5/10/20 bins) sweep — 182 variants total, most run specifically to
+        demonstrate why these two families are expected to lag the linear and tree agents on this dataset. <b>The
+        nuance: the winning variant didn't actually lag.</b> <code>nb_discretised_bins10</code> — Gaussian-shape
+        assumptions replaced with 10 quantile bins per numeric feature — landed at test ROC-AUC 0.8389, inside
+        the team's 0.84–0.85 ceiling band, ahead of both raw KNN and raw GaussianNB.</p>
+
+        <div class="mstats">
+          <div class="mstat"><div class="mk">CV ROC-AUC</div><div class="mv">0.8410 <em>+/-0.0096</em></div></div>
+          <div class="mstat"><div class="mk">TEST ROC-AUC</div><div class="mv">0.8389</div></div>
+          <div class="mstat"><div class="mk">F1 (YES)</div><div class="mv">0.6170</div></div>
+          <div class="mstat"><div class="mk">PRECISION (YES)</div><div class="mv">0.5530</div></div>
+          <div class="mstat"><div class="mk">RECALL (YES)</div><div class="mv">0.6979</div></div>
+        </div>
+
+        <div class="mc-cols">
+          <div class="mc-block">
+            <div class="mc-sub">CONFUSION MATRIX — TEST SET, N=1409, THRESHOLD 0.49</div>
+            <div class="cm-wrap">
+              <div class="cm">
+                <div class="ch"></div>
+                <div class="ch">PRED NO</div>
+                <div class="ch">PRED YES</div>
+                <div class="rh">ACTUAL NO</div>
+                <div class="cc cell s6" title="True Negative — 824"><span class="cv2">824</span><span class="cl">TN</span></div>
+                <div class="cc cell s2" title="False Positive — 211"><span class="cv2">211</span><span class="cl">FP</span></div>
+                <div class="rh">ACTUAL YES</div>
+                <div class="cc cell s1" title="False Negative — 113"><span class="cv2">113</span><span class="cl">FN</span></div>
+                <div class="cc cell s3" title="True Positive — 261"><span class="cv2">261</span><span class="cl">TP</span></div>
+              </div>
+              <div class="cm-key">
+                <div>Threshold <b>0.49</b> — barely off the default, because <code>nb_discretised_bins10</code>'s
+                out-of-fold F1(Yes) was already near-maximal at 0.5.</div>
+                <div>At the default 0.5 cut: F1(Yes) 0.6159, precision 0.5546, recall 0.6925, accuracy 77.08% —
+                almost identical to the tuned threshold's 0.6170, 0.5530, 0.6979, 77.00%.</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="mc-block">
+            <div class="mc-sub">VARIANTS TRIED — CV ROC-AUC, TOP 8 OF 182, 5-FOLD TRAIN ONLY</div>
+            <div class="bars">
+              <div class="bar-head"><span>VARIANT</span><span>CV_ROC_AUC</span><span>AUC</span><span></span></div>
+              <div class="bar-row" title="nb_discretised_bins10 — 0.8410 +/-0.0096 — the winning configuration">
+                <span class="bar-lab">nb_discretised_bins10</span>
+                <span class="bar-track"><span class="bar-fill" style="width:86.3%"></span></span>
+                <span class="bar-val">0.8410</span><span class="bar-n">winner</span>
+              </div>
+              <div class="bar-row dim" title="nb_discretised_bins5 — 0.8406 +/-0.0106">
+                <span class="bar-lab">nb_discretised_bins5</span>
+                <span class="bar-track"><span class="bar-fill" style="width:80.0%"></span></span>
+                <span class="bar-val">0.8406</span><span class="bar-n">rejected</span>
+              </div>
+              <div class="bar-row dim" title="nb_discretised_bins20 — 0.8400 +/-0.0096">
+                <span class="bar-lab">nb_discretised_bins20</span>
+                <span class="bar-track"><span class="bar-fill" style="width:71.3%"></span></span>
+                <span class="bar-val">0.8400</span><span class="bar-n">rejected</span>
+              </div>
+              <div class="bar-row dim" title="knn_full21_k101_uniform_manhattan — 0.8393 +/-0.0089 — best KNN of 182">
+                <span class="bar-lab">knn_k101_manhattan</span>
+                <span class="bar-track"><span class="bar-fill" style="width:61.2%"></span></span>
+                <span class="bar-val">0.8393</span><span class="bar-n">best knn</span>
+              </div>
+              <div class="bar-row dim" title="knn_full21_k151_uniform_manhattan — 0.8391 +/-0.0091">
+                <span class="bar-lab">knn_k151_manhattan</span>
+                <span class="bar-track"><span class="bar-fill" style="width:58.6%"></span></span>
+                <span class="bar-val">0.8391</span><span class="bar-n">rejected</span>
+              </div>
+              <div class="bar-row dim" title="knn_full21_k81_uniform_manhattan — 0.8386 +/-0.0087">
+                <span class="bar-lab">knn_k81_manhattan</span>
+                <span class="bar-track"><span class="bar-fill" style="width:52.1%"></span></span>
+                <span class="bar-val">0.8386</span><span class="bar-n">rejected</span>
+              </div>
+              <div class="bar-row dim" title="knn_full21_k201_uniform_manhattan — 0.8386 +/-0.0079">
+                <span class="bar-lab">knn_k201_manhattan</span>
+                <span class="bar-track"><span class="bar-fill" style="width:51.1%"></span></span>
+                <span class="bar-val">0.8386</span><span class="bar-n">rejected</span>
+              </div>
+              <div class="bar-row dim" title="knn_full21_k61_uniform_manhattan — 0.8380 +/-0.0088">
+                <span class="bar-lab">knn_k61_manhattan</span>
+                <span class="bar-track"><span class="bar-fill" style="width:42.7%"></span></span>
+                <span class="bar-val">0.8380</span><span class="bar-n">rejected</span>
+              </div>
+            </div>
+            <div class="bar-legend"><span>scale zoomed to 0.835–0.842 · top 8 of 182 variants by CV ROC-AUC · the 3 bin-discretised NB variants and 5 manhattan-distance KNN variants form the entire top of the field</span></div>
+          </div>
+        </div>
+
+        <div class="mc-block">
+          <div class="mc-sub">TOP DRIVERS — DELIBERATELY EMPTY</div>
+          <p class="fig-d">No feature-importance chart for this card, and that omission is itself a finding, not
+          a gap: neither KNN nor Naive Bayes yields a natural feature ranking. KNN has no coefficients or
+          splits to read; Naive Bayes's per-feature log-likelihood ratios are not comparable across a mixed
+          Gaussian/Bernoulli model and are inflated by the independence violations that are supposed to make NB
+          struggle here — inventing a ranking would be worse than reporting none.
+          <b>On that independence assumption:</b> the most correlated binary pair within the No-churn class is
+          <code>StreamingMovies_Yes</code> &lt;-&gt; <code>StreamingTV_Yes</code> at r=0.557, and letting Naive
+          Bayes's diagonal covariance loosen to a shared full covariance (LDA) recovers CV ROC-AUC 0.8008 against
+          plain GaussianNB's 0.7746 — evidence the independence assumption really is costing this family
+          something, just not enough to keep the best (discretised) variant off the leaderboard.</p>
+        </div>
+        <p class="src">results/knn_naive_bayes.json — runtime 290.87s, frozen split, test set read once</p>
+      </div>
+
+      <!-- MODEL CARD — SVM + Feature Engineering (landed) -->
+      <div class="model-card">
+        <div class="mc-head">
+          <span class="mc-name">SVM + Feature Engineering</span>
+          <span class="mc-brief">SVM plus engineered features</span>
+          <span class="mc-status"><span class="badge done">landed</span></span>
+        </div>
+        <p class="mc-desc">LinearSVC and kernel SVC (linear, RBF), each swept over regularisation/kernel
+        parameters and class-weight balancing, then paired with seven hand-engineered features — a
+        Contract &times; InternetService interaction, MonthlyCharges bins/spline/combined encodings, a
+        TotalCharges residual, a dropped-TotalCharges variant, and an add-on count — to test whether explicit
+        feature engineering closes the gap to the tree ensembles without needing a tree. Winner:
+        <b>LinearSVC, balanced class weights</b>, standard preprocessor features only, calibrated with
+        <code>CalibratedClassifierCV(sigmoid, cv=5)</code> for usable probabilities.</p>
+
+        <div class="mstats">
+          <div class="mstat"><div class="mk">CV ROC-AUC</div><div class="mv">0.8450 <em>+/-0.0085</em></div></div>
+          <div class="mstat"><div class="mk">TEST ROC-AUC</div><div class="mv">0.8399</div></div>
+          <div class="mstat"><div class="mk">F1 (YES)</div><div class="mv">0.6182</div></div>
+          <div class="mstat"><div class="mk">PRECISION (YES)</div><div class="mv">0.5375</div></div>
+          <div class="mstat"><div class="mk">RECALL (YES)</div><div class="mv">0.7273</div></div>
+        </div>
+
+        <div class="mc-cols">
+          <div class="mc-block">
+            <div class="mc-sub">CONFUSION MATRIX — TEST SET, N=1409, THRESHOLD 0.33</div>
+            <div class="cm-wrap">
+              <div class="cm">
+                <div class="ch"></div>
+                <div class="ch">PRED NO</div>
+                <div class="ch">PRED YES</div>
+                <div class="rh">ACTUAL NO</div>
+                <div class="cc cell s6" title="True Negative — 801"><span class="cv2">801</span><span class="cl">TN</span></div>
+                <div class="cc cell s2" title="False Positive — 234"><span class="cv2">234</span><span class="cl">FP</span></div>
+                <div class="rh">ACTUAL YES</div>
+                <div class="cc cell s1" title="False Negative — 102"><span class="cv2">102</span><span class="cl">FN</span></div>
+                <div class="cc cell s3" title="True Positive — 272"><span class="cv2">272</span><span class="cl">TP</span></div>
+              </div>
+              <div class="cm-key">
+                <div>Threshold <b>0.33</b>, maximising out-of-fold F1(Yes) at 0.6365 (vs. 0.5979 at the
+                default 0.5) on the calibrated pipeline's OOF probabilities.</div>
+                <div>At the default 0.5 cut: F1(Yes) 0.5954, precision 0.6478, recall 0.5508, accuracy 80.13% —
+                tuning the threshold trades precision for recall and moves F1(Yes) 0.5954 -&gt; 0.6182.</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="mc-block">
+            <div class="mc-sub">FAMILIES TRIED — CV ROC-AUC, 8 OF 41 VARIANTS</div>
+            <div class="bars">
+              <div class="bar-head"><span>VARIANT</span><span>CV_ROC_AUC</span><span>AUC</span><span></span></div>
+              <div class="bar-row" title="LinearSVC, class_weight=balanced — 0.8450 +/-0.0085 — the winning configuration">
+                <span class="bar-lab">LinearSVC balanced</span>
+                <span class="bar-track"><span class="bar-fill" style="width:92.9%"></span></span>
+                <span class="bar-val">0.8450</span><span class="bar-n">winner</span>
+              </div>
+              <div class="bar-row dim" title="SVC-rbf, class_weight=balanced — 0.8432 +/-0.0089">
+                <span class="bar-lab">SVC-rbf balanced</span>
+                <span class="bar-track"><span class="bar-fill" style="width:90.3%"></span></span>
+                <span class="bar-val">0.8432</span><span class="bar-n">rejected</span>
+              </div>
+              <div class="bar-row dim" title="SVC-linear, class_weight=balanced — 0.8427 +/-0.0091">
+                <span class="bar-lab">SVC-linear balanced</span>
+                <span class="bar-track"><span class="bar-fill" style="width:89.6%"></span></span>
+                <span class="bar-val">0.8427</span><span class="bar-n">rejected</span>
+              </div>
+              <div class="bar-row dim" title="LinearSVC, C=1.0, unweighted — 0.8425 +/-0.0088">
+                <span class="bar-lab">LinearSVC C=1.0</span>
+                <span class="bar-track"><span class="bar-fill" style="width:89.3%"></span></span>
+                <span class="bar-val">0.8425</span><span class="bar-n">rejected</span>
+              </div>
+              <div class="bar-row dim" title="LinearSVC, C=0.01, unweighted — 0.8400 +/-0.0087">
+                <span class="bar-lab">LinearSVC C=0.01</span>
+                <span class="bar-track"><span class="bar-fill" style="width:85.7%"></span></span>
+                <span class="bar-val">0.8400</span><span class="bar-n">rejected</span>
+              </div>
+              <div class="bar-row dim" title="SVC linear kernel, C=1.0, unweighted, baseline features — 0.8331 +/-0.0108">
+                <span class="bar-lab">SVC linear C=1.0</span>
+                <span class="bar-track"><span class="bar-fill" style="width:75.9%"></span></span>
+                <span class="bar-val">0.8331</span><span class="bar-n">rejected</span>
+              </div>
+              <div class="bar-row dim" title="SVC rbf kernel, C=1.0, gamma=0.02 — 0.8278 +/-0.0120">
+                <span class="bar-lab">SVC rbf gamma=0.02</span>
+                <span class="bar-track"><span class="bar-fill" style="width:68.3%"></span></span>
+                <span class="bar-val">0.8278</span><span class="bar-n">rejected</span>
+              </div>
+              <div class="bar-row dim" title="SVC rbf kernel, C=1.0, gamma=scale (sklearn default) — 0.8025 +/-0.0109">
+                <span class="bar-lab">SVC rbf gamma=scale</span>
+                <span class="bar-track"><span class="bar-fill" style="width:32.1%"></span></span>
+                <span class="bar-val">0.8025</span><span class="bar-n">worst</span>
+              </div>
+            </div>
+            <div class="bar-legend"><span>scale zoomed to 0.780–0.850 · one bar per kernel/weighting combination — the 33 remaining variants are the feature-engineering sweep in the table below · full 41 in results/svm_features.json</span></div>
+          </div>
+        </div>
+
+        <div class="mc-block">
+          <div class="mc-sub">TOP DRIVERS — LINEARSVC COEFFICIENTS, TOP 8 OF 12</div>
+          <div class="drv-rows">
+            <div class="drv-row" title="InternetService_No — coef -1.1467, decreases churn">
+              <span class="drv-lab">InternetService_No</span>
+              <span class="drv-track"><span class="drv-zero"></span><span class="drv-fill neg" style="width:50.0%"></span></span>
+              <span class="drv-val">-1.147</span>
+            </div>
+            <div class="drv-row" title="Contract_Two year — coef -0.8733, decreases churn">
+              <span class="drv-lab">Contract_Two year</span>
+              <span class="drv-track"><span class="drv-zero"></span><span class="drv-fill neg" style="width:38.1%"></span></span>
+              <span class="drv-val">-0.873</span>
+            </div>
+            <div class="drv-row" title="Contract_One year — coef -0.8431, decreases churn">
+              <span class="drv-lab">Contract_One year</span>
+              <span class="drv-track"><span class="drv-zero"></span><span class="drv-fill neg" style="width:36.8%"></span></span>
+              <span class="drv-val">-0.843</span>
+            </div>
+            <div class="drv-row" title="InternetService_Fiber optic — coef 0.5128, increases churn">
+              <span class="drv-lab">InternetService_Fiber optic</span>
+              <span class="drv-track"><span class="drv-zero"></span><span class="drv-fill pos" style="width:22.4%"></span></span>
+              <span class="drv-val">+0.513</span>
+            </div>
+            <div class="drv-row" title="tenure — coef -0.5036, decreases churn">
+              <span class="drv-lab">tenure</span>
+              <span class="drv-track"><span class="drv-zero"></span><span class="drv-fill neg" style="width:22.0%"></span></span>
+              <span class="drv-val">-0.504</span>
+            </div>
+            <div class="drv-row" title="MonthlyCharges_sp_2 — coef 0.4069, increases churn">
+              <span class="drv-lab">MonthlyCharges_sp_2</span>
+              <span class="drv-track"><span class="drv-zero"></span><span class="drv-fill pos" style="width:17.7%"></span></span>
+              <span class="drv-val">+0.407</span>
+            </div>
+            <div class="drv-row" title="MonthlyCharges_sp_3 — coef -0.3205, decreases churn">
+              <span class="drv-lab">MonthlyCharges_sp_3</span>
+              <span class="drv-track"><span class="drv-zero"></span><span class="drv-fill neg" style="width:14.0%"></span></span>
+              <span class="drv-val">-0.321</span>
+            </div>
+            <div class="drv-row" title="TechSupport_Yes — coef -0.2769, decreases churn">
+              <span class="drv-lab">TechSupport_Yes</span>
+              <span class="drv-track"><span class="drv-zero"></span><span class="drv-fill neg" style="width:12.1%"></span></span>
+              <span class="drv-val">-0.277</span>
+            </div>
+          </div>
+          <div class="drv-legend">
+            <span><i class="swatch amber"></i>positive — increases churn</span>
+            <span><i class="swatch solid"></i>negative — decreases churn</span>
+            <span>bars scaled to the largest |coef|, 1.1467 (InternetService_No) — from the spline-augmented LinearSVC fit used for interpretability, not necessarily the exact standard-feature winner above</span>
+          </div>
+        </div>
+
+        <div class="mc-block">
+          <div class="mc-sub">FEATURE EXPERIMENTS — DID ENGINEERING HELP? (24 RUNS, CV ROC-AUC DELTA VS. EACH BASE MODEL'S OWN BASELINE)</div>
+          <p class="fig-d" style="margin-bottom:14px;">Every one of the seven engineered features was tested against three base models
+          (LinearSVC, SVC-linear, SVC-rbf). <b>Verdict: none helped.</b> 22 of 24 runs are "neutral" (delta
+          within +/-0.0014), and the 2 that moved were both harmful — both on the Contract &times;
+          InternetService interaction, which a tree already gets for free and an SVM apparently does not need
+          spelled out.</p>
+          <div class="table-scroll">
+            <table>
+              <thead><tr><th>ENGINEERED FEATURE</th><th>BASE MODEL</th><th>CV_ROC_AUC DELTA</th><th>VERDICT</th></tr></thead>
+              <tbody>
+                <tr><td class="issue">+ MonthlyCharges spline</td><td>SVC-linear</td><td>+0.0010</td><td><span class="chip wait">neutral</span></td></tr>
+                <tr><td class="issue">combined (spline)</td><td>SVC-linear</td><td>+0.0010</td><td><span class="chip wait">neutral</span></td></tr>
+                <tr><td class="issue">+ TotalCharges residual</td><td>SVC-rbf</td><td>+0.0004</td><td><span class="chip wait">neutral</span></td></tr>
+                <tr><td class="issue">- TotalCharges dropped</td><td>SVC-rbf</td><td>+0.0004</td><td><span class="chip wait">neutral</span></td></tr>
+                <tr><td class="issue">combined (spline + residual)</td><td>SVC-rbf</td><td>+0.0014</td><td><span class="chip wait">neutral</span></td></tr>
+                <tr><td class="issue">+ addon count</td><td>LinearSVC</td><td>-0.0000</td><td><span class="chip wait">neutral</span></td></tr>
+                <tr><td class="issue">combined (none selected)</td><td>LinearSVC</td><td>0.0000</td><td><span class="chip wait">neutral</span></td></tr>
+                <tr><td class="issue">+ MonthlyCharges 10 bins</td><td>SVC-linear</td><td>-0.0000</td><td><span class="chip wait">neutral</span></td></tr>
+                <tr><td class="issue">+ addon count</td><td>SVC-linear</td><td>-0.0001</td><td><span class="chip wait">neutral</span></td></tr>
+                <tr><td class="issue">+ addon count</td><td>SVC-rbf</td><td>-0.0002</td><td><span class="chip wait">neutral</span></td></tr>
+                <tr><td class="issue">+ MonthlyCharges spline</td><td>LinearSVC</td><td>-0.0004</td><td><span class="chip wait">neutral</span></td></tr>
+                <tr><td class="issue">+ Contract x InternetService</td><td>LinearSVC</td><td>-0.0004</td><td><span class="chip wait">neutral</span></td></tr>
+                <tr><td class="issue">+ TotalCharges residual</td><td>SVC-linear</td><td>-0.0004</td><td><span class="chip wait">neutral</span></td></tr>
+                <tr><td class="issue">- TotalCharges dropped</td><td>SVC-linear</td><td>-0.0004</td><td><span class="chip wait">neutral</span></td></tr>
+                <tr><td class="issue">+ MonthlyCharges 10 bins</td><td>LinearSVC</td><td>-0.0005</td><td><span class="chip wait">neutral</span></td></tr>
+                <tr><td class="issue">+ MonthlyCharges bins + linear</td><td>LinearSVC</td><td>-0.0005</td><td><span class="chip wait">neutral</span></td></tr>
+                <tr><td class="issue">+ TotalCharges residual</td><td>LinearSVC</td><td>-0.0006</td><td><span class="chip wait">neutral</span></td></tr>
+                <tr><td class="issue">- TotalCharges dropped</td><td>LinearSVC</td><td>-0.0006</td><td><span class="chip wait">neutral</span></td></tr>
+                <tr><td class="issue">+ MonthlyCharges bins + linear</td><td>SVC-linear</td><td>-0.0007</td><td><span class="chip wait">neutral</span></td></tr>
+                <tr><td class="issue">+ MonthlyCharges 10 bins</td><td>SVC-rbf</td><td>-0.0006</td><td><span class="chip wait">neutral</span></td></tr>
+                <tr><td class="issue">+ MonthlyCharges bins + linear</td><td>SVC-rbf</td><td>-0.0012</td><td><span class="chip wait">neutral</span></td></tr>
+                <tr><td class="issue">+ Contract x InternetService</td><td>SVC-linear</td><td>-0.0033</td><td><span class="chip hurt">hurt</span></td></tr>
+                <tr><td class="issue">+ Contract x InternetService</td><td>SVC-rbf</td><td>-0.0051</td><td><span class="chip hurt">hurt</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <p class="src">results/svm_features.json — runtime 371.5s, frozen split, test set read once, 366 of 372s spent fitting SVMs on 2 cores</p>
+      </div>
+
+    </div>
+
+    <div class="next-grid" style="margin-top:32px;">
+      <div class="card">
+        <h3>HOW THIS SECTION WORKS</h3>
+        <ul>
+          <li>Each of the three team members ran their own model agent against the same frozen
+          <code>load_splits()</code> data — no re-derived splits, no shared fitting across agents.</li>
+          <li>Every card's stat row, confusion matrix and variant chart is read straight from that agent's
+          <code>results/&lt;approach&gt;.json</code> — nothing on this page is computed or estimated live.</li>
+          <li>All four result files now exist. Earlier versions of this page showed tree ensembles,
+          k-NN/naive Bayes and SVM+features as dashed "pending" placeholders while their agents were still
+          running — this version fills them in from the same files, with nothing invented in between.</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>STILL_OPEN</h3>
+        <ul>
+          <li><b>Which model wins?</b> Still not decided — that's Step 4's job, not this one. All four have
+          landed within 0.0051 ROC-AUC of each other (0.8389–0.8440); nothing on this page ranks them beyond
+          the leaderboard's sort order.</li>
+          <li><b>TotalCharges keep/drop/residual — converges across all four agents.</b> Logistic regression:
+          keeping it beats dropping/residualising by ~0.0015 CV ROC-AUC. Tree ensembles: it ranks 4th by
+          permutation importance, above <code>MonthlyCharges</code> — trees are indifferent to the collinearity
+          that gets it dropped for linear models. SVM: dropping it is neutral to slightly negative (-0.0004 to
+          -0.0006 CV ROC-AUC across variants). k-NN/naive Bayes: dropping it costs the winning NB variant
+          -0.0049 CV ROC-AUC (0.8410 -&gt; 0.8362), the largest single effect of any experiment run this step.
+          <b>No agent found a reason to drop it.</b></li>
+          <li><b>Does the noise cull help — resolved for logistic regression, and it's a wash.</b> Keeping
+          gender/PhoneService scores 0.84627 tuned CV ROC-AUC against the winning configuration's 0.84634 — a
+          0.00007 gap, confirming the Step 2 prediction that a regularised model shrinks noise columns to
+          nothing on its own. Not re-tested by the other three agents.</li>
+          <li><b>MonthlyCharges non-monotonicity — the tree ensembles agent's finding corrects <code>CLAUDE.md</code>
+          fact #8.</b> Trees do recover a genuine local dip at the decile 9-&gt;10 boundary, but it is tiny
+          (0.94pp of partial dependence) against the 16.66pp swing the deciles actually show, and a plain
+          logistic regression on the full Step 2 feature set reproduces the same fall (via the Contract and
+          InternetService columns) slightly more sharply. The non-monotonicity is real; the inference that it
+          argues for trees specifically is not supported. See the Tree Ensembles card above and
+          <code>docs/step-03b-tree-ensembles.md</code> §7.</li>
+          <li><b>The construction caveat — still open.</b> tenure and TotalCharges are outcome-correlated by
+          construction: a customer who churned early has low tenure by definition. Legitimate signal for "who
+          will churn," not causal, and unavailable when scoring a customer at signup. Leading candidate for
+          the synthesis cell's "main technical decision" question — to be finalised in Step 5.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <!-- ============ /CHAPTER: STEP 3 ============ -->
+
+  <!-- ============ CHAPTER: STEP 4 — EVALUATE & COMPARE ============ -->
+  <div class="chapter" id="step4">
+    <div class="chapter-head">
+      <span class="chapter-n">STEP 4 / 5</span>
+      <h2 class="chapter-title">Evaluate &amp; compare</h2>
+      <div class="chapter-meta">
+        <span class="chapter-budget">budget 15 min</span>
+        <span class="badge pending">not started</span>
+      </div>
+    </div>
+    <p class="chapter-sub">Not started. All four Step 3 model agents have now landed — tree ensembles,
+    logistic regression, SVM+features, k-NN/naive Bayes — so the inputs this step needs are ready, but the
+    step itself has not been run. Planned: one comparison table across all four (ROC-AUC, F1(Yes),
+    precision/recall(Yes)), a look at whether the decision threshold should move off 0.5 for each, and a team
+    pick of which model actually goes forward. <b>No comparison exists yet</b> — the Step 3 leaderboard shows
+    individual results only, not a team decision.</p>
+
+    <div class="pending-body" style="max-width:680px;">
+      <div class="pb-t">not started</div>
+      All four result files exist now, so this section is no longer blocked on any agent — it is blocked on
+      actually being run. Nothing below is measured: no comparison table, no chosen model, no final metric.
+      Checking back here is the right move, not re-deriving numbers from the individual model cards above —
+      that comparison is Step 4's job specifically so it happens once, against the same rows, rather than once
+      per model card.
+    </div>
+  </div>
+  <!-- ============ /CHAPTER: STEP 4 ============ -->
+
+  <!-- ============ CHAPTER: STEP 5 — SYNTHESIS ============ -->
+  <div class="chapter" id="step5">
+    <div class="chapter-head">
+      <span class="chapter-n">STEP 5 / 5</span>
+      <h2 class="chapter-title">Synthesis</h2>
+      <div class="chapter-meta">
+        <span class="chapter-budget">budget 10 min</span>
+        <span class="badge pending">not started</span>
+      </div>
+    </div>
+    <p class="chapter-sub">Not started. The assignment closes with one synthesis cell answering four
+    questions. <b>None of the four are answered yet</b> — the material below is what's on hand, not
+    conclusions, and none of it should be read as final until Step 4 has actually picked a model.</p>
+
+    <div class="table-scroll">
+      <table>
+        <thead>
+          <tr><th>SYNTHESIS QUESTION</th><th>STATUS</th><th>MATERIAL ON HAND</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="issue">Best model</td>
+            <td><span class="badge pending">pending</span></td>
+            <td class="why">Waits on Step 4. All four families have measured results now — tree ensembles
+            (GradientBoosting) leads the Step 3 leaderboard at test ROC-AUC 0.8440, with logistic regression
+            (0.8424), SVM+features (0.8399) and k-NN/naive Bayes (0.8389) within 0.0051 of it — four
+            candidates on the board, not a winner.</td>
+          </tr>
+          <tr>
+            <td class="issue">Chosen metric &amp; value</td>
+            <td><span class="badge pending">pending</span></td>
+            <td class="why">Primary metric is already decided (ROC-AUC, per the Step 1 baseline analysis).
+            The value waits on which model Step 4 picks from the four landed results (0.8389–0.8440 test
+            ROC-AUC, 0.6170–0.6228 F1(Yes)).</td>
+          </tr>
+          <tr>
+            <td class="issue">Main technical decision &amp; why</td>
+            <td><span class="badge pending">pending</span></td>
+            <td class="why">Two candidates so far, not finalised: the tenure/TotalCharges construction
+            caveat flagged in Step 1 and carried through Step 3; and the tree ensembles agent's correction to
+            <code>CLAUDE.md</code> fact #8 — the MonthlyCharges non-monotonicity is real but does not actually
+            argue for trees over linear models, since a plain logistic regression on the full feature set
+            reproduces it too (docs/step-03b-tree-ensembles.md §7).</td>
+          </tr>
+          <tr>
+            <td class="issue">What we'd try next</td>
+            <td><span class="badge pending">pending</span></td>
+            <td class="why">Not drafted. Likely candidates: the SVM agent's engineered features (Contract
+            &times; InternetService, MonthlyCharges splines/bins, an add-on count) all tested neutral-to-hurt
+            on that family — worth checking whether they behave differently on the tree ensembles, which get
+            the same interaction natively; and whichever of the four families Step 4 shows has the most
+            headroom left on the table.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <!-- ============ /CHAPTER: STEP 5 ============ -->
+
+  <footer>
+    <span>grupo2 // hackaton-classificacao — sources: docs/step-01-eda.md · docs/step-02-data-treatment.md · results/logistic_regression.json · METHODOLOGY.md · ARCHITECTURE.md · CHANGES.md</span>
+    <span><a href="https://github.com/miskmichel/grupo2">github.com/miskmichel/grupo2</a></span>
+  </footer>
+
+</div>
