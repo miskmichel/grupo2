@@ -77,6 +77,10 @@ Each cleaning claim was checked empirically rather than assumed — row counts p
 
 **One thing that had to be forced.** Ubuntu 24.04 marks its system Python as externally managed (PEP 668), so the install needed `--break-system-packages`. That overrides a distro safety rail. It is acceptable here because the machine is a disposable hackathon environment; on anything longer-lived a virtualenv would be the right call instead.
 
+**Freezing the split.** The split was then materialised to `data/splits/` and committed, rather than left as a function call. The reason is coordination, not tidiness: three people are about to train different models in parallel, and if each notebook re-derives its own split they are scored on different test rows and the comparison table is meaningless. Freezing makes the comparison valid by construction instead of by everyone remembering to pass `random_state=42`. It also keeps the holdout honest — re-splitting inside a tuning loop is how a test set quietly degrades into a validation set.
+
+The manifest records a SHA-256 of each file and of the source CSV, so a regenerated split that differs is loud rather than silent. `customerID` stays out of the feature matrix but remains recoverable through a `row_id` join key, because a churn score nobody can attach to a customer is not actionable.
+
 **Evidence:** [`docs/step-02-data-treatment.md`](docs/step-02-data-treatment.md)
 
 ---

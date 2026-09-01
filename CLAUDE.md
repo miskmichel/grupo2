@@ -51,10 +51,15 @@ Do not install packages without saying so in the response and logging it in `CHA
 import sys; sys.path.insert(0, 'src')
 import data_prep as dp
 
-df = dp.clean(dp.load_raw())          # 7043 × 18, TotalCharges float, Churn 0/1
-X_tr, X_te, y_tr, y_te = dp.split(df) # stratified 80/20, random_state=42
-pre = dp.build_preprocessor(df=df)    # UNFITTED ColumnTransformer
+X_tr, X_te, y_tr, y_te = dp.load_splits()   # the FROZEN split — use this
+pre = dp.build_preprocessor(df=dp.clean(dp.load_raw()))   # UNFITTED
 ```
+
+**Use `load_splits()`, not `split()`.** The split is frozen to `data/splits/` and
+committed, so all three team members score on identical held-out rows. Calling
+`split()` again re-derives it and silently invalidates the comparison table.
+`test.csv` stays unread until final evaluation. Verify with
+`python3 src/make_splits.py --check`.
 
 `build_preprocessor` returns an unfitted transformer on purpose — fit it inside a `Pipeline` on the training fold only. Flags: `clean(drop_noise=False)` keeps `gender`/`PhoneService` for demonstrating the noise cull; `clean(drop_total_charges=True)` for linear models.
 

@@ -29,6 +29,8 @@ split leaks test information into the model.
 
 from __future__ import annotations
 
+from pathlib import Path
+
 import pandas as pd
 from sklearn.compose import ColumnTransformer
 from sklearn.model_selection import train_test_split
@@ -45,6 +47,8 @@ __all__ = [
     "infer_feature_groups",
     "build_preprocessor",
     "split",
+    "load_splits",
+    "load_customer_ids",
 ]
 
 #: The CSV lives at the repository root, not in ``data/``.  The enunciado's
@@ -258,3 +262,50 @@ def split(
     return train_test_split(
         X, y, test_size=test_size, random_state=random_state, stratify=y
     )
+
+
+def load_splits(
+    split_dir: str | None = None,
+) -> tuple[pd.DataFrame, pd.DataFrame, pd.Series, pd.Series]:
+    """Load the **frozen** train/test split from disk.  Returns ``(X_tr, X_te, y_tr, y_te)``.
+
+    This is what Step 3 should use.  Prefer it over calling :func:`split`
+    directly: the whole team scores on the same held-out rows, so the model
+    comparison table is valid by construction rather than by everyone
+    remembering to pass the same ``random_state``.
+
+    The files are generated once by ``src/make_splits.py``.  Regenerate them
+    only if the cleaning changes -- and if you do, say so, because every score
+    recorded before that point becomes incomparable.
+
+    Frames are indexed by ``row_id`` (the row's position in the raw CSV), which
+    is the join key back to ``customerID`` via :func:`load_customer_ids`.
+    ``customerID`` is deliberately absent from X: it is an identifier, and
+    label-encoding it would let a tree memorise the training set.
+    """
+    base = Path(split_dir) if split_dir else Path(__file__).resolve().parent.parent / "data" / "splits"
+    train_path, test_path = base / "train.csv", base / "test.csv"
+
+    if not train_path.exists() or not test_path.exists():
+        raise FileNotFoundError(
+            f"No frozen split in {base}. Generate it with: python3 src/make_splits.py"
+        )
+
+    train = pd.read_csv(train_path, index_col="row_id")
+    test = pd.read_csv(test_path, index_col="row_id")
+    return (
+        train.drop(columns=[TARGET]),
+        test.drop(columns=[TARGET]),
+        train[TARGET],
+        test[TARGET],
+    )
+
+
+def load_customer_ids(split_dir: str | None = None) -> pd.Series:
+    """``row_id -> customerID``, for re-attaching predictions to real customers.
+
+    Dropping the identifier from the feature matrix is not the same as throwing
+    it away -- a churn score is only actionable if you know whose it is.
+    """
+    base = Path(split_dir) if split_dir else Path(__file__).resolve().parent.parent / "data" / "splits"
+    return pd.read_csv(base / "customer_ids.csv", index_col="row_id")[ID_COLUMN]

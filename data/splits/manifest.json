@@ -1,0 +1,44 @@
+{
+  "generated_by": "src/make_splits.py",
+  "source_csv": "Telco-Customer-Churn.csv",
+  "source_sha256": "16320c9c1ec72448db59aa0a26a0b95401046bef5d02fd3aeb906448e3055e91",
+  "params": {
+    "test_size": 0.2,
+    "random_state": 42,
+    "stratify": "Churn",
+    "clean_drop_noise": true,
+    "clean_drop_total_charges": false
+  },
+  "train": {
+    "rows": 5634,
+    "churn_positives": 1495,
+    "churn_rate": 0.265353,
+    "sha256": "08cd0f158e076218b7984354b7716f982c680da901edca709a99a9cc1615cd87"
+  },
+  "test": {
+    "rows": 1409,
+    "churn_positives": 374,
+    "churn_rate": 0.265436,
+    "sha256": "a80da8608953ee75e8f15d553515402fcaabf0c58663fdef1eb8347efc0518ff"
+  },
+  "columns": [
+    "SeniorCitizen",
+    "Partner",
+    "Dependents",
+    "tenure",
+    "MultipleLines",
+    "InternetService",
+    "OnlineSecurity",
+    "OnlineBackup",
+    "DeviceProtection",
+    "TechSupport",
+    "StreamingTV",
+    "StreamingMovies",
+    "Contract",
+    "PaperlessBilling",
+    "PaymentMethod",
+    "MonthlyCharges",
+    "TotalCharges",
+    "Churn"
+  ]
+}

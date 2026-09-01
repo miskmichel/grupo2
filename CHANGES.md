@@ -67,6 +67,16 @@ Newest first.
 
 - **Encoded width is 21, not the 25–30 predicted.** Under `drop='first'`, the "No X service" collapse turns seven 3-level columns into 2-level ones (7 dummies saved), and the noise cull removes 2 more. Measured counterfactual: naive encoding gives **30 columns at rank 24** with **22 perfect-|r| pairs**, including `PhoneService_Yes` ↔ `MultipleLines_No phone service` at **r = −1.0000**.
 
+#### Frozen train/test split (added for Step 3)
+
+- Added **`src/make_splits.py`** and **`data/splits/`** — the split is now materialised to disk and committed, not re-derived per notebook.
+- `data/splits/train.csv` **5634 rows, churn 26.5353%**; `data/splits/test.csv` **1409 rows, churn 26.5436%**; `customer_ids.csv` (`row_id → customerID`); `manifest.json` recording parameters plus SHA-256 of every file and of the source CSV.
+- Added `data_prep.load_splits()` and `data_prep.load_customer_ids()`. **Step 3 must use `load_splits()`, not `split()`** — three people training in parallel have to score on identical held-out rows or the comparison table means nothing.
+- `customerID` is kept *out* of the feature matrix (17 feature columns) but recoverable via `row_id`, so predictions can be re-attached to real customers.
+- Verified: regeneration is byte-stable (`train.csv` sha256 `08cd0f158e076218…` across runs), folds do not overlap and cover all 7043 rows, frozen split matches what `split()` produces in memory, and encoding still yields 21 columns at full rank 21.
+- `python3 src/make_splits.py --check` verifies on-disk files against the manifest and re-checks determinism.
+- Added `data/README.md` warning that the raw CSV must stay at the repo root — `data/` exists only for derived files.
+
 ### Housekeeping
 
 - Added **`requirements.txt`** pinning numpy 2.5.1, scipy 1.18.0, pandas 3.0.5, scikit-learn 1.9.0, matplotlib 3.11.1, seaborn 0.13.2. The pandas pin is load-bearing, not cosmetic — under 2.x a `dtype == 'object'` guard works and under 3.0 it silently does not, which is exactly the class of bug only one team member can reproduce. Documents both the venv install (preferred) and the `--break-system-packages` form actually used here.

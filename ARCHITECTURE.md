@@ -17,8 +17,17 @@ hackaton-classificacao/
 ├── codigo.ipynb               # team working notebook
 ├── Telco-Customer-Churn.csv   # the dataset (root path — do not move)
 │
+├── data/
+│   ├── README.md              # derived files only — raw CSV stays at root
+│   └── splits/                # FROZEN train/test split (committed)
+│       ├── train.csv          #   5634 rows
+│       ├── test.csv           #   1409 rows — held out until final eval
+│       ├── customer_ids.csv   #   row_id -> customerID join key
+│       └── manifest.json      #   params + SHA-256 of each file
+│
 ├── src/
-│   └── data_prep.py           # loading, cleaning, encoding, splitting
+│   ├── data_prep.py           # loading, cleaning, encoding, splitting
+│   └── make_splits.py         # writes data/splits/ once; --check verifies
 │
 └── docs/
     ├── step-01-eda.md         # Step 1 — exploratory data analysis
@@ -98,12 +107,12 @@ raw CSV
   ├─ drop    customerID, gender, PhoneService
   │
   ▼
-train / test split  ── stratified on Churn ──┐
-  │                                          │
-  ▼                                          ▼
-ColumnTransformer                       (test set held out,
-  ├─ numeric   → StandardScaler          untouched until final
-  └─ categoric → OneHotEncoder(drop='first')   evaluation)
+train / test split  ── stratified, FROZEN to data/splits/ ──┐
+  │  load with data_prep.load_splits()                     │
+  ▼                                                        ▼
+ColumnTransformer                                   (test.csv held out,
+  ├─ numeric   → StandardScaler                      untouched until final
+  └─ categoric → OneHotEncoder(drop='first')         evaluation)
   │
   ▼
 estimator  ── ≥2 required by the assignment ──
