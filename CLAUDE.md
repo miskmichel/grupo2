@@ -12,7 +12,9 @@ The deliverable is **a notebook that runs start-to-finish** plus a synthesis cel
 
 These are established, verified findings from `docs/step-01-eda.md`. Do not re-derive them; do not contradict them without new evidence.
 
-1. **`TotalCharges` contains 11 single-space `' '` values, not empty strings.** This is why the column reads as `object`. `.isnull()` does not catch them. `.astype(float)` raises `ValueError`. All 11 rows have `tenure == 0` (the only such rows in the dataset) and all are `Churn == 'No'`. **Impute `0`, not the median** — they are new customers who have never been billed.
+1. **`TotalCharges` contains 11 single-space `' '` values, not empty strings.** This is why the column reads as text. `.isnull()` does not catch them. `.astype(float)` raises `ValueError: could not convert string to float: ' '`. All 11 rows have `tenure == 0` (the only such rows in the dataset) and all are `Churn == 'No'`. **Impute `0`, not the median** — they are new customers who have never been billed.
+
+   ⚠️ **Do not guard on `dtype == 'object'`.** Under the installed **pandas 3.0.5** this column reads as dtype **`str`**, not `object`, so an `object` check silently never fires. Dispatch on `not pandas.api.types.is_numeric_dtype(...)` instead, as `src/data_prep.py` does. Most published tutorials for this dataset were written against pandas 1.x/2.x and will tell you `object`.
 
 2. **The CSV is at the repo root, not in `data/`.** The enunciado's *prose* says `data/`, but its *code* cell reads `pd.read_csv('Telco-Customer-Churn.csv')`. The code is right. **Do not move the file** — it breaks the notebook.
 
@@ -30,13 +32,30 @@ These are established, verified findings from `docs/step-01-eda.md`. Do not re-d
 
 ## Environment
 
-Python 3.12.3 with numpy and scipy. **pandas, scikit-learn, matplotlib and seaborn are not installed** — the notebook cannot run past its setup cell until they are. Install with:
+Python 3.12.3 · numpy 2.5.1 · scipy 1.18.0 · **pandas 3.0.5** · **scikit-learn 1.9.0** · **matplotlib 3.11.1** · **seaborn 0.13.2**
+
+The four ML packages were installed during Step 2. Ubuntu 24.04 marks its Python as externally managed (PEP 668), so a plain `pip install` fails and `--break-system-packages` was required:
 
 ```bash
-pip install pandas scikit-learn matplotlib seaborn
+pip install --break-system-packages pandas scikit-learn matplotlib seaborn
 ```
 
+Note pandas **3.0** — not 1.x/2.x. This changes text-column dtypes (see fact 1) and some tutorial code for this dataset will not apply verbatim.
+
 Do not install packages without saying so in the response and logging it in `CHANGES.md`.
+
+## Using the cleaning code
+
+```python
+import sys; sys.path.insert(0, 'src')
+import data_prep as dp
+
+df = dp.clean(dp.load_raw())          # 7043 × 18, TotalCharges float, Churn 0/1
+X_tr, X_te, y_tr, y_te = dp.split(df) # stratified 80/20, random_state=42
+pre = dp.build_preprocessor(df=df)    # UNFITTED ColumnTransformer
+```
+
+`build_preprocessor` returns an unfitted transformer on purpose — fit it inside a `Pipeline` on the training fold only. Flags: `clean(drop_noise=False)` keeps `gender`/`PhoneService` for demonstrating the noise cull; `clean(drop_total_charges=True)` for linear models.
 
 ## Conventions
 

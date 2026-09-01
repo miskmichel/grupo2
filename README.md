@@ -27,7 +27,7 @@ Full statement: [`enunciado.ipynb`](enunciado.ipynb) *(read-only — this is the
 | Step | Phase | Status |
 |---|---|---|
 | 1 | Explore | ✅ [EDA report](docs/step-01-eda.md) |
-| 2 | Treat data | 🔄 In progress |
+| 2 | Treat data | ✅ [Treatment report](docs/step-02-data-treatment.md) |
 | 3 | Train ≥2 models | ⬜ |
 | 4 | Evaluate & compare | ⬜ |
 | 5 | Synthesis | ⬜ |

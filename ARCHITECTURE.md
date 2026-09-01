@@ -13,11 +13,20 @@ hackaton-classificacao/
 ├── METHODOLOGY.md             # what we did at each step, and why
 │
 ├── enunciado.ipynb            # THE ASSIGNMENT (read-only — do not edit)
+├── codigo.ipynb               # team working notebook
 ├── Telco-Customer-Churn.csv   # the dataset (root path — do not move)
 │
+├── src/
+│   └── data_prep.py           # loading, cleaning, encoding, splitting
+│
 └── docs/
-    └── step-01-eda.md         # Step 1 — exploratory data analysis
+    ├── step-01-eda.md         # Step 1 — exploratory data analysis
+    └── step-02-data-treatment.md   # Step 2 — cleaning decisions + verification
 ```
+
+### Why cleaning lives in `src/`, not inline in the notebook
+
+Three reasons. It keeps the notebook readable so the run-start-to-finish deliverable is short and reviewable; it lets all three team members import the same cleaning without copy-pasting divergent cells; and it makes the leakage discipline structural — `build_preprocessor()` returns an *unfitted* `ColumnTransformer`, so the encoder physically cannot be fitted before the split by accident.
 
 ### Why the CSV sits at the root
 
@@ -112,4 +121,10 @@ Everything from `ColumnTransformer` down belongs **inside** a single `sklearn.pi
 - **Time:** 90 minutes total, per the assignment.
 - **Algorithms:** restricted to Module 3 — KNN, Naive Bayes, Logistic Regression, SVM, Trees, Ensemble.
 - **Offline:** the assignment states no internet is required; the dataset is vendored in the repo.
-- **Environment:** pandas / scikit-learn / matplotlib / seaborn are currently *not installed*. See `CLAUDE.md`.
+- **Environment:** pandas 3.0.5, scikit-learn 1.9.0, matplotlib 3.11.1, seaborn 0.13.2 installed as of Step 2. See `CLAUDE.md`.
+
+## Realised feature matrix (as of Step 2)
+
+`clean()` yields **7043 × 18**; encoding yields **21 features**, full rank 21/21, max off-diagonal |r| = 0.8297 (`tenure` ↔ `TotalCharges`, deliberately retained).
+
+Step 1 predicted 25–30 columns. The actual 21 is lower because, under `drop='first'`, collapsing the "No X service" levels turns seven 3-level columns into 2-level ones — saving 7 dummies — and the noise cull removes 2 more. The counterfactual naive encoding measures **30 columns at rank 24** (deficient by 6) with **22 perfectly-correlated pairs**, including `PhoneService_Yes` ↔ `MultipleLines_No phone service` at **r = −1.0000** — an *anti*-correlation, which duplicate-column checks miss entirely.

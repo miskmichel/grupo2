@@ -13,8 +13,8 @@ The assignment (`enunciado.ipynb`) breaks the 90 minutes into five phases. We fo
 | Step | Phase | Budget | Status | Evidence |
 |---|---|---|---|---|
 | 1 | Load and explore | 10 min | ✅ Complete | [`docs/step-01-eda.md`](docs/step-01-eda.md) |
-| 2 | Treat data — missing values, categoricals, `customerID` | 20–25 min | 🔄 In progress | `docs/step-02-data-treatment.md` |
-| 3 | Train ≥2 models | 30–35 min | ⬜ Not started | — |
+| 2 | Treat data — missing values, categoricals, `customerID` | 20–25 min | ✅ Complete | [`docs/step-02-data-treatment.md`](docs/step-02-data-treatment.md) |
+| 3 | Train ≥2 models | 30–35 min | 🔄 Next | — |
 | 4 | Evaluate and compare | 15 min | ⬜ Not started | — |
 | 5 | Review + synthesis cell | 10 min | ⬜ Not started | — |
 
@@ -57,13 +57,27 @@ Three findings beyond the planted trap materially shaped the rest of the project
 
 **Goal:** implement the cleaning decisions from Step 1 as verified, reusable code — missing values, categorical encoding, and the `customerID` question the assignment names explicitly.
 
-**Approach.** Rather than cleaning inline in a notebook, the treatment is being built as an importable module (`src/data_prep.py`) with the encoder returned as an *unfitted* `ColumnTransformer`. The reason is leakage discipline: fitting a scaler or encoder on the full dataset before splitting is the single most common way to quietly inflate a score on this exercise, and building the transformer separately from the fit makes that mistake structurally hard to commit.
+**Approach.** Rather than cleaning inline in a notebook, the treatment was built as an importable module (`src/data_prep.py`) with the encoder returned as an *unfitted* `ColumnTransformer`. The reason is leakage discipline: fitting a scaler or encoder on the full dataset before splitting is the single most common way to quietly inflate a score on this exercise, and building the transformer separately from the fit makes that mistake structurally hard to commit.
 
-Each cleaning claim is being checked empirically rather than assumed — row counts preserved, the 11 rows landing at exactly 0.0, the redundant service levels actually gone, and no perfectly-collinear pairs surviving encoding.
+Each cleaning claim was checked empirically rather than assumed — row counts preserved, the 11 rows landing at exactly 0.0, the redundant service levels actually gone, and no perfectly-collinear pairs surviving encoding. All 25 assertions passed and were then independently re-run by the lead before the work was committed.
 
-*This section will be completed when the step finishes.*
+**Decisions taken.**
 
-**Evidence:** `docs/step-02-data-treatment.md`
+| Issue | Decision | Alternative rejected |
+|---|---|---|
+| `TotalCharges` blanks | Coerce to numeric, `fillna(0)` | Median imputation — assigns a year of billing to someone billed nothing. Dropping the rows — silently deletes 11 non-churners |
+| `customerID` | **Drop entirely** | Keeping it as a feature. Label-encoding it is the real trap: it produces a high-cardinality integer that a tree will happily split on, memorising the training set and inflating the score with pure noise |
+| `'No internet service'` / `'No phone service'` | Collapse to `'No'` before encoding | Leaving them — measured to cost 6 rank deficiencies and 22 perfectly-correlated pairs |
+| `gender`, `PhoneService` | Drop, behind a `drop_noise=True` flag | Hard-coding the drop — the flag lets the synthesis cell *demonstrate* the cull rather than assert it |
+| Encoder fitting | `build_preprocessor()` returns it **unfitted** | Fitting on the full dataset before splitting — the classic leak on this exercise |
+
+**What we got wrong in Step 1, and the correction.** Step 1 recorded that `TotalCharges` reads as dtype `object`. Under pandas 3.0.5 it reads as **`str`**. Every downstream consequence survives — `.isnull()` still catches nothing, `.astype(float)` still raises — but a guard written as `dtype == 'object'` would silently never fire. The module dispatches on `not is_numeric_dtype()` instead. Worth flagging to the team, because essentially every published tutorial for this dataset was written against pandas 1.x/2.x and says `object`.
+
+**What we over-estimated.** Step 1 predicted 25–30 encoded columns; the real figure is **21**. Not an error in either direction — under `drop='first'` the collapse converts seven 3-level columns into 2-level ones, which saves seven dummies rather than the smaller number one counts by looking only at the *perfectly collinear* ones. The practical upside is real: 21 dense features on 5634 training rows leaves enough headroom to run `GridSearchCV` inside Step 3's 30–35 minute slot, which was not obviously affordable before.
+
+**One thing that had to be forced.** Ubuntu 24.04 marks its system Python as externally managed (PEP 668), so the install needed `--break-system-packages`. That overrides a distro safety rail. It is acceptable here because the machine is a disposable hackathon environment; on anything longer-lived a virtualenv would be the right call instead.
+
+**Evidence:** [`docs/step-02-data-treatment.md`](docs/step-02-data-treatment.md)
 
 ---
 
