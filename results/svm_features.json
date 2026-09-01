@@ -1,0 +1,476 @@
+{
+  "approach": "svm-feature-engineering",
+  "agent_brief": "SVM plus engineered features",
+  "variants": [
+    {
+      "name": "LinearSVC C=0.01",
+      "cv_roc_auc_mean": 0.84,
+      "cv_roc_auc_std": 0.0087,
+      "note": "no predict_proba; AUC off decision_function [8s CV]"
+    },
+    {
+      "name": "LinearSVC C=0.1",
+      "cv_roc_auc_mean": 0.8422,
+      "cv_roc_auc_std": 0.0087,
+      "note": "no predict_proba; AUC off decision_function [1s CV]"
+    },
+    {
+      "name": "LinearSVC C=1.0",
+      "cv_roc_auc_mean": 0.8425,
+      "cv_roc_auc_std": 0.0088,
+      "note": "no predict_proba; AUC off decision_function [1s CV]"
+    },
+    {
+      "name": "SVC linear C=0.03",
+      "cv_roc_auc_mean": 0.8334,
+      "cv_roc_auc_std": 0.0106,
+      "note": "baseline features [11s CV]"
+    },
+    {
+      "name": "SVC linear C=0.3",
+      "cv_roc_auc_mean": 0.8329,
+      "cv_roc_auc_std": 0.0109,
+      "note": "baseline features [12s CV]"
+    },
+    {
+      "name": "SVC linear C=1.0",
+      "cv_roc_auc_mean": 0.8331,
+      "cv_roc_auc_std": 0.0108,
+      "note": "baseline features [14s CV]"
+    },
+    {
+      "name": "SVC rbf C=1.0 gamma=scale",
+      "cv_roc_auc_mean": 0.8025,
+      "cv_roc_auc_std": 0.0109,
+      "note": "baseline features [16s CV]"
+    },
+    {
+      "name": "SVC rbf C=1.0 gamma=0.02",
+      "cv_roc_auc_mean": 0.8278,
+      "cv_roc_auc_std": 0.012,
+      "note": "baseline features [16s CV]"
+    },
+    {
+      "name": "SVC rbf C=3.0 gamma=scale",
+      "cv_roc_auc_mean": 0.8006,
+      "cv_roc_auc_std": 0.012,
+      "note": "baseline features [14s CV]"
+    },
+    {
+      "name": "SVC rbf C=3.0 gamma=0.02",
+      "cv_roc_auc_mean": 0.8229,
+      "cv_roc_auc_std": 0.013,
+      "note": "baseline features [12s CV]"
+    },
+    {
+      "name": "SVC rbf C=10.0 gamma=scale",
+      "cv_roc_auc_mean": 0.7889,
+      "cv_roc_auc_std": 0.0103,
+      "note": "baseline features [15s CV]"
+    },
+    {
+      "name": "SVC rbf C=10.0 gamma=0.02",
+      "cv_roc_auc_mean": 0.8192,
+      "cv_roc_auc_std": 0.0116,
+      "note": "baseline features [12s CV]"
+    },
+    {
+      "name": "LinearSVC balanced",
+      "cv_roc_auc_mean": 0.845,
+      "cv_roc_auc_std": 0.0085,
+      "note": "class_weight='balanced' [1s CV]"
+    },
+    {
+      "name": "SVC-linear balanced",
+      "cv_roc_auc_mean": 0.8427,
+      "cv_roc_auc_std": 0.0091,
+      "note": "class_weight='balanced' [11s CV]"
+    },
+    {
+      "name": "SVC-rbf balanced",
+      "cv_roc_auc_mean": 0.8432,
+      "cv_roc_auc_std": 0.0089,
+      "note": "class_weight='balanced' [15s CV]"
+    },
+    {
+      "name": "LinearSVC baseline",
+      "cv_roc_auc_mean": 0.845,
+      "cv_roc_auc_std": 0.0085,
+      "note": "feature experiment [1s CV]"
+    },
+    {
+      "name": "LinearSVC + Contract x InternetService",
+      "cv_roc_auc_mean": 0.8445,
+      "cv_roc_auc_std": 0.0081,
+      "note": "feature experiment [1s CV]"
+    },
+    {
+      "name": "LinearSVC + MonthlyCharges 10 bins",
+      "cv_roc_auc_mean": 0.8444,
+      "cv_roc_auc_std": 0.0083,
+      "note": "feature experiment [1s CV]"
+    },
+    {
+      "name": "LinearSVC + MonthlyCharges bins + linear",
+      "cv_roc_auc_mean": 0.8444,
+      "cv_roc_auc_std": 0.0085,
+      "note": "feature experiment [1s CV]"
+    },
+    {
+      "name": "LinearSVC + MonthlyCharges spline",
+      "cv_roc_auc_mean": 0.8445,
+      "cv_roc_auc_std": 0.0085,
+      "note": "feature experiment [1s CV]"
+    },
+    {
+      "name": "LinearSVC + TotalCharges residual",
+      "cv_roc_auc_mean": 0.8444,
+      "cv_roc_auc_std": 0.0084,
+      "note": "feature experiment [1s CV]"
+    },
+    {
+      "name": "LinearSVC - TotalCharges dropped",
+      "cv_roc_auc_mean": 0.8444,
+      "cv_roc_auc_std": 0.0084,
+      "note": "feature experiment [1s CV]"
+    },
+    {
+      "name": "LinearSVC + addon count",
+      "cv_roc_auc_mean": 0.8449,
+      "cv_roc_auc_std": 0.0085,
+      "note": "feature experiment [1s CV]"
+    },
+    {
+      "name": "SVC-linear baseline",
+      "cv_roc_auc_mean": 0.8427,
+      "cv_roc_auc_std": 0.0091,
+      "note": "feature experiment [12s CV]"
+    },
+    {
+      "name": "SVC-linear + Contract x InternetService",
+      "cv_roc_auc_mean": 0.8394,
+      "cv_roc_auc_std": 0.0092,
+      "note": "feature experiment [13s CV]"
+    },
+    {
+      "name": "SVC-linear + MonthlyCharges 10 bins",
+      "cv_roc_auc_mean": 0.8427,
+      "cv_roc_auc_std": 0.0105,
+      "note": "feature experiment [14s CV]"
+    },
+    {
+      "name": "SVC-linear + MonthlyCharges bins + linear",
+      "cv_roc_auc_mean": 0.8421,
+      "cv_roc_auc_std": 0.0103,
+      "note": "feature experiment [15s CV]"
+    },
+    {
+      "name": "SVC-linear + MonthlyCharges spline",
+      "cv_roc_auc_mean": 0.8438,
+      "cv_roc_auc_std": 0.0092,
+      "note": "feature experiment [12s CV]"
+    },
+    {
+      "name": "SVC-linear + TotalCharges residual",
+      "cv_roc_auc_mean": 0.8423,
+      "cv_roc_auc_std": 0.0092,
+      "note": "feature experiment [12s CV]"
+    },
+    {
+      "name": "SVC-linear - TotalCharges dropped",
+      "cv_roc_auc_mean": 0.8423,
+      "cv_roc_auc_std": 0.0093,
+      "note": "feature experiment [11s CV]"
+    },
+    {
+      "name": "SVC-linear + addon count",
+      "cv_roc_auc_mean": 0.8427,
+      "cv_roc_auc_std": 0.0091,
+      "note": "feature experiment [12s CV]"
+    },
+    {
+      "name": "SVC-linear combined {'monthly_charges': 'spline'}",
+      "cv_roc_auc_mean": 0.8438,
+      "cv_roc_auc_std": 0.0092,
+      "note": "all positive-delta features [12s CV]"
+    },
+    {
+      "name": "SVC-rbf baseline",
+      "cv_roc_auc_mean": 0.8432,
+      "cv_roc_auc_std": 0.0089,
+      "note": "feature experiment [16s CV]"
+    },
+    {
+      "name": "SVC-rbf + Contract x InternetService",
+      "cv_roc_auc_mean": 0.838,
+      "cv_roc_auc_std": 0.0105,
+      "note": "feature experiment [12s CV]"
+    },
+    {
+      "name": "SVC-rbf + MonthlyCharges 10 bins",
+      "cv_roc_auc_mean": 0.8425,
+      "cv_roc_auc_std": 0.0103,
+      "note": "feature experiment [8s CV]"
+    },
+    {
+      "name": "SVC-rbf + MonthlyCharges bins + linear",
+      "cv_roc_auc_mean": 0.842,
+      "cv_roc_auc_std": 0.0102,
+      "note": "feature experiment [8s CV]"
+    },
+    {
+      "name": "SVC-rbf + MonthlyCharges spline",
+      "cv_roc_auc_mean": 0.8441,
+      "cv_roc_auc_std": 0.0089,
+      "note": "feature experiment [8s CV]"
+    },
+    {
+      "name": "SVC-rbf + TotalCharges residual",
+      "cv_roc_auc_mean": 0.8436,
+      "cv_roc_auc_std": 0.0092,
+      "note": "feature experiment [7s CV]"
+    },
+    {
+      "name": "SVC-rbf - TotalCharges dropped",
+      "cv_roc_auc_mean": 0.8435,
+      "cv_roc_auc_std": 0.009,
+      "note": "feature experiment [7s CV]"
+    },
+    {
+      "name": "SVC-rbf + addon count",
+      "cv_roc_auc_mean": 0.8429,
+      "cv_roc_auc_std": 0.0091,
+      "note": "feature experiment [7s CV]"
+    },
+    {
+      "name": "SVC-rbf combined {'monthly_charges': 'spline', 'total_charges_residual': True}",
+      "cv_roc_auc_mean": 0.8446,
+      "cv_roc_auc_std": 0.0094,
+      "note": "all positive-delta features [9s CV]"
+    }
+  ],
+  "best_model": {
+    "name": "LinearSVC (baseline features)",
+    "params": {
+      "C": 1.0,
+      "random_state": 42,
+      "max_iter": 20000,
+      "dual": "auto",
+      "class_weight": "balanced",
+      "features": "standard preprocessor only",
+      "calibration": "CalibratedClassifierCV(sigmoid, cv=5)"
+    },
+    "cv_roc_auc_mean": 0.845,
+    "cv_roc_auc_std": 0.0085,
+    "threshold": 0.33,
+    "test": {
+      "roc_auc": 0.8399,
+      "f1_yes": 0.6182,
+      "precision_yes": 0.5375,
+      "recall_yes": 0.7273,
+      "accuracy": 0.7615,
+      "confusion_matrix": [
+        [
+          801,
+          234
+        ],
+        [
+          102,
+          272
+        ]
+      ]
+    },
+    "test_at_threshold_0.5": {
+      "f1_yes": 0.5954,
+      "precision_yes": 0.6478,
+      "recall_yes": 0.5508,
+      "accuracy": 0.8013
+    }
+  },
+  "feature_experiments": [
+    {
+      "feature": "[LinearSVC] + Contract x InternetService",
+      "cv_roc_auc_delta": -0.0004,
+      "verdict": "neutral"
+    },
+    {
+      "feature": "[LinearSVC] + MonthlyCharges 10 bins",
+      "cv_roc_auc_delta": -0.0005,
+      "verdict": "neutral"
+    },
+    {
+      "feature": "[LinearSVC] + MonthlyCharges bins + linear",
+      "cv_roc_auc_delta": -0.0005,
+      "verdict": "neutral"
+    },
+    {
+      "feature": "[LinearSVC] + MonthlyCharges spline",
+      "cv_roc_auc_delta": -0.0004,
+      "verdict": "neutral"
+    },
+    {
+      "feature": "[LinearSVC] + TotalCharges residual",
+      "cv_roc_auc_delta": -0.0006,
+      "verdict": "neutral"
+    },
+    {
+      "feature": "[LinearSVC] - TotalCharges dropped",
+      "cv_roc_auc_delta": -0.0006,
+      "verdict": "neutral"
+    },
+    {
+      "feature": "[LinearSVC] + addon count",
+      "cv_roc_auc_delta": -0.0,
+      "verdict": "neutral"
+    },
+    {
+      "feature": "[LinearSVC] combined none",
+      "cv_roc_auc_delta": 0.0,
+      "verdict": "neutral"
+    },
+    {
+      "feature": "[SVC-linear] + Contract x InternetService",
+      "cv_roc_auc_delta": -0.0033,
+      "verdict": "hurt"
+    },
+    {
+      "feature": "[SVC-linear] + MonthlyCharges 10 bins",
+      "cv_roc_auc_delta": -0.0,
+      "verdict": "neutral"
+    },
+    {
+      "feature": "[SVC-linear] + MonthlyCharges bins + linear",
+      "cv_roc_auc_delta": -0.0007,
+      "verdict": "neutral"
+    },
+    {
+      "feature": "[SVC-linear] + MonthlyCharges spline",
+      "cv_roc_auc_delta": 0.001,
+      "verdict": "neutral"
+    },
+    {
+      "feature": "[SVC-linear] + TotalCharges residual",
+      "cv_roc_auc_delta": -0.0004,
+      "verdict": "neutral"
+    },
+    {
+      "feature": "[SVC-linear] - TotalCharges dropped",
+      "cv_roc_auc_delta": -0.0004,
+      "verdict": "neutral"
+    },
+    {
+      "feature": "[SVC-linear] + addon count",
+      "cv_roc_auc_delta": -0.0001,
+      "verdict": "neutral"
+    },
+    {
+      "feature": "[SVC-linear] combined {'monthly_charges': 'spline'}",
+      "cv_roc_auc_delta": 0.001,
+      "verdict": "neutral"
+    },
+    {
+      "feature": "[SVC-rbf] + Contract x InternetService",
+      "cv_roc_auc_delta": -0.0051,
+      "verdict": "hurt"
+    },
+    {
+      "feature": "[SVC-rbf] + MonthlyCharges 10 bins",
+      "cv_roc_auc_delta": -0.0006,
+      "verdict": "neutral"
+    },
+    {
+      "feature": "[SVC-rbf] + MonthlyCharges bins + linear",
+      "cv_roc_auc_delta": -0.0012,
+      "verdict": "neutral"
+    },
+    {
+      "feature": "[SVC-rbf] + MonthlyCharges spline",
+      "cv_roc_auc_delta": 0.001,
+      "verdict": "neutral"
+    },
+    {
+      "feature": "[SVC-rbf] + TotalCharges residual",
+      "cv_roc_auc_delta": 0.0004,
+      "verdict": "neutral"
+    },
+    {
+      "feature": "[SVC-rbf] - TotalCharges dropped",
+      "cv_roc_auc_delta": 0.0004,
+      "verdict": "neutral"
+    },
+    {
+      "feature": "[SVC-rbf] + addon count",
+      "cv_roc_auc_delta": -0.0002,
+      "verdict": "neutral"
+    },
+    {
+      "feature": "[SVC-rbf] combined {'monthly_charges': 'spline', 'total_charges_residual': True}",
+      "cv_roc_auc_delta": 0.0014,
+      "verdict": "neutral"
+    }
+  ],
+  "top_drivers": [
+    {
+      "feature": "InternetService_No",
+      "coef": -1.1467,
+      "direction": "decreases churn"
+    },
+    {
+      "feature": "Contract_Two year",
+      "coef": -0.8733,
+      "direction": "decreases churn"
+    },
+    {
+      "feature": "Contract_One year",
+      "coef": -0.8431,
+      "direction": "decreases churn"
+    },
+    {
+      "feature": "InternetService_Fiber optic",
+      "coef": 0.5128,
+      "direction": "increases churn"
+    },
+    {
+      "feature": "tenure",
+      "coef": -0.5036,
+      "direction": "decreases churn"
+    },
+    {
+      "feature": "MonthlyCharges_sp_2",
+      "coef": 0.4069,
+      "direction": "increases churn"
+    },
+    {
+      "feature": "MonthlyCharges_sp_3",
+      "coef": -0.3205,
+      "direction": "decreases churn"
+    },
+    {
+      "feature": "TechSupport_Yes",
+      "coef": -0.2769,
+      "direction": "decreases churn"
+    },
+    {
+      "feature": "OnlineSecurity_Yes",
+      "coef": -0.2586,
+      "direction": "decreases churn"
+    },
+    {
+      "feature": "PaymentMethod_Electronic check",
+      "coef": 0.2151,
+      "direction": "increases churn"
+    },
+    {
+      "feature": "PaperlessBilling_Yes",
+      "coef": 0.2114,
+      "direction": "increases churn"
+    },
+    {
+      "feature": "MonthlyCharges_sp_1",
+      "coef": -0.1794,
+      "direction": "decreases churn"
+    }
+  ],
+  "runtime_seconds": 371.5,
+  "notes": "Frozen split (dp.load_splits); 5-fold StratifiedKFold on TRAIN for every tuning, feature-selection and threshold decision; test read exactly once. All search arms ran with probability=False, scoring ROC-AUC off decision_function (rank-identical to predict_proba, ~6x cheaper); calibration was paid twice only -- OOF threshold sweep and final fit. 366s of the 372s total was SVM fitting on 2 cores. OOF AUC of the final calibrated pipeline 0.8446; threshold 0.33 maximises OOF F1(Yes)=0.6365 vs 0.5979 at 0.50."
+}

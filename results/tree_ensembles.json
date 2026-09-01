@@ -1,0 +1,147 @@
+{
+  "approach": "tree-ensembles",
+  "agent_brief": "random forest / gradient boosting",
+  "variants": [
+    {
+      "name": "RandomForest (default, 200 trees)",
+      "cv_roc_auc_mean": 0.8228,
+      "cv_roc_auc_std": 0.0087,
+      "note": "unweighted; fully grown trees"
+    },
+    {
+      "name": "RandomForest (200 trees, class_weight=balanced)",
+      "cv_roc_auc_mean": 0.8257,
+      "cv_roc_auc_std": 0.0107,
+      "note": "imbalance handled by class_weight"
+    },
+    {
+      "name": "GradientBoosting (default)",
+      "cv_roc_auc_mean": 0.847,
+      "cv_roc_auc_std": 0.0089,
+      "note": "unweighted"
+    },
+    {
+      "name": "GradientBoosting (balanced sample_weight)",
+      "cv_roc_auc_mean": 0.8455,
+      "cv_roc_auc_std": 0.0082,
+      "note": "no class_weight param -> sample_weight in fit()"
+    },
+    {
+      "name": "HistGradientBoosting (default)",
+      "cv_roc_auc_mean": 0.8336,
+      "cv_roc_auc_std": 0.0095,
+      "note": "unweighted"
+    },
+    {
+      "name": "HistGradientBoosting (class_weight=balanced)",
+      "cv_roc_auc_mean": 0.8357,
+      "cv_roc_auc_std": 0.0108,
+      "note": "imbalance handled by class_weight"
+    },
+    {
+      "name": "RandomForest (tuned)",
+      "cv_roc_auc_mean": 0.8464,
+      "cv_roc_auc_std": 0.0098,
+      "note": "6 draws, 105s"
+    },
+    {
+      "name": "GradientBoosting (tuned)",
+      "cv_roc_auc_mean": 0.8486,
+      "cv_roc_auc_std": 0.0084,
+      "note": "5 draws, 47s"
+    },
+    {
+      "name": "GradientBoosting (tuned, balanced weights)",
+      "cv_roc_auc_mean": 0.8485,
+      "cv_roc_auc_std": 0.0096,
+      "note": "4 draws, 37s"
+    },
+    {
+      "name": "HistGradientBoosting (tuned)",
+      "cv_roc_auc_mean": 0.8455,
+      "cv_roc_auc_std": 0.0088,
+      "note": "5 draws, 53s"
+    }
+  ],
+  "best_model": {
+    "name": "GradientBoosting (tuned)",
+    "params": {
+      "subsample": 0.8,
+      "n_estimators": 100,
+      "min_samples_leaf": 50,
+      "max_features": null,
+      "max_depth": 2,
+      "learning_rate": 0.1
+    },
+    "cv_roc_auc_mean": 0.8486,
+    "cv_roc_auc_std": 0.0084,
+    "threshold": 0.385,
+    "test": {
+      "roc_auc": 0.844,
+      "f1_yes": 0.6228,
+      "precision_yes": 0.5913,
+      "recall_yes": 0.6578,
+      "accuracy": 0.7885,
+      "confusion_matrix": [
+        [
+          865,
+          170
+        ],
+        [
+          128,
+          246
+        ]
+      ]
+    },
+    "test_at_threshold_0.5": {
+      "f1_yes": 0.5723,
+      "precision_yes": 0.6552,
+      "recall_yes": 0.508,
+      "accuracy": 0.7984
+    }
+  },
+  "top_drivers": [
+    {
+      "feature": "tenure",
+      "importance": 0.06666
+    },
+    {
+      "feature": "InternetService",
+      "importance": 0.05496
+    },
+    {
+      "feature": "Contract",
+      "importance": 0.02938
+    },
+    {
+      "feature": "TotalCharges",
+      "importance": 0.00685
+    },
+    {
+      "feature": "PaymentMethod",
+      "importance": 0.00524
+    },
+    {
+      "feature": "MonthlyCharges",
+      "importance": 0.00518
+    },
+    {
+      "feature": "PaperlessBilling",
+      "importance": 0.00345
+    },
+    {
+      "feature": "OnlineSecurity",
+      "importance": 0.00246
+    },
+    {
+      "feature": "TechSupport",
+      "importance": 0.00184
+    },
+    {
+      "feature": "MultipleLines",
+      "importance": 0.00169
+    }
+  ],
+  "runtime_seconds": 380.5,
+  "notes": "Frozen split (data/splits), 5-fold StratifiedKFold on train only; test read once. Threshold 0.385 chosen by F1(Yes)-max on out-of-fold TRAIN probabilities, not on test. Importances are permutation dAUC on the train fold (5 repeats), not impurity. MonthlyCharges partial dependence: tree peaks at 104.37 then falls 0.0094 by the top of the range; decile 9->10 out-of-fold mean predicted churn 41.30%->23.69% vs actual 41.22%->24.56% (tree reproduces the drop: True; logistic: True). class_weight/sample_weight balancing moved CV ROC-AUC by <0.005 -- it shifts calibration, not ranking, so threshold tuning does the same job more directly."
+}

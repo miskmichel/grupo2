@@ -1,0 +1,174 @@
+{
+  "approach": "logistic-regression",
+  "agent_brief": "linear / interpretable",
+  "variants": [
+    {
+      "name": "a_keep_total_charges",
+      "cv_roc_auc_mean": 0.8462,
+      "cv_roc_auc_std": 0.00852,
+      "note": "baseline: TotalCharges kept, noise columns dropped (the frozen split as written); 21 encoded features; tuned CV ROC-AUC 0.84634 +/- 0.00846 at {'C': 10.0, 'class_weight': None, 'penalty': 'l2', 'solver': 'lbfgs'}"
+    },
+    {
+      "name": "b_drop_total_charges",
+      "cv_roc_auc_mean": 0.84466,
+      "cv_roc_auc_std": 0.00847,
+      "note": "TotalCharges dropped (99.91% explained by tenure x MonthlyCharges); 20 encoded features; tuned CV ROC-AUC 0.84479 +/- 0.00841 at {'C': 100.0, 'class_weight': None, 'penalty': 'l2', 'solver': 'liblinear'}"
+    },
+    {
+      "name": "c_total_charges_residual",
+      "cv_roc_auc_mean": 0.84474,
+      "cv_roc_auc_std": 0.00833,
+      "note": "TotalCharges replaced by TotalCharges - tenure*MonthlyCharges; 21 encoded features; tuned CV ROC-AUC 0.84482 +/- 0.00826 at {'C': 100.0, 'class_weight': None, 'penalty': 'l2', 'solver': 'liblinear'}"
+    },
+    {
+      "name": "d_keep_noise_columns",
+      "cv_roc_auc_mean": 0.84584,
+      "cv_roc_auc_std": 0.00825,
+      "note": "gender + PhoneService kept (chi2 p = 0.487 / 0.339), TotalCharges kept; 23 encoded features; tuned CV ROC-AUC 0.84627 +/- 0.00856 at {'C': 100.0, 'class_weight': None, 'penalty': 'l2', 'solver': 'lbfgs'}"
+    }
+  ],
+  "best_model": {
+    "name": "LogisticRegression [a_keep_total_charges]",
+    "params": {
+      "C": 10.0,
+      "class_weight": null,
+      "penalty": "l2",
+      "solver": "lbfgs"
+    },
+    "cv_roc_auc_mean": 0.84634,
+    "cv_roc_auc_std": 0.00846,
+    "threshold": 0.32,
+    "test": {
+      "roc_auc": 0.8424,
+      "f1_yes": 0.6178,
+      "precision_yes": 0.5341,
+      "recall_yes": 0.7326,
+      "accuracy": 0.7594,
+      "confusion_matrix": [
+        [
+          796,
+          239
+        ],
+        [
+          100,
+          274
+        ]
+      ]
+    },
+    "test_at_threshold_0.5": {
+      "f1_yes": 0.6081,
+      "precision_yes": 0.6594,
+      "recall_yes": 0.5642,
+      "accuracy": 0.807
+    }
+  },
+  "top_drivers": [
+    {
+      "feature": "InternetService_No",
+      "coef": -1.5718,
+      "odds_ratio": 0.2077
+    },
+    {
+      "feature": "InternetService_Fiber optic",
+      "coef": 1.5542,
+      "odds_ratio": 4.7314
+    },
+    {
+      "feature": "Contract_Two year",
+      "coef": -1.3642,
+      "odds_ratio": 0.2556
+    },
+    {
+      "feature": "tenure",
+      "coef": -1.308,
+      "odds_ratio": 0.2704
+    },
+    {
+      "feature": "MonthlyCharges",
+      "coef": -0.9171,
+      "odds_ratio": 0.3997
+    },
+    {
+      "feature": "Contract_One year",
+      "coef": -0.6948,
+      "odds_ratio": 0.4992
+    },
+    {
+      "feature": "TotalCharges",
+      "coef": 0.5882,
+      "odds_ratio": 1.8007
+    },
+    {
+      "feature": "StreamingTV_Yes",
+      "coef": 0.5179,
+      "odds_ratio": 1.6785
+    },
+    {
+      "feature": "StreamingMovies_Yes",
+      "coef": 0.5168,
+      "odds_ratio": 1.6767
+    },
+    {
+      "feature": "MultipleLines_Yes",
+      "coef": 0.44,
+      "odds_ratio": 1.5527
+    },
+    {
+      "feature": "PaymentMethod_Electronic check",
+      "coef": 0.3842,
+      "odds_ratio": 1.4684
+    },
+    {
+      "feature": "PaperlessBilling_Yes",
+      "coef": 0.3693,
+      "odds_ratio": 1.4468
+    },
+    {
+      "feature": "OnlineSecurity_Yes",
+      "coef": -0.28,
+      "odds_ratio": 0.7558
+    },
+    {
+      "feature": "TechSupport_Yes",
+      "coef": -0.2273,
+      "odds_ratio": 0.7967
+    },
+    {
+      "feature": "Dependents_Yes",
+      "coef": -0.2224,
+      "odds_ratio": 0.8006
+    },
+    {
+      "feature": "SeniorCitizen",
+      "coef": 0.1456,
+      "odds_ratio": 1.1567
+    },
+    {
+      "feature": "DeviceProtection_Yes",
+      "coef": 0.1053,
+      "odds_ratio": 1.111
+    },
+    {
+      "feature": "PaymentMethod_Mailed check",
+      "coef": 0.0745,
+      "odds_ratio": 1.0773
+    },
+    {
+      "feature": "OnlineBackup_Yes",
+      "coef": -0.0326,
+      "odds_ratio": 0.968
+    },
+    {
+      "feature": "PaymentMethod_Credit card (automatic)",
+      "coef": -0.0297,
+      "odds_ratio": 0.9707
+    },
+    {
+      "feature": "Partner_Yes",
+      "coef": 0.0232,
+      "odds_ratio": 1.0234
+    }
+  ],
+  "runtime_seconds": 420.75,
+  "notes": "Frozen split (dp.load_splits()); test set read once. All tuning by 5-fold StratifiedKFold(shuffle, seed 42) on train only; threshold chosen by maximising F1(Yes) on cross_val_predict out-of-fold train probabilities (OOF F1 0.6362). Threshold tuning moved test F1(Yes) 0.6081 -> 0.6178 (+0.0097). ROC-AUC 0.8424 sits in the 0.84-0.85 band predicted in Step 1, so no leakage indicated. Accuracy is NOT the headline: the all-'No' baseline is 73.46%."
+}

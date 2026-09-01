@@ -14,7 +14,7 @@ The assignment (`enunciado.ipynb`) breaks the 90 minutes into five phases. We fo
 |---|---|---|---|---|
 | 1 | Load and explore | 10 min | ✅ Complete | [`docs/step-01-eda.md`](docs/step-01-eda.md) |
 | 2 | Treat data — missing values, categoricals, `customerID` | 20–25 min | ✅ Complete | [`docs/step-02-data-treatment.md`](docs/step-02-data-treatment.md) |
-| 3 | Train ≥2 models | 30–35 min | 🔄 Next | — |
+| 3 | Train ≥2 models | 30–35 min | ✅ Complete | 4 approaches — see below |
 | 4 | Evaluate and compare | 15 min | ⬜ Not started | — |
 | 5 | Review + synthesis cell | 10 min | ⬜ Not started | — |
 
@@ -87,9 +87,41 @@ The manifest records a SHA-256 of each file and of the source CSV, so a regenera
 
 ## Step 3 — Modeling
 
-Not started. Planned: `LogisticRegression(class_weight='balanced')` for an interpretable driver list, plus a `RandomForest`/`GradientBoosting` to capture the non-monotonicity Step 1 identified. Both inside a single `Pipeline`, both evaluated on the same stratified split.
+**Goal:** train at least two models (the assignment's minimum) from Module 3, evaluate them the same way, and settle the one decision Step 1 left open — `TotalCharges` keep/drop/residual. We went further: four parallel approaches, one per Module 3 family, each on the **frozen split** (`dp.load_splits()`, 5634 train / 1409 test, `random_state=42`) so all four are directly comparable. Test was touched exactly once per model, at the end; all tuning and thresholding used 5-fold CV on train only.
 
-Sanity bound established in Step 1: **ROC-AUC 0.84–0.85, F1(Yes) 0.60–0.63**. A score above AUC 0.90 should be treated as evidence of leakage, not success.
+### The comparison
+
+| Approach | CV ROC-AUC | Test ROC-AUC | Test F1(Yes) | Precision(Yes) | Recall(Yes) | Threshold |
+|---|---|---|---|---|---|---|
+| **GradientBoosting** (tuned) | **0.8486 ± 0.0084** | **0.8440** | **0.6228** | 0.5913 | 0.6578 | 0.385 |
+| LinearSVC (`class_weight='balanced'`) | 0.8450 ± 0.0085 | 0.8399 | 0.6182 | 0.5375 | 0.7273 | 0.33 |
+| Logistic Regression | 0.8463 ± 0.0085 | 0.8424 | 0.6178 | 0.5341 | 0.7326 | 0.32 |
+| Naive Bayes (discretised, 10 bins) | 0.8410 ± 0.0096 | 0.8389 | 0.6170 | 0.5530 | 0.6978 | 0.49 |
+| KNN (k=101, manhattan, uniform) | 0.8393 ± 0.0089 | 0.8363 | 0.6141 | — | — | 0.40 |
+
+**The headline result is the spread, not the winner.** Every approach lands inside the Step 1 predicted band (ROC-AUC 0.84–0.85, F1(Yes) 0.60–0.63) — no leakage anywhere — and the *entire* range from best (GradientBoosting, 0.8440) to worst (KNN, 0.8363) is **0.0077 test ROC-AUC**, well under one CV standard deviation (±0.008–0.010). On this dataset, model family barely matters once each is properly tuned and thresholded; the ceiling is set by the data, not the algorithm. This is itself the most defensible finding for the synthesis cell's "why this model" answer — the honest version is "the practical differences were noise-level, so we picked X for reason Y (interpretability / recall / simplicity)," not "X was measurably best."
+
+**`TotalCharges`, finally answered.** Logistic regression tested keep vs. drop vs. residual under identical CV: keeping it won, by +0.0016 CV ROC-AUC over either alternative — itself noise-level, meaning the theoretical collinearity concern (fact 6, R²=0.9991 with `tenure×MonthlyCharges`) never translated into a measurable CV cost for a *regularised* linear model. **Decision: keep `TotalCharges`.**
+
+**Threshold tuning was worth more than model choice.** Every approach gained by abandoning the default 0.5 threshold — logistic regression +0.0097 F1(Yes), moving 42 more true churners into the caught column; SVM +0.0228 F1. The tuned threshold trades precision for recall in every case, which is the correct direction for a churn model: a missed churner (false negative) is a lost customer, a false positive is a retention offer to someone who wasn't leaving.
+
+### Two Step 1 claims corrected by Step 3's evidence
+
+Both are now recorded in `CLAUDE.md` fact 8, since that is the file people read before touching this dataset again.
+
+1. **Trees do not beat a tuned linear model here**, and Cramér's V is a poor tree-importance ranking. GradientBoosting's permutation importances concentrate 82% of weight in three features (`tenure`, `InternetService`, `Contract`); `OnlineSecurity`/`TechSupport` — EDA's #2 and #3 by Cramér's V — score 22–30× lower, because their marginal signal mostly *is* the `InternetService` effect flowing through the "No internet service"→"No" collapse (fact 5). (`docs/step-03b-tree-ensembles.md`)
+2. **"Add the `Contract × InternetService` interaction explicitly" was actively wrong.** A 70× rate spread is not evidence of a true interaction — an additive-in-log-odds model produces multiplicative spread by construction, and a plain additive fit reproduces the nine-cell table to within 1.69 pp with no interaction term at all. Adding the term anyway cost −0.0033 to −0.0051 CV ROC-AUC, the single worst feature-engineering result measured. (`docs/step-03d-svm-features.md`)
+
+Both corrections replaced the original wording in `CLAUDE.md` rather than sitting only in the per-model reports, so a future reader doesn't rediscover the mistake.
+
+### What each approach was for, and what it found
+
+- **[Logistic Regression](docs/step-03a-logistic-regression.md)** — the interpretable baseline and the `TotalCharges` decision-maker (above). Coefficients sanity-checked clean against EDA (`Contract_Two year`/`One year` strongly negative, `PaymentMethod_Electronic check` positive, as predicted). Recovered, and explained, the `MonthlyCharges` sign flip: raw correlation +0.193 but a negative fitted coefficient once `InternetService` is controlled — the bill is a proxy for service tier, and *within* a tier a higher bill is mildly protective.
+- **[Tree Ensembles](docs/step-03b-tree-ensembles.md)** — asked whether trees actually exploit the non-monotone `MonthlyCharges` decile and the `Contract×InternetService` interaction. Answer: marginally (a 0.94 pp partial-dependence turn against a 16.66 pp decile swing), and not enough to beat a well-tuned linear model. Best single model overall by test ROC-AUC, by a margin smaller than CV noise.
+- **[KNN / Naive Bayes](docs/step-03c-knn-naive-bayes.md)** — briefed to demonstrate *why* these families should underperform; the honest result is closer than expected (both land at the bottom of the predicted band, not below it). Found the mechanism precisely: in the 21-column mostly-binary encoded space, 100% of sampled points have tied nearest-neighbour distances in the pure-dummy subspace (22.71 of 25 ties), which is why KNN needs k≈101 to work at all — it survives only by stopping being local. For Naive Bayes, two independent measurements agree the independence-violation cost is ≈0.019 AUC (dropping `TotalCharges` helps `GaussianNB` by exactly that; replacing the diagonal covariance with a full one via QDA gains almost the same). The winning NB variant wins by *discretising away* the correlations it can't model, not by fitting them.
+- **[SVM + feature engineering](docs/step-03d-svm-features.md)** — the only approach allowed to change the feature representation. Result: an honest null. Every engineered feature (the interaction term, `MonthlyCharges` binning/splines, the `TotalCharges` residual, an add-on count) landed within ±0.0015 AUC of the unengineered baseline, except the interaction term, which hurt (see above). `class_weight='balanced'` was a bigger lever than all the feature engineering combined (+0.0025 to +0.0154 depending on kernel). RBF bought nothing over linear at 13× the training cost.
+
+**Evidence:** `docs/step-03a-logistic-regression.md`, `docs/step-03b-tree-ensembles.md`, `docs/step-03c-knn-naive-bayes.md`, `docs/step-03d-svm-features.md`; raw numbers in `results/*.json`.
 
 ---
 

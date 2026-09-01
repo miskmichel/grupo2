@@ -1,0 +1,1440 @@
+{
+  "approach": "knn-naive-bayes",
+  "agent_brief": "distance-based and probabilistic",
+  "variants": [
+    {
+      "name": "knn_full21_k1_uniform_euclidean",
+      "cv_roc_auc_mean": 0.6670732797802879,
+      "cv_roc_auc_std": 0.01118790228315015,
+      "note": "KNN on full21 feature space"
+    },
+    {
+      "name": "knn_full21_k3_uniform_euclidean",
+      "cv_roc_auc_mean": 0.7513815037423384,
+      "cv_roc_auc_std": 0.011223409184631602,
+      "note": "KNN on full21 feature space"
+    },
+    {
+      "name": "knn_full21_k5_uniform_euclidean",
+      "cv_roc_auc_mean": 0.7860227628674059,
+      "cv_roc_auc_std": 0.015209610309065195,
+      "note": "KNN on full21 feature space"
+    },
+    {
+      "name": "knn_full21_k9_uniform_euclidean",
+      "cv_roc_auc_mean": 0.8086555246073445,
+      "cv_roc_auc_std": 0.01292187399208457,
+      "note": "KNN on full21 feature space"
+    },
+    {
+      "name": "knn_full21_k15_uniform_euclidean",
+      "cv_roc_auc_mean": 0.8212990200488571,
+      "cv_roc_auc_std": 0.012328455861087075,
+      "note": "KNN on full21 feature space"
+    },
+    {
+      "name": "knn_full21_k21_uniform_euclidean",
+      "cv_roc_auc_mean": 0.828395338282351,
+      "cv_roc_auc_std": 0.011121737605631564,
+      "note": "KNN on full21 feature space"
+    },
+    {
+      "name": "knn_full21_k31_uniform_euclidean",
+      "cv_roc_auc_mean": 0.8328463258870269,
+      "cv_roc_auc_std": 0.009090661500085289,
+      "note": "KNN on full21 feature space"
+    },
+    {
+      "name": "knn_full21_k45_uniform_euclidean",
+      "cv_roc_auc_mean": 0.8361552305299835,
+      "cv_roc_auc_std": 0.008326547646210785,
+      "note": "KNN on full21 feature space"
+    },
+    {
+      "name": "knn_full21_k61_uniform_euclidean",
+      "cv_roc_auc_mean": 0.8375171261844001,
+      "cv_roc_auc_std": 0.008098645047499934,
+      "note": "KNN on full21 feature space"
+    },
+    {
+      "name": "knn_full21_k81_uniform_euclidean",
+      "cv_roc_auc_mean": 0.8370195766923182,
+      "cv_roc_auc_std": 0.007208665765350076,
+      "note": "KNN on full21 feature space"
+    },
+    {
+      "name": "knn_full21_k101_uniform_euclidean",
+      "cv_roc_auc_mean": 0.8369122318618644,
+      "cv_roc_auc_std": 0.008586479201469438,
+      "note": "KNN on full21 feature space"
+    },
+    {
+      "name": "knn_full21_k151_uniform_euclidean",
+      "cv_roc_auc_mean": 0.8367444080024912,
+      "cv_roc_auc_std": 0.00820128509839375,
+      "note": "KNN on full21 feature space"
+    },
+    {
+      "name": "knn_full21_k201_uniform_euclidean",
+      "cv_roc_auc_mean": 0.8355504485439248,
+      "cv_roc_auc_std": 0.007191479482887721,
+      "note": "KNN on full21 feature space"
+    },
+    {
+      "name": "knn_full21_k301_uniform_euclidean",
+      "cv_roc_auc_mean": 0.8326518636299246,
+      "cv_roc_auc_std": 0.007361864654669121,
+      "note": "KNN on full21 feature space"
+    },
+    {
+      "name": "knn_full21_k1_distance_euclidean",
+      "cv_roc_auc_mean": 0.6670732797802879,
+      "cv_roc_auc_std": 0.01118790228315015,
+      "note": "KNN on full21 feature space"
+    },
+    {
+      "name": "knn_full21_k3_distance_euclidean",
+      "cv_roc_auc_mean": 0.7492789478061477,
+      "cv_roc_auc_std": 0.00907686069522354,
+      "note": "KNN on full21 feature space"
+    },
+    {
+      "name": "knn_full21_k5_distance_euclidean",
+      "cv_roc_auc_mean": 0.7761574808738356,
+      "cv_roc_auc_std": 0.014156680160967732,
+      "note": "KNN on full21 feature space"
+    },
+    {
+      "name": "knn_full21_k9_distance_euclidean",
+      "cv_roc_auc_mean": 0.7964745355379963,
+      "cv_roc_auc_std": 0.011455009356548052,
+      "note": "KNN on full21 feature space"
+    },
+    {
+      "name": "knn_full21_k15_distance_euclidean",
+      "cv_roc_auc_mean": 0.8090459402661819,
+      "cv_roc_auc_std": 0.010008706410581126,
+      "note": "KNN on full21 feature space"
+    },
+    {
+      "name": "knn_full21_k21_distance_euclidean",
+      "cv_roc_auc_mean": 0.8169453798165657,
+      "cv_roc_auc_std": 0.009448737607799934,
+      "note": "KNN on full21 feature space"
+    },
+    {
+      "name": "knn_full21_k31_distance_euclidean",
+      "cv_roc_auc_mean": 0.8221145638264705,
+      "cv_roc_auc_std": 0.008386570060683366,
+      "note": "KNN on full21 feature space"
+    },
+    {
+      "name": "knn_full21_k45_distance_euclidean",
+      "cv_roc_auc_mean": 0.8263875127670408,
+      "cv_roc_auc_std": 0.007353404766001479,
+      "note": "KNN on full21 feature space"
+    },
+    {
+      "name": "knn_full21_k61_distance_euclidean",
+      "cv_roc_auc_mean": 0.8283223943002153,
+      "cv_roc_auc_std": 0.007362102627064624,
+      "note": "KNN on full21 feature space"
+    },
+    {
+      "name": "knn_full21_k81_distance_euclidean",
+      "cv_roc_auc_mean": 0.8292054874669514,
+      "cv_roc_auc_std": 0.006724483138027762,
+      "note": "KNN on full21 feature space"
+    },
+    {
+      "name": "knn_full21_k101_distance_euclidean",
+      "cv_roc_auc_mean": 0.8300868154857339,
+      "cv_roc_auc_std": 0.007631179321888428,
+      "note": "KNN on full21 feature space"
+    },
+    {
+      "name": "knn_full21_k151_distance_euclidean",
+      "cv_roc_auc_mean": 0.8309001359779333,
+      "cv_roc_auc_std": 0.007649910256002057,
+      "note": "KNN on full21 feature space"
+    },
+    {
+      "name": "knn_full21_k201_distance_euclidean",
+      "cv_roc_auc_mean": 0.8308059867762188,
+      "cv_roc_auc_std": 0.007005336775749061,
+      "note": "KNN on full21 feature space"
+    },
+    {
+      "name": "knn_full21_k301_distance_euclidean",
+      "cv_roc_auc_mean": 0.8297140664474366,
+      "cv_roc_auc_std": 0.006878898261141461,
+      "note": "KNN on full21 feature space"
+    },
+    {
+      "name": "knn_full21_k1_uniform_manhattan",
+      "cv_roc_auc_mean": 0.6665521508615984,
+      "cv_roc_auc_std": 0.008494009662826416,
+      "note": "KNN on full21 feature space"
+    },
+    {
+      "name": "knn_full21_k3_uniform_manhattan",
+      "cv_roc_auc_mean": 0.7531197856948229,
+      "cv_roc_auc_std": 0.008200912621932923,
+      "note": "KNN on full21 feature space"
+    },
+    {
+      "name": "knn_full21_k5_uniform_manhattan",
+      "cv_roc_auc_mean": 0.7895461080773425,
+      "cv_roc_auc_std": 0.012936885395798667,
+      "note": "KNN on full21 feature space"
+    },
+    {
+      "name": "knn_full21_k9_uniform_manhattan",
+      "cv_roc_auc_mean": 0.8111518052442614,
+      "cv_roc_auc_std": 0.013404514608947019,
+      "note": "KNN on full21 feature space"
+    },
+    {
+      "name": "knn_full21_k15_uniform_manhattan",
+      "cv_roc_auc_mean": 0.8226663982117908,
+      "cv_roc_auc_std": 0.01177633820639135,
+      "note": "KNN on full21 feature space"
+    },
+    {
+      "name": "knn_full21_k21_uniform_manhattan",
+      "cv_roc_auc_mean": 0.8298351519827554,
+      "cv_roc_auc_std": 0.00976439765526349,
+      "note": "KNN on full21 feature space"
+    },
+    {
+      "name": "knn_full21_k31_uniform_manhattan",
+      "cv_roc_auc_mean": 0.8336538605622206,
+      "cv_roc_auc_std": 0.008766445044022504,
+      "note": "KNN on full21 feature space"
+    },
+    {
+      "name": "knn_full21_k45_uniform_manhattan",
+      "cv_roc_auc_mean": 0.8368081008315029,
+      "cv_roc_auc_std": 0.009187653760620817,
+      "note": "KNN on full21 feature space"
+    },
+    {
+      "name": "knn_full21_k61_uniform_manhattan",
+      "cv_roc_auc_mean": 0.8379882541369958,
+      "cv_roc_auc_std": 0.008824824128523428,
+      "note": "KNN on full21 feature space"
+    },
+    {
+      "name": "knn_full21_k81_uniform_manhattan",
+      "cv_roc_auc_mean": 0.8386461356222465,
+      "cv_roc_auc_std": 0.008664875491424294,
+      "note": "KNN on full21 feature space"
+    },
+    {
+      "name": "knn_full21_k101_uniform_manhattan",
+      "cv_roc_auc_mean": 0.8392870572299257,
+      "cv_roc_auc_std": 0.008891275384947113,
+      "note": "KNN on full21 feature space"
+    },
+    {
+      "name": "knn_full21_k151_uniform_manhattan",
+      "cv_roc_auc_mean": 0.8391021552954703,
+      "cv_roc_auc_std": 0.009051944299211766,
+      "note": "KNN on full21 feature space"
+    },
+    {
+      "name": "knn_full21_k201_uniform_manhattan",
+      "cv_roc_auc_mean": 0.8385768567397912,
+      "cv_roc_auc_std": 0.007876455706263885,
+      "note": "KNN on full21 feature space"
+    },
+    {
+      "name": "knn_full21_k301_uniform_manhattan",
+      "cv_roc_auc_mean": 0.8364719515059642,
+      "cv_roc_auc_std": 0.007173212823292055,
+      "note": "KNN on full21 feature space"
+    },
+    {
+      "name": "knn_full21_k1_distance_manhattan",
+      "cv_roc_auc_mean": 0.6665521508615984,
+      "cv_roc_auc_std": 0.008494009662826416,
+      "note": "KNN on full21 feature space"
+    },
+    {
+      "name": "knn_full21_k3_distance_manhattan",
+      "cv_roc_auc_mean": 0.7505403423636817,
+      "cv_roc_auc_std": 0.006481323642799253,
+      "note": "KNN on full21 feature space"
+    },
+    {
+      "name": "knn_full21_k5_distance_manhattan",
+      "cv_roc_auc_mean": 0.7788525565369466,
+      "cv_roc_auc_std": 0.011053891795098175,
+      "note": "KNN on full21 feature space"
+    },
+    {
+      "name": "knn_full21_k9_distance_manhattan",
+      "cv_roc_auc_mean": 0.7987054696005673,
+      "cv_roc_auc_std": 0.011834449919282578,
+      "note": "KNN on full21 feature space"
+    },
+    {
+      "name": "knn_full21_k15_distance_manhattan",
+      "cv_roc_auc_mean": 0.8097697901267413,
+      "cv_roc_auc_std": 0.009724608682059186,
+      "note": "KNN on full21 feature space"
+    },
+    {
+      "name": "knn_full21_k21_distance_manhattan",
+      "cv_roc_auc_mean": 0.817278551248614,
+      "cv_roc_auc_std": 0.008292953206724815,
+      "note": "KNN on full21 feature space"
+    },
+    {
+      "name": "knn_full21_k31_distance_manhattan",
+      "cv_roc_auc_mean": 0.8218642239402474,
+      "cv_roc_auc_std": 0.008185072076594226,
+      "note": "KNN on full21 feature space"
+    },
+    {
+      "name": "knn_full21_k45_distance_manhattan",
+      "cv_roc_auc_mean": 0.8255219846295958,
+      "cv_roc_auc_std": 0.00798954363358513,
+      "note": "KNN on full21 feature space"
+    },
+    {
+      "name": "knn_full21_k61_distance_manhattan",
+      "cv_roc_auc_mean": 0.827613456862822,
+      "cv_roc_auc_std": 0.007898638500517011,
+      "note": "KNN on full21 feature space"
+    },
+    {
+      "name": "knn_full21_k81_distance_manhattan",
+      "cv_roc_auc_mean": 0.8292369167712325,
+      "cv_roc_auc_std": 0.008026342396103425,
+      "note": "KNN on full21 feature space"
+    },
+    {
+      "name": "knn_full21_k101_distance_manhattan",
+      "cv_roc_auc_mean": 0.8306289547446347,
+      "cv_roc_auc_std": 0.007854219550809805,
+      "note": "KNN on full21 feature space"
+    },
+    {
+      "name": "knn_full21_k151_distance_manhattan",
+      "cv_roc_auc_mean": 0.8315167445529653,
+      "cv_roc_auc_std": 0.00797520364541086,
+      "note": "KNN on full21 feature space"
+    },
+    {
+      "name": "knn_full21_k201_distance_manhattan",
+      "cv_roc_auc_mean": 0.8320650911348721,
+      "cv_roc_auc_std": 0.007339901703573558,
+      "note": "KNN on full21 feature space"
+    },
+    {
+      "name": "knn_full21_k301_distance_manhattan",
+      "cv_roc_auc_mean": 0.8321762300077458,
+      "cv_roc_auc_std": 0.0068942556667789924,
+      "note": "KNN on full21 feature space"
+    },
+    {
+      "name": "knn_cont3_k1_uniform_euclidean",
+      "cv_roc_auc_mean": 0.6411957633870257,
+      "cv_roc_auc_std": 0.012046056095420225,
+      "note": "KNN on cont3 feature space"
+    },
+    {
+      "name": "knn_cont3_k3_uniform_euclidean",
+      "cv_roc_auc_mean": 0.7331613046707691,
+      "cv_roc_auc_std": 0.0064014943653475055,
+      "note": "KNN on cont3 feature space"
+    },
+    {
+      "name": "knn_cont3_k5_uniform_euclidean",
+      "cv_roc_auc_mean": 0.763913970693777,
+      "cv_roc_auc_std": 0.008339225062449718,
+      "note": "KNN on cont3 feature space"
+    },
+    {
+      "name": "knn_cont3_k9_uniform_euclidean",
+      "cv_roc_auc_mean": 0.7839214694955375,
+      "cv_roc_auc_std": 0.011438976614743714,
+      "note": "KNN on cont3 feature space"
+    },
+    {
+      "name": "knn_cont3_k15_uniform_euclidean",
+      "cv_roc_auc_mean": 0.7978614118944715,
+      "cv_roc_auc_std": 0.010527742203662767,
+      "note": "KNN on cont3 feature space"
+    },
+    {
+      "name": "knn_cont3_k21_uniform_euclidean",
+      "cv_roc_auc_mean": 0.8053906236278466,
+      "cv_roc_auc_std": 0.007721614207715409,
+      "note": "KNN on cont3 feature space"
+    },
+    {
+      "name": "knn_cont3_k31_uniform_euclidean",
+      "cv_roc_auc_mean": 0.8097591787254015,
+      "cv_roc_auc_std": 0.008276648674434678,
+      "note": "KNN on cont3 feature space"
+    },
+    {
+      "name": "knn_cont3_k45_uniform_euclidean",
+      "cv_roc_auc_mean": 0.8138249484312073,
+      "cv_roc_auc_std": 0.005416890330704348,
+      "note": "KNN on cont3 feature space"
+    },
+    {
+      "name": "knn_cont3_k61_uniform_euclidean",
+      "cv_roc_auc_mean": 0.8137516298313404,
+      "cv_roc_auc_std": 0.006928523179657175,
+      "note": "KNN on cont3 feature space"
+    },
+    {
+      "name": "knn_cont3_k81_uniform_euclidean",
+      "cv_roc_auc_mean": 0.8147742068062973,
+      "cv_roc_auc_std": 0.008022481998374948,
+      "note": "KNN on cont3 feature space"
+    },
+    {
+      "name": "knn_cont3_k101_uniform_euclidean",
+      "cv_roc_auc_mean": 0.8148608836785863,
+      "cv_roc_auc_std": 0.00812464195166224,
+      "note": "KNN on cont3 feature space"
+    },
+    {
+      "name": "knn_cont3_k151_uniform_euclidean",
+      "cv_roc_auc_mean": 0.8138692431926684,
+      "cv_roc_auc_std": 0.0077033586257052224,
+      "note": "KNN on cont3 feature space"
+    },
+    {
+      "name": "knn_cont3_k201_uniform_euclidean",
+      "cv_roc_auc_mean": 0.8122909845522497,
+      "cv_roc_auc_std": 0.0081074719274545,
+      "note": "KNN on cont3 feature space"
+    },
+    {
+      "name": "knn_cont3_k301_uniform_euclidean",
+      "cv_roc_auc_mean": 0.8095847353169923,
+      "cv_roc_auc_std": 0.009266773229665667,
+      "note": "KNN on cont3 feature space"
+    },
+    {
+      "name": "knn_cont3_k1_distance_euclidean",
+      "cv_roc_auc_mean": 0.6411957633870257,
+      "cv_roc_auc_std": 0.012046056095420225,
+      "note": "KNN on cont3 feature space"
+    },
+    {
+      "name": "knn_cont3_k3_distance_euclidean",
+      "cv_roc_auc_mean": 0.7239943125702114,
+      "cv_roc_auc_std": 0.010354580312344382,
+      "note": "KNN on cont3 feature space"
+    },
+    {
+      "name": "knn_cont3_k5_distance_euclidean",
+      "cv_roc_auc_mean": 0.7488029507998856,
+      "cv_roc_auc_std": 0.00937663154607051,
+      "note": "KNN on cont3 feature space"
+    },
+    {
+      "name": "knn_cont3_k9_distance_euclidean",
+      "cv_roc_auc_mean": 0.7670753555630224,
+      "cv_roc_auc_std": 0.010580849318328105,
+      "note": "KNN on cont3 feature space"
+    },
+    {
+      "name": "knn_cont3_k15_distance_euclidean",
+      "cv_roc_auc_mean": 0.7774285143895505,
+      "cv_roc_auc_std": 0.010222472239901073,
+      "note": "KNN on cont3 feature space"
+    },
+    {
+      "name": "knn_cont3_k21_distance_euclidean",
+      "cv_roc_auc_mean": 0.7833823320626807,
+      "cv_roc_auc_std": 0.007724559229440702,
+      "note": "KNN on cont3 feature space"
+    },
+    {
+      "name": "knn_cont3_k31_distance_euclidean",
+      "cv_roc_auc_mean": 0.7882343545422453,
+      "cv_roc_auc_std": 0.0072658769972344505,
+      "note": "KNN on cont3 feature space"
+    },
+    {
+      "name": "knn_cont3_k45_distance_euclidean",
+      "cv_roc_auc_mean": 0.7927365333912559,
+      "cv_roc_auc_std": 0.005848588667523992,
+      "note": "KNN on cont3 feature space"
+    },
+    {
+      "name": "knn_cont3_k61_distance_euclidean",
+      "cv_roc_auc_mean": 0.7943090184251556,
+      "cv_roc_auc_std": 0.006609955963921318,
+      "note": "KNN on cont3 feature space"
+    },
+    {
+      "name": "knn_cont3_k81_distance_euclidean",
+      "cv_roc_auc_mean": 0.7958696685669506,
+      "cv_roc_auc_std": 0.006425332136549714,
+      "note": "KNN on cont3 feature space"
+    },
+    {
+      "name": "knn_cont3_k101_distance_euclidean",
+      "cv_roc_auc_mean": 0.7966385482602684,
+      "cv_roc_auc_std": 0.0065084159326018135,
+      "note": "KNN on cont3 feature space"
+    },
+    {
+      "name": "knn_cont3_k151_distance_euclidean",
+      "cv_roc_auc_mean": 0.7973064486940455,
+      "cv_roc_auc_std": 0.006864487829705589,
+      "note": "KNN on cont3 feature space"
+    },
+    {
+      "name": "knn_cont3_k201_distance_euclidean",
+      "cv_roc_auc_mean": 0.796991052311659,
+      "cv_roc_auc_std": 0.007461706428667907,
+      "note": "KNN on cont3 feature space"
+    },
+    {
+      "name": "knn_cont3_k301_distance_euclidean",
+      "cv_roc_auc_mean": 0.7963134181663245,
+      "cv_roc_auc_std": 0.008195518583940145,
+      "note": "KNN on cont3 feature space"
+    },
+    {
+      "name": "knn_cont3_k1_uniform_manhattan",
+      "cv_roc_auc_mean": 0.6435657934527604,
+      "cv_roc_auc_std": 0.009993524629822713,
+      "note": "KNN on cont3 feature space"
+    },
+    {
+      "name": "knn_cont3_k3_uniform_manhattan",
+      "cv_roc_auc_mean": 0.7350196875049269,
+      "cv_roc_auc_std": 0.006811539077156159,
+      "note": "KNN on cont3 feature space"
+    },
+    {
+      "name": "knn_cont3_k5_uniform_manhattan",
+      "cv_roc_auc_mean": 0.7609659992453723,
+      "cv_roc_auc_std": 0.006073343065123446,
+      "note": "KNN on cont3 feature space"
+    },
+    {
+      "name": "knn_cont3_k9_uniform_manhattan",
+      "cv_roc_auc_mean": 0.7841501723993729,
+      "cv_roc_auc_std": 0.011419928203623324,
+      "note": "KNN on cont3 feature space"
+    },
+    {
+      "name": "knn_cont3_k15_uniform_manhattan",
+      "cv_roc_auc_mean": 0.7980825306208235,
+      "cv_roc_auc_std": 0.010986305333899927,
+      "note": "KNN on cont3 feature space"
+    },
+    {
+      "name": "knn_cont3_k21_uniform_manhattan",
+      "cv_roc_auc_mean": 0.8049793993460377,
+      "cv_roc_auc_std": 0.009404499789881298,
+      "note": "KNN on cont3 feature space"
+    },
+    {
+      "name": "knn_cont3_k31_uniform_manhattan",
+      "cv_roc_auc_mean": 0.810318910853503,
+      "cv_roc_auc_std": 0.00978982105948772,
+      "note": "KNN on cont3 feature space"
+    },
+    {
+      "name": "knn_cont3_k45_uniform_manhattan",
+      "cv_roc_auc_mean": 0.8128331540931575,
+      "cv_roc_auc_std": 0.007725796783957055,
+      "note": "KNN on cont3 feature space"
+    },
+    {
+      "name": "knn_cont3_k61_uniform_manhattan",
+      "cv_roc_auc_mean": 0.8129510907881723,
+      "cv_roc_auc_std": 0.007661301184666797,
+      "note": "KNN on cont3 feature space"
+    },
+    {
+      "name": "knn_cont3_k81_uniform_manhattan",
+      "cv_roc_auc_mean": 0.815135593742534,
+      "cv_roc_auc_std": 0.008637956244978767,
+      "note": "KNN on cont3 feature space"
+    },
+    {
+      "name": "knn_cont3_k101_uniform_manhattan",
+      "cv_roc_auc_mean": 0.8159954698899069,
+      "cv_roc_auc_std": 0.008768993146242778,
+      "note": "KNN on cont3 feature space"
+    },
+    {
+      "name": "knn_cont3_k151_uniform_manhattan",
+      "cv_roc_auc_mean": 0.8144975293887367,
+      "cv_roc_auc_std": 0.008902191799281117,
+      "note": "KNN on cont3 feature space"
+    },
+    {
+      "name": "knn_cont3_k201_uniform_manhattan",
+      "cv_roc_auc_mean": 0.8142158671620958,
+      "cv_roc_auc_std": 0.00856829474101175,
+      "note": "KNN on cont3 feature space"
+    },
+    {
+      "name": "knn_cont3_k301_uniform_manhattan",
+      "cv_roc_auc_mean": 0.81070127247533,
+      "cv_roc_auc_std": 0.00917778931298178,
+      "note": "KNN on cont3 feature space"
+    },
+    {
+      "name": "knn_cont3_k1_distance_manhattan",
+      "cv_roc_auc_mean": 0.6435657934527604,
+      "cv_roc_auc_std": 0.009993524629822713,
+      "note": "KNN on cont3 feature space"
+    },
+    {
+      "name": "knn_cont3_k3_distance_manhattan",
+      "cv_roc_auc_mean": 0.7257370865165339,
+      "cv_roc_auc_std": 0.009479878556368462,
+      "note": "KNN on cont3 feature space"
+    },
+    {
+      "name": "knn_cont3_k5_distance_manhattan",
+      "cv_roc_auc_mean": 0.7457276913773508,
+      "cv_roc_auc_std": 0.00787749997499777,
+      "note": "KNN on cont3 feature space"
+    },
+    {
+      "name": "knn_cont3_k9_distance_manhattan",
+      "cv_roc_auc_mean": 0.7647559071941277,
+      "cv_roc_auc_std": 0.009751492052965697,
+      "note": "KNN on cont3 feature space"
+    },
+    {
+      "name": "knn_cont3_k15_distance_manhattan",
+      "cv_roc_auc_mean": 0.7767402004641508,
+      "cv_roc_auc_std": 0.010179608922088657,
+      "note": "KNN on cont3 feature space"
+    },
+    {
+      "name": "knn_cont3_k21_distance_manhattan",
+      "cv_roc_auc_mean": 0.7824686203679787,
+      "cv_roc_auc_std": 0.008846524000580466,
+      "note": "KNN on cont3 feature space"
+    },
+    {
+      "name": "knn_cont3_k31_distance_manhattan",
+      "cv_roc_auc_mean": 0.7877182485293543,
+      "cv_roc_auc_std": 0.007805898525680731,
+      "note": "KNN on cont3 feature space"
+    },
+    {
+      "name": "knn_cont3_k45_distance_manhattan",
+      "cv_roc_auc_mean": 0.7910503374675697,
+      "cv_roc_auc_std": 0.006781375554561789,
+      "note": "KNN on cont3 feature space"
+    },
+    {
+      "name": "knn_cont3_k61_distance_manhattan",
+      "cv_roc_auc_mean": 0.7929122510860545,
+      "cv_roc_auc_std": 0.006323752303304449,
+      "note": "KNN on cont3 feature space"
+    },
+    {
+      "name": "knn_cont3_k81_distance_manhattan",
+      "cv_roc_auc_mean": 0.7950201430049219,
+      "cv_roc_auc_std": 0.006553991453773945,
+      "note": "KNN on cont3 feature space"
+    },
+    {
+      "name": "knn_cont3_k101_distance_manhattan",
+      "cv_roc_auc_mean": 0.7961772795430331,
+      "cv_roc_auc_std": 0.00647560865116366,
+      "note": "KNN on cont3 feature space"
+    },
+    {
+      "name": "knn_cont3_k151_distance_manhattan",
+      "cv_roc_auc_mean": 0.7968848420796267,
+      "cv_roc_auc_std": 0.007124547503605198,
+      "note": "KNN on cont3 feature space"
+    },
+    {
+      "name": "knn_cont3_k201_distance_manhattan",
+      "cv_roc_auc_mean": 0.7968343018984416,
+      "cv_roc_auc_std": 0.007146082109533306,
+      "note": "KNN on cont3 feature space"
+    },
+    {
+      "name": "knn_cont3_k301_distance_manhattan",
+      "cv_roc_auc_mean": 0.7966308126727504,
+      "cv_roc_auc_std": 0.007658653695375732,
+      "note": "KNN on cont3 feature space"
+    },
+    {
+      "name": "knn_bin18_k1_uniform_euclidean",
+      "cv_roc_auc_mean": 0.6467154723726408,
+      "cv_roc_auc_std": 0.01231181504804123,
+      "note": "KNN on bin18 feature space"
+    },
+    {
+      "name": "knn_bin18_k3_uniform_euclidean",
+      "cv_roc_auc_mean": 0.7319949096532415,
+      "cv_roc_auc_std": 0.015238336306060401,
+      "note": "KNN on bin18 feature space"
+    },
+    {
+      "name": "knn_bin18_k5_uniform_euclidean",
+      "cv_roc_auc_mean": 0.7660516342212544,
+      "cv_roc_auc_std": 0.00689928458312846,
+      "note": "KNN on bin18 feature space"
+    },
+    {
+      "name": "knn_bin18_k9_uniform_euclidean",
+      "cv_roc_auc_mean": 0.7902944238458418,
+      "cv_roc_auc_std": 0.007715103206764928,
+      "note": "KNN on bin18 feature space"
+    },
+    {
+      "name": "knn_bin18_k15_uniform_euclidean",
+      "cv_roc_auc_mean": 0.8039405130682393,
+      "cv_roc_auc_std": 0.010493314640849384,
+      "note": "KNN on bin18 feature space"
+    },
+    {
+      "name": "knn_bin18_k21_uniform_euclidean",
+      "cv_roc_auc_mean": 0.8083305918348651,
+      "cv_roc_auc_std": 0.008298856025223997,
+      "note": "KNN on bin18 feature space"
+    },
+    {
+      "name": "knn_bin18_k31_uniform_euclidean",
+      "cv_roc_auc_mean": 0.8126607151582409,
+      "cv_roc_auc_std": 0.009191348715784298,
+      "note": "KNN on bin18 feature space"
+    },
+    {
+      "name": "knn_bin18_k45_uniform_euclidean",
+      "cv_roc_auc_mean": 0.8151992054939139,
+      "cv_roc_auc_std": 0.007682188435413088,
+      "note": "KNN on bin18 feature space"
+    },
+    {
+      "name": "knn_bin18_k61_uniform_euclidean",
+      "cv_roc_auc_mean": 0.8149384246647455,
+      "cv_roc_auc_std": 0.00733714011871386,
+      "note": "KNN on bin18 feature space"
+    },
+    {
+      "name": "knn_bin18_k81_uniform_euclidean",
+      "cv_roc_auc_mean": 0.8173654430254687,
+      "cv_roc_auc_std": 0.005711243055226367,
+      "note": "KNN on bin18 feature space"
+    },
+    {
+      "name": "knn_bin18_k101_uniform_euclidean",
+      "cv_roc_auc_mean": 0.8179100307311575,
+      "cv_roc_auc_std": 0.005506901684957418,
+      "note": "KNN on bin18 feature space"
+    },
+    {
+      "name": "knn_bin18_k151_uniform_euclidean",
+      "cv_roc_auc_mean": 0.8180170116891088,
+      "cv_roc_auc_std": 0.0057849672806459,
+      "note": "KNN on bin18 feature space"
+    },
+    {
+      "name": "knn_bin18_k201_uniform_euclidean",
+      "cv_roc_auc_mean": 0.8173359356517903,
+      "cv_roc_auc_std": 0.005668339965678783,
+      "note": "KNN on bin18 feature space"
+    },
+    {
+      "name": "knn_bin18_k301_uniform_euclidean",
+      "cv_roc_auc_mean": 0.8166192401595834,
+      "cv_roc_auc_std": 0.005498374389206543,
+      "note": "KNN on bin18 feature space"
+    },
+    {
+      "name": "knn_bin18_k1_distance_euclidean",
+      "cv_roc_auc_mean": 0.6467154723726408,
+      "cv_roc_auc_std": 0.01231181504804123,
+      "note": "KNN on bin18 feature space"
+    },
+    {
+      "name": "knn_bin18_k3_distance_euclidean",
+      "cv_roc_auc_mean": 0.7099273376405288,
+      "cv_roc_auc_std": 0.010716382845633072,
+      "note": "KNN on bin18 feature space"
+    },
+    {
+      "name": "knn_bin18_k5_distance_euclidean",
+      "cv_roc_auc_mean": 0.7294140386719984,
+      "cv_roc_auc_std": 0.004648127693114622,
+      "note": "KNN on bin18 feature space"
+    },
+    {
+      "name": "knn_bin18_k9_distance_euclidean",
+      "cv_roc_auc_mean": 0.7377246565927612,
+      "cv_roc_auc_std": 0.005598432991827363,
+      "note": "KNN on bin18 feature space"
+    },
+    {
+      "name": "knn_bin18_k15_distance_euclidean",
+      "cv_roc_auc_mean": 0.740588359076849,
+      "cv_roc_auc_std": 0.007579872270034644,
+      "note": "KNN on bin18 feature space"
+    },
+    {
+      "name": "knn_bin18_k21_distance_euclidean",
+      "cv_roc_auc_mean": 0.7410260889062923,
+      "cv_roc_auc_std": 0.006225495414314902,
+      "note": "KNN on bin18 feature space"
+    },
+    {
+      "name": "knn_bin18_k31_distance_euclidean",
+      "cv_roc_auc_mean": 0.7418473046991755,
+      "cv_roc_auc_std": 0.006964151832103493,
+      "note": "KNN on bin18 feature space"
+    },
+    {
+      "name": "knn_bin18_k45_distance_euclidean",
+      "cv_roc_auc_mean": 0.7421795950225055,
+      "cv_roc_auc_std": 0.006302281752326354,
+      "note": "KNN on bin18 feature space"
+    },
+    {
+      "name": "knn_bin18_k61_distance_euclidean",
+      "cv_roc_auc_mean": 0.7414507422813459,
+      "cv_roc_auc_std": 0.006357859706079999,
+      "note": "KNN on bin18 feature space"
+    },
+    {
+      "name": "knn_bin18_k81_distance_euclidean",
+      "cv_roc_auc_mean": 0.7417529772243555,
+      "cv_roc_auc_std": 0.006306260942939439,
+      "note": "KNN on bin18 feature space"
+    },
+    {
+      "name": "knn_bin18_k101_distance_euclidean",
+      "cv_roc_auc_mean": 0.7417958448241339,
+      "cv_roc_auc_std": 0.006291919477780968,
+      "note": "KNN on bin18 feature space"
+    },
+    {
+      "name": "knn_bin18_k151_distance_euclidean",
+      "cv_roc_auc_mean": 0.7414728706137172,
+      "cv_roc_auc_std": 0.0056440710062931635,
+      "note": "KNN on bin18 feature space"
+    },
+    {
+      "name": "knn_bin18_k201_distance_euclidean",
+      "cv_roc_auc_mean": 0.7412183405768872,
+      "cv_roc_auc_std": 0.00556279704748543,
+      "note": "KNN on bin18 feature space"
+    },
+    {
+      "name": "knn_bin18_k301_distance_euclidean",
+      "cv_roc_auc_mean": 0.740735137429809,
+      "cv_roc_auc_std": 0.005128160064228549,
+      "note": "KNN on bin18 feature space"
+    },
+    {
+      "name": "knn_bin18_k1_uniform_manhattan",
+      "cv_roc_auc_mean": 0.6467154723726408,
+      "cv_roc_auc_std": 0.01231181504804123,
+      "note": "KNN on bin18 feature space"
+    },
+    {
+      "name": "knn_bin18_k3_uniform_manhattan",
+      "cv_roc_auc_mean": 0.7319949096532415,
+      "cv_roc_auc_std": 0.015238336306060401,
+      "note": "KNN on bin18 feature space"
+    },
+    {
+      "name": "knn_bin18_k5_uniform_manhattan",
+      "cv_roc_auc_mean": 0.7660516342212544,
+      "cv_roc_auc_std": 0.00689928458312846,
+      "note": "KNN on bin18 feature space"
+    },
+    {
+      "name": "knn_bin18_k9_uniform_manhattan",
+      "cv_roc_auc_mean": 0.7902944238458418,
+      "cv_roc_auc_std": 0.007715103206764928,
+      "note": "KNN on bin18 feature space"
+    },
+    {
+      "name": "knn_bin18_k15_uniform_manhattan",
+      "cv_roc_auc_mean": 0.8039405130682393,
+      "cv_roc_auc_std": 0.010493314640849384,
+      "note": "KNN on bin18 feature space"
+    },
+    {
+      "name": "knn_bin18_k21_uniform_manhattan",
+      "cv_roc_auc_mean": 0.8083305918348651,
+      "cv_roc_auc_std": 0.008298856025223997,
+      "note": "KNN on bin18 feature space"
+    },
+    {
+      "name": "knn_bin18_k31_uniform_manhattan",
+      "cv_roc_auc_mean": 0.8126607151582409,
+      "cv_roc_auc_std": 0.009191348715784298,
+      "note": "KNN on bin18 feature space"
+    },
+    {
+      "name": "knn_bin18_k45_uniform_manhattan",
+      "cv_roc_auc_mean": 0.8151992054939139,
+      "cv_roc_auc_std": 0.007682188435413088,
+      "note": "KNN on bin18 feature space"
+    },
+    {
+      "name": "knn_bin18_k61_uniform_manhattan",
+      "cv_roc_auc_mean": 0.8149384246647455,
+      "cv_roc_auc_std": 0.00733714011871386,
+      "note": "KNN on bin18 feature space"
+    },
+    {
+      "name": "knn_bin18_k81_uniform_manhattan",
+      "cv_roc_auc_mean": 0.8173654430254687,
+      "cv_roc_auc_std": 0.005711243055226367,
+      "note": "KNN on bin18 feature space"
+    },
+    {
+      "name": "knn_bin18_k101_uniform_manhattan",
+      "cv_roc_auc_mean": 0.8179100307311575,
+      "cv_roc_auc_std": 0.005506901684957418,
+      "note": "KNN on bin18 feature space"
+    },
+    {
+      "name": "knn_bin18_k151_uniform_manhattan",
+      "cv_roc_auc_mean": 0.8180170116891088,
+      "cv_roc_auc_std": 0.0057849672806459,
+      "note": "KNN on bin18 feature space"
+    },
+    {
+      "name": "knn_bin18_k201_uniform_manhattan",
+      "cv_roc_auc_mean": 0.8173359356517903,
+      "cv_roc_auc_std": 0.005668339965678783,
+      "note": "KNN on bin18 feature space"
+    },
+    {
+      "name": "knn_bin18_k301_uniform_manhattan",
+      "cv_roc_auc_mean": 0.8166192401595834,
+      "cv_roc_auc_std": 0.005498374389206543,
+      "note": "KNN on bin18 feature space"
+    },
+    {
+      "name": "knn_bin18_k1_distance_manhattan",
+      "cv_roc_auc_mean": 0.6467154723726408,
+      "cv_roc_auc_std": 0.01231181504804123,
+      "note": "KNN on bin18 feature space"
+    },
+    {
+      "name": "knn_bin18_k3_distance_manhattan",
+      "cv_roc_auc_mean": 0.7098364374051085,
+      "cv_roc_auc_std": 0.010674267467199666,
+      "note": "KNN on bin18 feature space"
+    },
+    {
+      "name": "knn_bin18_k5_distance_manhattan",
+      "cv_roc_auc_mean": 0.729409688319806,
+      "cv_roc_auc_std": 0.004637415944500871,
+      "note": "KNN on bin18 feature space"
+    },
+    {
+      "name": "knn_bin18_k9_distance_manhattan",
+      "cv_roc_auc_mean": 0.7375275583357955,
+      "cv_roc_auc_std": 0.005759304890386144,
+      "note": "KNN on bin18 feature space"
+    },
+    {
+      "name": "knn_bin18_k15_distance_manhattan",
+      "cv_roc_auc_mean": 0.7403412300602019,
+      "cv_roc_auc_std": 0.00722069331738642,
+      "note": "KNN on bin18 feature space"
+    },
+    {
+      "name": "knn_bin18_k21_distance_manhattan",
+      "cv_roc_auc_mean": 0.7411001103417724,
+      "cv_roc_auc_std": 0.0065742393401811055,
+      "note": "KNN on bin18 feature space"
+    },
+    {
+      "name": "knn_bin18_k31_distance_manhattan",
+      "cv_roc_auc_mean": 0.74183285920502,
+      "cv_roc_auc_std": 0.007018559493156206,
+      "note": "KNN on bin18 feature space"
+    },
+    {
+      "name": "knn_bin18_k45_distance_manhattan",
+      "cv_roc_auc_mean": 0.7422943408731428,
+      "cv_roc_auc_std": 0.00662399223968205,
+      "note": "KNN on bin18 feature space"
+    },
+    {
+      "name": "knn_bin18_k61_distance_manhattan",
+      "cv_roc_auc_mean": 0.7416819097498119,
+      "cv_roc_auc_std": 0.006182511550149278,
+      "note": "KNN on bin18 feature space"
+    },
+    {
+      "name": "knn_bin18_k81_distance_manhattan",
+      "cv_roc_auc_mean": 0.7419389473321856,
+      "cv_roc_auc_std": 0.0063174064557788056,
+      "note": "KNN on bin18 feature space"
+    },
+    {
+      "name": "knn_bin18_k101_distance_manhattan",
+      "cv_roc_auc_mean": 0.7420946075931527,
+      "cv_roc_auc_std": 0.006230993027477084,
+      "note": "KNN on bin18 feature space"
+    },
+    {
+      "name": "knn_bin18_k151_distance_manhattan",
+      "cv_roc_auc_mean": 0.7415916747417057,
+      "cv_roc_auc_std": 0.005889550136014361,
+      "note": "KNN on bin18 feature space"
+    },
+    {
+      "name": "knn_bin18_k201_distance_manhattan",
+      "cv_roc_auc_mean": 0.7415771862666372,
+      "cv_roc_auc_std": 0.005582514096387894,
+      "note": "KNN on bin18 feature space"
+    },
+    {
+      "name": "knn_bin18_k301_distance_manhattan",
+      "cv_roc_auc_mean": 0.7410874939785206,
+      "cv_roc_auc_std": 0.005101094510876597,
+      "note": "KNN on bin18 feature space"
+    },
+    {
+      "name": "nb_gaussian_cont3",
+      "cv_roc_auc_mean": 0.7746165692279599,
+      "cv_roc_auc_std": 0.019319858313641664,
+      "note": "Naive Bayes variant, all 3 continuous features kept"
+    },
+    {
+      "name": "nb_bernoulli_bin18",
+      "cv_roc_auc_mean": 0.8190179604732286,
+      "cv_roc_auc_std": 0.0029641817996382772,
+      "note": "Naive Bayes variant, all 3 continuous features kept"
+    },
+    {
+      "name": "nb_mixed_full21",
+      "cv_roc_auc_mean": 0.8327408863809136,
+      "cv_roc_auc_std": 0.008907749473165255,
+      "note": "Naive Bayes variant, all 3 continuous features kept"
+    },
+    {
+      "name": "nb_discretised_bins3",
+      "cv_roc_auc_mean": 0.8379191364329645,
+      "cv_roc_auc_std": 0.010077950360540834,
+      "note": "Naive Bayes variant, all 3 continuous features kept"
+    },
+    {
+      "name": "nb_discretised_bins5",
+      "cv_roc_auc_mean": 0.8405987716914656,
+      "cv_roc_auc_std": 0.010613333590847712,
+      "note": "Naive Bayes variant, all 3 continuous features kept"
+    },
+    {
+      "name": "nb_discretised_bins10",
+      "cv_roc_auc_mean": 0.8410402755381303,
+      "cv_roc_auc_std": 0.009636228627462653,
+      "note": "Naive Bayes variant, all 3 continuous features kept"
+    },
+    {
+      "name": "nb_discretised_bins20",
+      "cv_roc_auc_mean": 0.8399909341532217,
+      "cv_roc_auc_std": 0.009640602582831585,
+      "note": "Naive Bayes variant, all 3 continuous features kept"
+    },
+    {
+      "name": "nb_gaussian_cont3_noTotalCharges",
+      "cv_roc_auc_mean": 0.7935027599900293,
+      "cv_roc_auc_std": 0.012863263534538401,
+      "note": "same variant with TotalCharges dropped (independence-violation test)"
+    },
+    {
+      "name": "nb_bernoulli_bin18_noTotalCharges",
+      "cv_roc_auc_mean": 0.8190179604732286,
+      "cv_roc_auc_std": 0.0029641817996382772,
+      "note": "same variant with TotalCharges dropped (independence-violation test)"
+    },
+    {
+      "name": "nb_mixed_full21_noTotalCharges",
+      "cv_roc_auc_mean": 0.8329081798167455,
+      "cv_roc_auc_std": 0.005130228432482446,
+      "note": "same variant with TotalCharges dropped (independence-violation test)"
+    },
+    {
+      "name": "nb_discretised_bins3_noTotalCharges",
+      "cv_roc_auc_mean": 0.8348098844807861,
+      "cv_roc_auc_std": 0.005756113635685209,
+      "note": "same variant with TotalCharges dropped (independence-violation test)"
+    },
+    {
+      "name": "nb_discretised_bins5_noTotalCharges",
+      "cv_roc_auc_mean": 0.8367980086200564,
+      "cv_roc_auc_std": 0.006473892627351738,
+      "note": "same variant with TotalCharges dropped (independence-violation test)"
+    },
+    {
+      "name": "nb_discretised_bins10_noTotalCharges",
+      "cv_roc_auc_mean": 0.8361819221654347,
+      "cv_roc_auc_std": 0.006166350071417642,
+      "note": "same variant with TotalCharges dropped (independence-violation test)"
+    },
+    {
+      "name": "nb_discretised_bins20_noTotalCharges",
+      "cv_roc_auc_mean": 0.8362206494333915,
+      "cv_roc_auc_std": 0.006675412876544141,
+      "note": "same variant with TotalCharges dropped (independence-violation test)"
+    }
+  ],
+  "best_model": {
+    "name": "nb_discretised_bins10",
+    "params": {
+      "variant": "nb_discretised_bins10",
+      "alpha_or_var_smoothing": "sklearn defaults",
+      "drop_total_charges": false
+    },
+    "cv_roc_auc_mean": 0.8410402755381303,
+    "cv_roc_auc_std": 0.009636228627462653,
+    "threshold": 0.49000000000000005,
+    "test": {
+      "roc_auc": 0.8388733886176342,
+      "f1_yes": 0.6170212765957447,
+      "precision_yes": 0.5529661016949152,
+      "recall_yes": 0.6978609625668449,
+      "accuracy": 0.7700496806245565,
+      "confusion_matrix": [
+        [
+          824,
+          211
+        ],
+        [
+          113,
+          261
+        ]
+      ]
+    },
+    "test_at_threshold_0.5": {
+      "f1_yes": 0.6159334126040428,
+      "precision_yes": 0.5546038543897216,
+      "recall_yes": 0.6925133689839572,
+      "accuracy": 0.7707594038325053
+    }
+  },
+  "top_drivers": [],
+  "runtime_seconds": 139.41,
+  "notes": "top_drivers is deliberately empty: neither KNN nor Naive Bayes yields a natural feature-importance ranking (KNN has no coefficients or splits; NB has per-feature log-likelihood ratios that are not comparable across a mixed Gaussian/Bernoulli model and are inflated by the very dependence violations documented here). Inventing a ranking would be worse than reporting none. Best KNN: knn_full21_k101_uniform_manhattan at CV ROC-AUC 0.8393; best NB: nb_discretised_bins10 at CV ROC-AUC 0.8410. Both sit below the 0.84-0.85 team ceiling, as expected for these families on this dataset -- see docs/step-03c-knn-naive-bayes.md for the geometry and independence-violation evidence.",
+  "diagnostics": {
+    "geometry": {
+      "shape": [
+        5634,
+        21
+      ],
+      "sqdist_share_continuous": 0.4441116377487897,
+      "sqdist_share_binary": 0.5558883622512103,
+      "relative_contrast_full": 135.1517714600441,
+      "relative_contrast_continuous": 625.8700293347432,
+      "knn25_tie_fraction": 0.09,
+      "knn25_mean_ties": 0.2866666666666667,
+      "concentration": {
+        "full 21-d": {
+          "relative_contrast": 135.1517714600441,
+          "cv_std_over_mean": 0.24719230985031312,
+          "d100_over_median": 0.5208023155698214
+        },
+        "3-d continuous": {
+          "relative_contrast": 625.8700293347432,
+          "cv_std_over_mean": 0.48783888127205843,
+          "d100_over_median": 0.12337266962917359
+        },
+        "18-d binary": {
+          "relative_contrast": 2.698983616626964,
+          "cv_std_over_mean": 0.1733555279421984,
+          "d100_over_median": 0.5906857993660117
+        }
+      },
+      "ties_by_space": {
+        "full 21-d": {
+          "tie_fraction": 0.09,
+          "mean_ties": 0.2866666666666667
+        },
+        "3-d continuous": {
+          "tie_fraction": 0.11,
+          "mean_ties": 1.1533333333333333
+        },
+        "18-d binary": {
+          "tie_fraction": 1.0,
+          "mean_ties": 22.71
+        }
+      }
+    },
+    "knn_best_per_space": {
+      "full21": {
+        "k": 101,
+        "weights": "uniform",
+        "metric": "manhattan",
+        "name": "knn_full21_k101_uniform_manhattan",
+        "cv_roc_auc_mean": 0.8392870572299257,
+        "cv_roc_auc_std": 0.008891275384947113,
+        "note": "KNN on full21 feature space"
+      },
+      "cont3": {
+        "k": 101,
+        "weights": "uniform",
+        "metric": "manhattan",
+        "name": "knn_cont3_k101_uniform_manhattan",
+        "cv_roc_auc_mean": 0.8159954698899069,
+        "cv_roc_auc_std": 0.008768993146242778,
+        "note": "KNN on cont3 feature space"
+      },
+      "bin18": {
+        "k": 151,
+        "weights": "uniform",
+        "metric": "euclidean",
+        "name": "knn_bin18_k151_uniform_euclidean",
+        "cv_roc_auc_mean": 0.8180170116891088,
+        "cv_roc_auc_std": 0.0057849672806459,
+        "note": "KNN on bin18 feature space"
+      }
+    },
+    "nb_total_charges_delta": {
+      "nb_gaussian_cont3": 0.018886190762069432,
+      "nb_bernoulli_bin18": 0.0,
+      "nb_mixed_full21": 0.00016729343583188339,
+      "nb_discretised_bins3": -0.0031092519521783712,
+      "nb_discretised_bins5": -0.0038007630714091967,
+      "nb_discretised_bins10": -0.0048583533726955785,
+      "nb_discretised_bins20": -0.003770284719830208
+    },
+    "independence": {
+      "continuous_within_class_corr": {
+        "Churn=0": {
+          "tenure": {
+            "tenure": 1.0,
+            "MonthlyCharges": 0.3448,
+            "TotalCharges": 0.7988
+          },
+          "MonthlyCharges": {
+            "tenure": 0.3448,
+            "MonthlyCharges": 1.0,
+            "TotalCharges": 0.7613
+          },
+          "TotalCharges": {
+            "tenure": 0.7988,
+            "MonthlyCharges": 0.7613,
+            "TotalCharges": 1.0
+          }
+        },
+        "Churn=1": {
+          "tenure": {
+            "tenure": 1.0,
+            "MonthlyCharges": 0.3911,
+            "TotalCharges": 0.952
+          },
+          "MonthlyCharges": {
+            "tenure": 0.3911,
+            "MonthlyCharges": 1.0,
+            "TotalCharges": 0.5434
+          },
+          "TotalCharges": {
+            "tenure": 0.952,
+            "MonthlyCharges": 0.5434,
+            "TotalCharges": 1.0
+          }
+        }
+      },
+      "binary_within_class_offdiag": [
+        {
+          "class": "Churn=0",
+          "mean_abs_r": 0.16761004814449032,
+          "max_abs_r": 0.557060619595056
+        },
+        {
+          "class": "Churn=1",
+          "mean_abs_r": 0.12468496484178439,
+          "max_abs_r": 0.5225530569041003
+        }
+      ],
+      "top_dependent_binary_pairs": [
+        {
+          "a": "StreamingMovies_Yes",
+          "b": "StreamingTV_Yes",
+          "abs_r": 0.557060619595056
+        },
+        {
+          "a": "InternetService_No",
+          "b": "OnlineBackup_Yes",
+          "abs_r": 0.4732530181403168
+        },
+        {
+          "a": "InternetService_No",
+          "b": "StreamingMovies_Yes",
+          "abs_r": 0.47081617575378676
+        },
+        {
+          "a": "InternetService_No",
+          "b": "StreamingTV_Yes",
+          "abs_r": 0.466687604932206
+        },
+        {
+          "a": "DeviceProtection_Yes",
+          "b": "StreamingMovies_Yes",
+          "abs_r": 0.46452505201725114
+        }
+      ],
+      "diagonal_covariance_cost": {
+        "GaussianNB (diagonal covariance)": {
+          "cv_roc_auc_mean": 0.7746165692279599,
+          "cv_roc_auc_std": 0.019319858313641664
+        },
+        "LDA (one shared full covariance)": {
+          "cv_roc_auc_mean": 0.8007698150165972,
+          "cv_roc_auc_std": 0.008638669233548772
+        },
+        "QDA (per-class full covariance)": {
+          "cv_roc_auc_mean": 0.7931966299017705,
+          "cv_roc_auc_std": 0.00904509266465016
+        }
+      },
+      "qda_minus_gaussiannb": 0.018580060673810683
+    },
+    "calibration": {
+      "knn_full21_k101_uniform_manhattan": {
+        "brier": 0.13920104723596707,
+        "ece": 0.03271622818162426,
+        "frac_below_0.01": 0.08732694355697551,
+        "frac_above_0.99": 0.0,
+        "min": 0.0,
+        "max": 0.8613861386138614,
+        "reliability": {
+          "mean_predicted": [
+            0.01135701805474664,
+            0.038325663552270475,
+            0.07694274962551576,
+            0.14284030443860737,
+            0.21192610754459104,
+            0.2854395236820981,
+            0.383207035787377,
+            0.48867290398764685,
+            0.6091563002454089,
+            0.7364181067553273
+          ],
+          "observed_frac_pos": [
+            0.016042780748663103,
+            0.02112676056338028,
+            0.06088560885608856,
+            0.11904761904761904,
+            0.13799621928166353,
+            0.24324324324324326,
+            0.3091247672253259,
+            0.43486238532110094,
+            0.5948717948717949,
+            0.7435424354243543
+          ]
+        }
+      },
+      "nb_discretised_bins10": {
+        "brier": 0.16678676668398928,
+        "ece": 0.13100415300798005,
+        "frac_below_0.01": 0.33990060347887824,
+        "frac_above_0.99": 0.0427760028399006,
+        "min": 4.001008241518998e-06,
+        "max": 0.999297051819647,
+        "reliability": {
+          "mean_predicted": [
+            8.352516870827281e-05,
+            0.0005204981177240032,
+            0.0026458618525042527,
+            0.012629957180199871,
+            0.05073487343759578,
+            0.16128872286251186,
+            0.41581125598830276,
+            0.7236562598439761,
+            0.9220293870524919,
+            0.9863336836417684
+          ],
+          "observed_frac_pos": [
+            0.008865248226950355,
+            0.028419182948490232,
+            0.06216696269982238,
+            0.0975177304964539,
+            0.14564831261101244,
+            0.2291296625222025,
+            0.30319148936170215,
+            0.4689165186500888,
+            0.5719360568383659,
+            0.7375886524822695
+          ]
+        }
+      }
+    },
+    "finalists_test": {
+      "knn_full21_k101_uniform_manhattan": {
+        "threshold": 0.4,
+        "test": {
+          "roc_auc": 0.8363352191996694,
+          "f1_yes": 0.6141176470588235,
+          "precision_yes": 0.5483193277310925,
+          "recall_yes": 0.6978609625668449,
+          "accuracy": 0.7672107877927609,
+          "confusion_matrix": [
+            [
+              820,
+              215
+            ],
+            [
+              113,
+              261
+            ]
+          ]
+        },
+        "test_at_threshold_0.5": {
+          "f1_yes": 0.589041095890411,
+          "precision_yes": 0.6039325842696629,
+          "recall_yes": 0.5748663101604278,
+          "accuracy": 0.78708303761533
+        },
+        "test_brier": 0.1412872379438718
+      },
+      "nb_discretised_bins10": {
+        "threshold": 0.49000000000000005,
+        "test": {
+          "roc_auc": 0.8388733886176342,
+          "f1_yes": 0.6170212765957447,
+          "precision_yes": 0.5529661016949152,
+          "recall_yes": 0.6978609625668449,
+          "accuracy": 0.7700496806245565,
+          "confusion_matrix": [
+            [
+              824,
+              211
+            ],
+            [
+              113,
+              261
+            ]
+          ]
+        },
+        "test_at_threshold_0.5": {
+          "f1_yes": 0.6159334126040428,
+          "precision_yes": 0.5546038543897216,
+          "recall_yes": 0.6925133689839572,
+          "accuracy": 0.7707594038325053
+        },
+        "test_brier": 0.17254706978769344
+      }
+    },
+    "oof_f1_at_tuned_threshold": {
+      "knn_full21_k101_uniform_manhattan": 0.6281090800119868,
+      "nb_discretised_bins10": 0.6342342342342342
+    }
+  }
+}

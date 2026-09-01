@@ -85,10 +85,25 @@ Newest first.
 - Added `.gitignore` for `__pycache__/`.
 - Set repo-local git identity (`miskmichel` / `michelcarneiro205@gmail.com`) — none was configured, so commits were impossible.
 
+### Step 3 — Modeling ✅
+
+Four approaches, run in parallel against the frozen split, each producing `src/models/*.py`, `results/*.json`, and `docs/step-03[a-d]-*.md`.
+
+- **Logistic Regression** (`docs/step-03a-logistic-regression.md`): CV ROC-AUC 0.8463±0.0085, test 0.8424, F1(Yes) 0.6178 at tuned threshold 0.32. Settled the open `TotalCharges` question — tested keep/drop/residual under identical CV, **keeping it won** by +0.0016 AUC (noise-level; the collinearity concern never became a measurable cost). Confirmed the noise-cull is free (−0.0005 AUC). Coefficients sanity-checked clean against EDA's `Contract`/`PaymentMethod` findings.
+- **Tree Ensembles** (`docs/step-03b-tree-ensembles.md`): best GradientBoosting (tuned), CV ROC-AUC 0.8486±0.0084, test 0.8440, F1(Yes) 0.6228 — **best single test score**, by a margin under a fifth of one CV standard deviation over logistic regression. **Corrects `CLAUDE.md` fact 8**: trees do not meaningfully beat a tuned linear model here, and Cramér's V is a poor tree-importance ranking (permutation importance concentrates 82% of weight in 3 features; EDA's #2/#3 by Cramér's V score 22–30× lower because their signal is mostly the `InternetService` effect passing through the "No internet service" collapse).
+- **KNN / Naive Bayes** (`docs/step-03c-knn-naive-bayes.md`): best NB (10-bin discretised), CV ROC-AUC 0.8410±0.0096, test 0.8389, F1(Yes) 0.6170; best KNN (k=101, manhattan), CV 0.8393, test 0.8363. Closer to the ceiling than briefed. Found the mechanism: 100% of sampled points tie on nearest-neighbour distance in the pure-dummy subspace, so KNN needs k≈101 to work at all; NB's independence-violation cost measured twice, independently, at ≈0.019 AUC (dropping `TotalCharges` helps GaussianNB by exactly that amount; QDA — same model, full covariance — gains almost the same).
+- **SVM + feature engineering** (`docs/step-03d-svm-features.md`): best LinearSVC (`class_weight='balanced'`), CV ROC-AUC 0.8450±0.0085, test 0.8399, F1(Yes) 0.6182. Every engineered feature landed within ±0.0015 AUC of baseline **except** the `Contract×InternetService` interaction, which **hurt** (−0.0033 to −0.0051) — **second correction to `CLAUDE.md` fact 8**: a 70× rate spread is not evidence of a true interaction; an additive fit reproduces the 9-cell table to within 1.69 pp on its own. `class_weight='balanced'` outweighed all feature engineering combined. RBF kernel bought nothing over linear at 13× the cost.
+
+**Cross-model result:** all four approaches land within **0.0077 test ROC-AUC of each other** (0.8363–0.8440), inside the Step 1 predicted 0.84–0.85 band, well under one CV standard deviation apart. Threshold tuning outweighed model choice — every approach gained by moving off the default 0.5 (logistic +0.0097 F1, SVM +0.0228 F1), trading precision for recall, the correct direction for a churn model.
+
+**`CLAUDE.md` fact 8 corrected twice** based on Step 3b and Step 3d evidence — both corrections applied inline with `⚠️ Correction` markers rather than silently rewritten. See `METHODOLOGY.md`'s Step 3 section for the full comparison table and narrative.
+
+Also added `docs/step-03a-logistic-regression.md` after the fact: its originating agent exited (a background-harness restart) before writing its report; reconstructed from `results/logistic_regression.json` by the lead rather than re-spawning an agent for it.
+
 ---
 
 ## In progress
 
-### Step 3 — Modeling ⬜
+### Step 4 — Evaluate & compare ⬜
 
-Not started. `TotalCharges` keep-vs-drop-vs-residual remains open and is now a one-flag decision (`clean(drop_total_charges=True)`).
+Not started. The assignment's own framing already answers its parenthetical ("pensem bem se acurácia sozinha é suficiente aqui") — no, settled in Step 1. What remains: a formal side-by-side writeup of the Step 3 comparison table above, and a team decision on which model to carry into the synthesis cell given the near-tie.
