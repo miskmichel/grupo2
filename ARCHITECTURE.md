@@ -29,9 +29,16 @@ hackaton-classificacao/
 │   ├── data_prep.py           # loading, cleaning, encoding, splitting
 │   └── make_splits.py         # writes data/splits/ once; --check verifies
 │
+├── site/
+│   └── index.html              # progress site, published as a Claude Artifact
+│
+├── results/                    # per-model JSON output + evaluation charts (src/models/*.py write here)
+│
 └── docs/
-    ├── step-01-eda.md         # Step 1 — exploratory data analysis
-    └── step-02-data-treatment.md   # Step 2 — cleaning decisions + verification
+    ├── step-01-eda.md              # Step 1 — exploratory data analysis
+    ├── step-02-data-treatment.md   # Step 2 — cleaning decisions + verification
+    ├── step-03[a-e]-*.md           # Step 3 — five modeling approaches (a-d team, e teammate Caco)
+    └── step-04-model-comparison.md # Step 4 — cross-model comparison + final model decision
 ```
 
 ### Why cleaning lives in `src/`, not inline in the notebook
@@ -96,7 +103,7 @@ Consequences: collapse the "No X service" levels to `'No'` before one-hot encodi
 
 ## Modeling pipeline
 
-Everything above the estimator is **built and verified** in `src/data_prep.py` as of Step 2. The estimator row is Step 3, not yet started.
+Built, trained, and evaluated as of Step 4. Five models trained (Step 3), one shipped (Step 4).
 
 ```
 raw CSV
@@ -115,13 +122,18 @@ ColumnTransformer                                   (test.csv held out,
   └─ categoric → OneHotEncoder(drop='first')         evaluation)
   │
   ▼
-estimator  ── ≥2 required by the assignment ──
-  ├─ LogisticRegression(class_weight='balanced')   # interpretable driver list
-  └─ RandomForest / GradientBoosting               # captures the non-monotonicity
+estimator  ── five trained, one shipped ──
+  ├─ LogisticRegression (C=10.0)         # ✅ SHIPPED — test ROC-AUC 0.8424, F1(Yes) 0.6178
+  ├─ GradientBoosting (tuned)            # best raw score (0.8440), inside CV noise of LR
+  ├─ LinearSVC (class_weight='balanced')
+  ├─ Naive Bayes (10-bin discretised)
+  ├─ KNN (k=101, manhattan)
+  └─ BernoulliNB (Caco, quantile-binned) # teammate's independent model, same frozen test rows
   │
   ▼
 evaluate  → ROC-AUC (primary) + F1/recall on Yes + confusion matrix
-          → tune decision threshold, do not assume 0.5
+          → decision threshold tuned per model (never the default 0.5)
+          → docs/step-04-model-comparison.md decides the winner
 ```
 
 Everything from `ColumnTransformer` down belongs **inside** a single `sklearn.pipeline.Pipeline`, fitted only on the training fold. Fitting any transformer before the split leaks test information.

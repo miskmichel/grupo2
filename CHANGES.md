@@ -6,6 +6,33 @@ Newest first.
 
 ---
 
+## 2026-09-01 (later)
+
+### Step 4 — Evaluate & compare ✅
+
+- Added `docs/step-04-model-comparison.md`: full cross-model comparison table (CV/test ROC-AUC, F1/precision/recall(Yes), confusion matrices) across all Step 3 approaches, plus the fifth approach below. **Decision: ship Logistic Regression** (`a_keep_total_charges`, `C=10.0`, threshold 0.32) — a statistical tie with GradientBoosting (raw best, but only +0.0016 AUC, under a fifth of a CV std dev) resolved in favor of interpretability. Notably, teammate Caco's fully independent pipeline reached the identical model choice.
+- `METHODOLOGY.md` Step 4 section written; status table and headline findings in `README.md` updated to reflect steps 4-5 complete.
+
+### Teammate's model pulled in from `CacoJuse` branch
+
+- Found `origin/CacoJuse` ("Branch do caco") — a teammate's fully independent effort (own `codigo.ipynb`, own docs) built two models: a LogisticRegression (redundant with the team's own, more-tuned LR — not integrated separately) and a **BernoulliNB** with hand-built quantile binarization, distinct from the team's own discretised-NB approach in `docs/step-03c-knn-naive-bayes.md`.
+- **Verified his split is identical to the team's frozen split**: his `train_test_split(X, y, test_size=0.20, random_state=42, stratify=y)` on the raw CSV lands on the exact same 1409 test rows (row-for-row) as `data/splits/test.csv`, despite being derived independently — so his results are directly comparable without re-deriving anything.
+- Ported to `src/models/bernoulli_nb_caco.py` (his exact preprocessing shape — 2-bin quantile discretisation on continuous columns, one-hot on categoricals, `BernoulliNB` with his own alpha grid — run against `dp.load_splits()` and the team's threshold-tuning convention). Results in `results/bernoulli_nb_caco.json`, documented in `docs/step-03e-caco-naive-bayes.md`. **Reproduction of his own reported numbers landed within half a percentage point on every metric** (CV ROC-AUC 0.8332 vs his 0.834; test ROC-AUC 0.8225 vs his 0.822) — the small residual gap is `dp.clean()`'s "No internet/phone service" collapse (`CLAUDE.md` fact 5), which his own preprocessing doesn't apply.
+- Added his BernoulliNB row (CV 0.8332, test ROC-AUC 0.8225, F1(Yes) 0.6134 @ threshold 0.39) to `docs/step-04-model-comparison.md`, `site/index.html`, and `codigo.ipynb`'s live comparison table.
+
+### Step 5 — Synthesis ✅
+
+- Built `codigo.ipynb` from scratch (it was an empty stub) as the actual runnable deliverable: load raw → demonstrate the `TotalCharges` trap → `dp.clean()` → `dp.load_splits()` → fit the shipped Logistic Regression pipeline → single test-set evaluation (confusion matrix + ROC curve plots, saved to `results/`) → a comparison table generated live from `results/*.json` → the required synthesis cell (best model / metric+value / main technical decision / next steps).
+- **Executed end-to-end** with `nbclient` to confirm it actually runs start-to-finish (assignment requirement) and reproduces the exact numbers in `results/logistic_regression.json` (test ROC-AUC 0.8424, F1(Yes) 0.6178, threshold 0.32).
+- **Installed `nbformat`, `nbclient`, `ipykernel`, `jupyter_client`** (plus transitive deps) via `pip install --break-system-packages` to build and execute the notebook programmatically — not in `requirements.txt` since they're a notebook-tooling dependency, not a modeling one.
+
+### Progress site
+
+- `site/index.html` had **no charset declaration at all** (no doctype, no `<meta charset>`) — plausible cause of a teammate seeing mojibake ("desafio de classificação" rendering as "desafio de classificaÃ§Ã£o") when opening the file directly rather than through the Artifact publish wrapper (which injects its own `<meta charset>`, but far past the byte offset browsers use for charset pre-scanning without an HTTP charset header). Fixed: added `<meta charset="UTF-8">` as the file's first line.
+- Filled in the Step 4/5 sections (previously scaffolded as "pending"/"not started" placeholders) with the actual comparison table and decision.
+
+---
+
 ## 2026-09-01
 
 ### Documentation structure established
@@ -102,8 +129,4 @@ Also added `docs/step-03a-logistic-regression.md` after the fact: its originatin
 
 ---
 
-## In progress
-
-### Step 4 — Evaluate & compare ⬜
-
-Not started. The assignment's own framing already answers its parenthetical ("pensem bem se acurácia sozinha é suficiente aqui") — no, settled in Step 1. What remains: a formal side-by-side writeup of the Step 3 comparison table above, and a team decision on which model to carry into the synthesis cell given the near-tie.
+Step 4 and Step 5 are complete — see the "2026-09-01 (later)" entry above, `docs/step-04-model-comparison.md`, and the synthesis cell in `codigo.ipynb`.

@@ -14,9 +14,9 @@ The assignment (`enunciado.ipynb`) breaks the 90 minutes into five phases. We fo
 |---|---|---|---|---|
 | 1 | Load and explore | 10 min | ✅ Complete | [`docs/step-01-eda.md`](docs/step-01-eda.md) |
 | 2 | Treat data — missing values, categoricals, `customerID` | 20–25 min | ✅ Complete | [`docs/step-02-data-treatment.md`](docs/step-02-data-treatment.md) |
-| 3 | Train ≥2 models | 30–35 min | ✅ Complete | 4 approaches — see below |
-| 4 | Evaluate and compare | 15 min | ⬜ Not started | — |
-| 5 | Review + synthesis cell | 10 min | ⬜ Not started | — |
+| 3 | Train ≥2 models | 30–35 min | ✅ Complete | 5 approaches — see below |
+| 4 | Evaluate and compare | 15 min | ✅ Complete | [`docs/step-04-model-comparison.md`](docs/step-04-model-comparison.md) |
+| 5 | Review + synthesis cell | 10 min | ✅ Complete | [`codigo.ipynb`](codigo.ipynb), final cell |
 
 ---
 
@@ -89,6 +89,8 @@ The manifest records a SHA-256 of each file and of the source CSV, so a regenera
 
 **Goal:** train at least two models (the assignment's minimum) from Module 3, evaluate them the same way, and settle the one decision Step 1 left open — `TotalCharges` keep/drop/residual. We went further: four parallel approaches, one per Module 3 family, each on the **frozen split** (`dp.load_splits()`, 5634 train / 1409 test, `random_state=42`) so all four are directly comparable. Test was touched exactly once per model, at the end; all tuning and thresholding used 5-fold CV on train only.
 
+**A fifth approach was added afterward.** Teammate Caco built a `BernoulliNB` model independently, on branch `CacoJuse`, without initially using the frozen split file — but his own `train_test_split(random_state=42, stratify=y)` on the raw CSV was verified to land on the *exact same* 1409 test rows (row-for-row) as `data/splits/`, so his results are directly comparable despite the parallel development. See [`docs/step-03e-caco-naive-bayes.md`](docs/step-03e-caco-naive-bayes.md).
+
 ### The comparison
 
 | Approach | CV ROC-AUC | Test ROC-AUC | Test F1(Yes) | Precision(Yes) | Recall(Yes) | Threshold |
@@ -96,7 +98,7 @@ The manifest records a SHA-256 of each file and of the source CSV, so a regenera
 | **GradientBoosting** (tuned) | **0.8486 ± 0.0084** | **0.8440** | **0.6228** | 0.5913 | 0.6578 | 0.385 |
 | LinearSVC (`class_weight='balanced'`) | 0.8450 ± 0.0085 | 0.8399 | 0.6182 | 0.5375 | 0.7273 | 0.33 |
 | Logistic Regression | 0.8463 ± 0.0085 | 0.8424 | 0.6178 | 0.5341 | 0.7326 | 0.32 |
-| Naive Bayes (discretised, 10 bins) | 0.8410 ± 0.0096 | 0.8389 | 0.6170 | 0.5530 | 0.6978 | 0.49 |
+| Naive Bayes (discretised, 10 bins) | 0.8410 ± 0.0096 | 0.8389 | 0.6170 | 0.5530 | 0.6979 | 0.49 |
 | KNN (k=101, manhattan, uniform) | 0.8393 ± 0.0089 | 0.8363 | 0.6141 | — | — | 0.40 |
 
 **The headline result is the spread, not the winner.** Every approach lands inside the Step 1 predicted band (ROC-AUC 0.84–0.85, F1(Yes) 0.60–0.63) — no leakage anywhere — and the *entire* range from best (GradientBoosting, 0.8440) to worst (KNN, 0.8363) is **0.0077 test ROC-AUC**, well under one CV standard deviation (±0.008–0.010). On this dataset, model family barely matters once each is properly tuned and thresholded; the ceiling is set by the data, not the algorithm. This is itself the most defensible finding for the synthesis cell's "why this model" answer — the honest version is "the practical differences were noise-level, so we picked X for reason Y (interpretability / recall / simplicity)," not "X was measurably best."
@@ -127,15 +129,24 @@ Both corrections replaced the original wording in `CLAUDE.md` rather than sittin
 
 ## Step 4 — Evaluation
 
-Not started. Planned: ROC-AUC and F1-Yes for each model on the held-out set, confusion matrices, and decision-threshold tuning rather than accepting the default 0.5.
+**Goal:** decide which model to ship, on grounds beyond the third decimal of a single held-out ROC-AUC number.
+
+All five approaches (four team tracks plus Caco's BernoulliNB) land inside the Step 1 predicted 0.84–0.85 ROC-AUC band, and the full spread from best to worst is under one CV standard deviation — see the full table and confusion matrices in [`docs/step-04-model-comparison.md`](docs/step-04-model-comparison.md). Two findings drove the final call:
+
+1. **Threshold tuning outweighed model family.** Every approach gained F1(Yes) by moving off the default 0.5 threshold (up to +0.0228 for SVM), always trading precision for recall — the right direction when a missed churner costs more than an unnecessary retention call.
+2. **The score alone can't break the near-tie, so interpretability did.** GradientBoosting's 0.0016 edge over Logistic Regression is smaller than a fifth of a CV standard deviation — not a defensible "better" claim. Logistic Regression was chosen instead: its coefficient/odds-ratio table is directly actionable by a retention team, and **teammate Caco's fully independent pipeline reached the identical conclusion** (his own `docs/step-04-model-comparison.md` on `CacoJuse` also picks Logistic Regression over his BernoulliNB, for the same reason). Two separately-built pipelines agreeing is stronger evidence than either model's score in isolation.
+
+**Decision: ship Logistic Regression** (`a_keep_total_charges`, `C=10.0`, threshold 0.32). Test ROC-AUC **0.8424**, F1(Yes) **0.6178**.
+
+**Evidence:** [`docs/step-04-model-comparison.md`](docs/step-04-model-comparison.md)
 
 ---
 
 ## Step 5 — Synthesis
 
-Not started. The assignment requires four fields:
+`codigo.ipynb` now runs start-to-finish — load → clean → frozen split → fit the chosen Logistic Regression pipeline → evaluate once on test → a dynamically-generated comparison table pulled from `results/*.json` — and ends with the required synthesis cell:
 
-1. **Best model** — TBD
-2. **Chosen metric and value** — TBD (metric decided in Step 1: ROC-AUC primary)
-3. **Main technical decision and why** — candidate: the `TotalCharges = 0` reasoning, or the construction-correlation caveat on `tenure`
-4. **What we would try next** — TBD
+1. **Best model** — Logistic Regression (`a_keep_total_charges`, `C=10.0`, `class_weight=None`, `penalty='l2'`, `solver='lbfgs'`, threshold 0.32), chosen for interpretability given a statistical tie with GradientBoosting and independent convergence with Caco's own model selection.
+2. **Chosen metric and value** — ROC-AUC (decided in Step 1, before any modeling, because of the 73.46%/26.54% imbalance) = **0.8424** on test; F1(Yes) = **0.6178** (precision 0.5341, recall 0.7326) at the tuned threshold.
+3. **Main technical decision and why** — freezing the train/test split to `data/splits/` before any of the five models were built. Without it, five people training in parallel would each score on different held-out rows and the entire comparison in Step 4 would be meaningless. The `TotalCharges` keep/drop/residual question (Step 1's other open item) was also settled empirically: keep won, but by a margin inside CV noise.
+4. **What we'd try next** — probability calibration (a calibration curve / Brier score) before presenting the score as a "churn risk" to a business stakeholder; repeated CV or multiple seeds — the team's four models span only 0.0077 AUC (0.8363–0.8440), roughly the size of single-fold CV noise, but the fifth approach (Caco's BernoulliNB, 0.8225) widens the full five-model spread to 0.0215, worth confirming isn't itself just cross-run noise; and a model restricted to features known at signup (dropping `tenure`/`TotalCharges`, which carry survivorship signal by construction — see the Step 1 caveat above) to test whether the 0.84–0.85 ceiling holds for the actually-actionable "who will churn before we've billed them much" use case.
