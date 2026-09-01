@@ -34,10 +34,11 @@ These are established, verified findings from `docs/step-01-eda.md`. Do not re-d
 
 Python 3.12.3 · numpy 2.5.1 · scipy 1.18.0 · **pandas 3.0.5** · **scikit-learn 1.9.0** · **matplotlib 3.11.1** · **seaborn 0.13.2**
 
-The four ML packages were installed during Step 2. Ubuntu 24.04 marks its Python as externally managed (PEP 668), so a plain `pip install` fails and `--break-system-packages` was required:
+The four ML packages were installed during Step 2 and are pinned in `requirements.txt`. Ubuntu 24.04 marks its Python as externally managed (PEP 668), so a plain `pip install` fails and `--break-system-packages` was required:
 
 ```bash
-pip install --break-system-packages pandas scikit-learn matplotlib seaborn
+pip install --break-system-packages -r requirements.txt   # what was done here
+python3 -m venv .venv && pip install -r requirements.txt  # preferred elsewhere
 ```
 
 Note pandas **3.0** — not 1.x/2.x. This changes text-column dtypes (see fact 1) and some tutorial code for this dataset will not apply verbatim.

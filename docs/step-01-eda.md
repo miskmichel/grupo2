@@ -109,7 +109,9 @@ The notebook's setup cell imports pandas, matplotlib, seaborn and sklearn, so **
 
 ### 4.1 `TotalCharges` — 11 disguised-missing values (the planted trap)
 
-The values are literally `' '` (a **single space**, not an empty string). That is exactly why pandas types the column as `object`, why `.isnull()` does not catch them on read, and why a naive `.astype(float)` raises `ValueError`.
+The values are literally `' '` (a **single space**, not an empty string). That is exactly why pandas types the column as text rather than numeric, why `.isnull()` does not catch them on read, and why a naive `.astype(float)` raises `ValueError`.
+
+> **Erratum (corrected in Step 2).** This section originally said pandas types the column as `object`. Under **pandas 3.0.5** — the version subsequently installed — the dtype is **`str`**, because pandas 3.0 promotes the dedicated string dtype to the default. Every consequence above is unchanged, but **a guard written as `dtype == 'object'` silently never fires**. Test values, or use `not pd.api.types.is_numeric_dtype(...)`, as `src/data_prep.py` does. Most published tutorials for this dataset predate pandas 3 and will say `object`.
 
 **The diagnosis the enunciado is fishing for:**
 

@@ -69,6 +69,9 @@ Newest first.
 
 ### Housekeeping
 
+- Added **`requirements.txt`** pinning numpy 2.5.1, scipy 1.18.0, pandas 3.0.5, scikit-learn 1.9.0, matplotlib 3.11.1, seaborn 0.13.2. The pandas pin is load-bearing, not cosmetic — under 2.x a `dtype == 'object'` guard works and under 3.0 it silently does not, which is exactly the class of bug only one team member can reproduce. Documents both the venv install (preferred) and the `--break-system-packages` form actually used here.
+- Corrected the stale `object` dtype claim in `docs/step-01-eda.md` §4.1, marked inline as an erratum rather than silently rewritten.
+- Refreshed `ARCHITECTURE.md`: added `src/`, `codigo.ipynb` and `requirements.txt` to the map; the pipeline section no longer says "not yet built" now that everything above the estimator exists; the "saves 7 collinear dummies" note replaced with the measured result (7 dummies, 6 rank deficiencies).
 - Added `.gitignore` for `__pycache__/`.
 - Set repo-local git identity (`miskmichel` / `michelcarneiro205@gmail.com`) — none was configured, so commits were impossible.
 

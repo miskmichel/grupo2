@@ -1,0 +1,26 @@
+# Pinned to the versions this project was actually built and verified against.
+#
+# The pandas pin is not cosmetic. pandas 3.0 promotes the dedicated string
+# dtype to the default, so TotalCharges reads as dtype `str` rather than
+# `object`. Any code that guards on `dtype == 'object'` silently does
+# nothing under 3.0, and silently works under 2.x. Matching versions across
+# the team avoids one member debugging a bug the others cannot reproduce.
+# See CLAUDE.md fact 1 and docs/step-02-data-treatment.md section 2.
+
+numpy==2.5.1
+scipy==1.18.0
+pandas==3.0.5
+scikit-learn==1.9.0
+matplotlib==3.11.1
+seaborn==0.13.2
+
+# Preferred install (isolated, no system override):
+#     python3 -m venv .venv && source .venv/bin/activate
+#     pip install -r requirements.txt
+#
+# What was actually done on the hackathon box, because Ubuntu 24.04 marks
+# its system Python as externally managed (PEP 668) and a venv would need
+# re-activating in every shell for a 90-minute exercise:
+#     pip install --break-system-packages -r requirements.txt
+#
+# Use the venv form on any machine you intend to keep.

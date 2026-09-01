@@ -42,11 +42,16 @@ Full statement: [`enunciado.ipynb`](enunciado.ipynb) *(read-only — this is the
 
 ## Setup
 
-Python 3.12.3. The notebook additionally needs:
+Python 3.12.3. Dependencies are pinned in [`requirements.txt`](requirements.txt):
 
 ```bash
-pip install pandas scikit-learn matplotlib seaborn
+python3 -m venv .venv && source .venv/bin/activate
+pip install -r requirements.txt
 ```
+
+On Ubuntu 24.04 without a venv, PEP 668 blocks the install and you need `pip install --break-system-packages -r requirements.txt` — which is what was done on the hackathon box.
+
+**Match the pinned versions.** This project runs **pandas 3.0.5**, where `TotalCharges` reads as dtype `str`, not `object`. Code that guards on `dtype == 'object'` works under pandas 2.x and silently does nothing under 3.0 — the exact kind of bug only one teammate can reproduce.
 
 The dataset is vendored at the repo root as `Telco-Customer-Churn.csv` — **do not move it into `data/`**, despite what the enunciado's prose says; the notebook's actual code reads it from the root.
 

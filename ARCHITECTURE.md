@@ -11,6 +11,7 @@ hackaton-classificacao/
 ├── ARCHITECTURE.md            # this file
 ├── CHANGES.md                 # chronological changelog
 ├── METHODOLOGY.md             # what we did at each step, and why
+├── requirements.txt           # pinned deps (pandas 3.0.5 pin is load-bearing)
 │
 ├── enunciado.ipynb            # THE ASSIGNMENT (read-only — do not edit)
 ├── codigo.ipynb               # team working notebook
@@ -82,11 +83,11 @@ TotalCharges              ≈  tenure × MonthlyCharges                         
 tenure == 0               ⟺  TotalCharges == ' '                                      (  11 rows, exact)
 ```
 
-Consequences: collapse the "No X service" levels to `'No'` before one-hot encoding (saves 7 collinear dummies); drop `TotalCharges` for linear models; impute `TotalCharges = 0` rather than the median.
+Consequences: collapse the "No X service" levels to `'No'` before one-hot encoding (measured: saves 7 dummies and 6 rank deficiencies); impute `TotalCharges = 0` rather than the median; consider dropping `TotalCharges` for linear models.
 
-## Intended modeling pipeline
+## Modeling pipeline
 
-Not yet built — this is the target shape for Step 2.
+Everything above the estimator is **built and verified** in `src/data_prep.py` as of Step 2. The estimator row is Step 3, not yet started.
 
 ```
 raw CSV
