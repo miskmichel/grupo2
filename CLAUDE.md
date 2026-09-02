@@ -30,13 +30,15 @@ These are established, verified findings from `docs/step-01-eda.md`. Do not re-d
 
 ## Environment
 
-Python 3.12.3 with numpy and scipy. **pandas, scikit-learn, matplotlib and seaborn are not installed** — the notebook cannot run past its setup cell until they are. Install with:
+The current Windows machine has an Anaconda Python 3.13.9 environment with pandas 2.3.3, scikit-learn 1.7.2, matplotlib, seaborn, and Jupyter. The bare `python` command may resolve to the Microsoft Store stub, so select the Anaconda `python3` Jupyter kernel in the IDE. A separate Python 3.14 installation exists without the data-science packages.
+
+If these dependencies are absent in another environment, install them with:
 
 ```bash
 pip install pandas scikit-learn matplotlib seaborn
 ```
 
-Do not install packages without saying so in the response and logging it in `CHANGES.md`.
+Do not install packages without saying so in the response and logging it in `CHANGES.md`. No package installation was needed for Step 2.
 
 ## Conventions
 

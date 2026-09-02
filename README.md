@@ -27,10 +27,10 @@ Full statement: [`enunciado.ipynb`](enunciado.ipynb) *(read-only — this is the
 | Step | Phase | Status |
 |---|---|---|
 | 1 | Explore | ✅ [EDA report](docs/step-01-eda.md) |
-| 2 | Treat data | 🔄 In progress |
-| 3 | Train ≥2 models | ⬜ |
-| 4 | Evaluate & compare | ⬜ |
-| 5 | Synthesis | ⬜ |
+| 2 | Treat data | ✅ [Data-treatment report](docs/step-02-data-treatment.md) |
+| 3 | Train ≥2 models | ✅ Logistic Regression + Bernoulli Naive Bayes |
+| 4 | Evaluate & compare | ✅ [Model comparison](docs/step-04-model-comparison.md) |
+| 5 | Synthesis | ✅ Completed in [`codigo.ipynb`](codigo.ipynb) |
 
 ## Headline findings so far
 
@@ -38,11 +38,13 @@ Full statement: [`enunciado.ipynb`](enunciado.ipynb) *(read-only — this is the
 - **The `TotalCharges` trap is solved.** Its 11 non-numeric values are single spaces `' '`; every one of those rows has `tenure == 0` and none of them churned. They are new customers who have never been billed, so the correct fix is **impute 0**, not the median.
 - **`Contract` is the strongest predictor** (Cramér's V = 0.410), spanning 2.83% churn on two-year contracts to 42.71% month-to-month. Crossed with `InternetService` the spread is **70×**: month-to-month + fiber churns at **54.61%** (n=2128), two-year + no internet at **0.78%** (n=638).
 - **`gender` and `PhoneService` are pure noise** (p = 0.487 and p = 0.339) and get dropped.
+- **Logistic baseline:** ROC-AUC **0.839**, F1(Yes) **0.617**, recall(Yes) **0.778** at threshold 0.50. Its 74.3% accuracy is close to the 73.46% constant baseline, illustrating why accuracy alone is misleading.
+- **Naive Bayes comparison:** BernoulliNB reaches ROC-AUC **0.822** and F1(Yes) **0.602**. Logistic Regression remains the winner on the primary metric and also has the higher F1/recall.
 - **Realistic ceiling: ROC-AUC 0.84–0.85.** Above 0.90 means something leaked.
 
 ## Setup
 
-Python 3.12.3. The notebook additionally needs:
+Tested with the available Anaconda Python 3.13.9 kernel. In another environment, install:
 
 ```bash
 pip install pandas scikit-learn matplotlib seaborn

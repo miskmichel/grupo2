@@ -13,10 +13,14 @@ hackaton-classificacao/
 ├── METHODOLOGY.md             # what we did at each step, and why
 │
 ├── enunciado.ipynb            # THE ASSIGNMENT (read-only — do not edit)
+├── codigo.ipynb               # executable data preparation and, next, modeling
 ├── Telco-Customer-Churn.csv   # the dataset (root path — do not move)
 │
 └── docs/
-    └── step-01-eda.md         # Step 1 — exploratory data analysis
+    ├── step-01-eda.md         # Step 1 — exploratory data analysis
+    ├── step-02-data-treatment.md # Step 2 — cleaning and preprocessing
+    ├── step-03-logistic-regression.md # Step 3 — first model and metrics
+    └── step-04-model-comparison.md # Step 4 — Naive Bayes and comparison
 ```
 
 ### Why the CSV sits at the root
@@ -75,9 +79,9 @@ tenure == 0               ⟺  TotalCharges == ' '                              
 
 Consequences: collapse the "No X service" levels to `'No'` before one-hot encoding (saves 7 collinear dummies); drop `TotalCharges` for linear models; impute `TotalCharges = 0` rather than the median.
 
-## Intended modeling pipeline
+## Modeling pipeline
 
-Not yet built — this is the target shape for Step 2.
+The complete assignment pipeline is implemented in `codigo.ipynb`: balanced logistic regression, Bernoulli Naive Bayes, matched evaluation, comparison, and final synthesis.
 
 ```
 raw CSV
@@ -112,4 +116,4 @@ Everything from `ColumnTransformer` down belongs **inside** a single `sklearn.pi
 - **Time:** 90 minutes total, per the assignment.
 - **Algorithms:** restricted to Module 3 — KNN, Naive Bayes, Logistic Regression, SVM, Trees, Ensemble.
 - **Offline:** the assignment states no internet is required; the dataset is vendored in the repo.
-- **Environment:** pandas / scikit-learn / matplotlib / seaborn are currently *not installed*. See `CLAUDE.md`.
+- **Environment:** the available Anaconda kernel includes pandas and scikit-learn; see `CLAUDE.md` for kernel selection details.
