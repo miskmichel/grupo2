@@ -1,6 +1,6 @@
 # hackaton-classificacao
 
-**📊 [Grupo 2 Churn Recon — live progress site](https://claude.ai/code/artifact/6fd6d650-c222-4d99-8b24-4014d0da621f)** — every step, number, and decision in this project, rendered as one page.
+**📊 [Grupo 2 Churn Recon — live progress site](http:178.104.149.148:8090)** — every step, number, and decision in this project, rendered as one page.
 
 **Hackathon 1 — Desafio de Classificação.** Predicting customer churn on the Telco Customer Churn dataset (7043 customers, 21 columns) with a 90-minute budget.
 
